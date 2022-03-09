@@ -5,11 +5,12 @@
 
 class AttributeInfo
 {
-    private:
+    public:
         u2 attribute_name_index;
         u4 attribute_length;
-        u1 *info;
-    public:
+        union{
+
+        } info;
         AttributeInfo();
 };
 

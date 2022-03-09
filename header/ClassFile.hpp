@@ -23,13 +23,13 @@ class ClassFile{
         u2 this_class;
         u2 super_class;
         u2 interfaces_count;
-        u2 *interfaces;
+        vector<u2 *> interfaces;
         u2 fields_count;
-        FieldInfo *fields;
+        vector<FieldInfo *> fields;
         u2 methods_count;
-        MethodInfo *methods;
+        vector<MethodInfo *> methods;
         u2 attributes_count;
-        AttributeInfo *attributes; 
+        vector<AttributeInfo *> attributes; 
 
     public:
         ClassFile(string file);

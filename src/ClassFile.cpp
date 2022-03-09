@@ -34,7 +34,6 @@ ClassFile::ClassFile(string file)
 
         switch (tag)
         {
-            
             case CONSTANT_Class:{
                 u2 nameIndex = ReadFile::u2Read(file_stream);
                 cp->info.Class.name_index = nameIndex;
@@ -95,4 +94,6 @@ ClassFile::ClassFile(string file)
         }
         
     }
+
+
 }
