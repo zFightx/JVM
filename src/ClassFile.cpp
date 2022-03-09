@@ -62,13 +62,20 @@ ClassFile::ClassFile(string file)
                 break;
             }
             case CONSTANT_NameAndType:{
-                u2 stringIndex = ReadFile::u2Read(file_stream);
-                cout << "string index: " << hex << stringIndex << endl;
+                u2 class_index = ReadFile::u2Read(file_stream);
+                u2 descriptor_index = ReadFile::u2Read(file_stream);
+                // cout << "string index: " << hex << stringIndex << endl;
                 break;
             }
             case CONSTANT_Utf8:{
-                u2 stringIndex = ReadFile::u2Read(file_stream);
-                cout << "string index: " << hex << stringIndex << endl;
+                u2 lenght = ReadFile::u2Read(file_stream);
+                u2 *bytes = new u2[(int)lenght];
+
+                for(unsigned j = 0; j < lenght; j++){
+                    bytes[j] = ReadFile::u2Read(file_stream);
+                }
+
+                // cout << "string index: " << hex << stringIndex << endl;
                 break;
             }
             case CONSTANT_String:{
@@ -83,12 +90,17 @@ ClassFile::ClassFile(string file)
                 break;
             }
             case CONSTANT_Float:{
+                u4 bytes = ReadFile::u4Read(file_stream);
                 break;
             }
             case CONSTANT_Long: {
+                u4 high_bytes = ReadFile::u4Read(file_stream);
+                u4 low_bytes = ReadFile::u4Read(file_stream);
                 break;
             }
             case CONSTANT_Double:{
+                u4 high_bytes = ReadFile::u4Read(file_stream);
+                u4 low_bytes = ReadFile::u4Read(file_stream);
                 break;
             }
         }
