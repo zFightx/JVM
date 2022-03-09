@@ -6,9 +6,9 @@
 
 class CpInfo
 {
-    private:
+    public:
         u1 tag;
-        union info
+        union
         {
             CONSTANT_Class_info Class;
             CONSTANT_Fieldref_info Fieldref;
@@ -21,9 +21,8 @@ class CpInfo
             CONSTANT_Float_info Float;
             CONSTANT_Long_info Long;
             CONSTANT_Double_info Double;
-        };
+        } info;
         
-    public:
         CpInfo(u1 tag);
 };
 

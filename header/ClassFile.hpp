@@ -18,7 +18,7 @@ class ClassFile{
         u2 minor_version;
         u2 major_version;
         u2 constant_pool_count;
-        CpInfo *constant_pool;
+        vector<CpInfo*> constant_pool;
         u2 access_flags;
         u2 this_class;
         u2 super_class;
