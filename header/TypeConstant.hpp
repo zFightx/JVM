@@ -1,7 +1,10 @@
 #ifndef __TypeConstant_HPP__
 #define __TypeConstant_HPP__
 
+#include <vector>
 #include "Dados.hpp"
+
+using namespace std;
 
 struct CONSTANT_Class_info
 {
@@ -35,7 +38,7 @@ struct CONSTANT_NameAndType_info
 struct CONSTANT_Utf8_info
 {
     u2 length;
-    u2 *bytes;
+    u1 *bytes;
 };
 
 struct CONSTANT_String_info

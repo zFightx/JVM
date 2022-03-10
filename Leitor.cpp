@@ -33,63 +33,12 @@ void printBinaryFile(string fileName)
 int main()
 {
     // ClassFile *cf = new ClassFile();
-    ifstream file("Simple.class", ios::binary);
+    // ifstream file("Simple.class", ios::binary);
 
-    file.seekg(0, ios::beg);
+    ClassFile *class_file = new ClassFile("Simple.class");
+    
 
-    u4 magic = ReadFile::u4Read(file);
-    u2 minorVersion = ReadFile::u2Read(file);
-    u2 majorVersion = ReadFile::u2Read(file);
-    u2 constantPoolCount = ReadFile::u2Read(file);
+    delete class_file;
 
-    cout << "magic: " << hex << (int)magic << endl;
-    cout << "minor version: " << hex << minorVersion << endl;
-    cout << "major version: " << hex << majorVersion << endl;
-    cout << "constant pool count: " << hex << constantPoolCount << endl;
-
-    // read constant pool
-    for (int i = 0; i < constantPoolCount; i++)
-    {
-        u1 tag = u1Read(file);
-        cout << "tag: " << hex << (int)tag << endl;
-        switch (tag)
-        {
-        case CONSTANT_Class:
-            u2 nameIndex = u2Read(file);
-            cout << "name index: " << hex << nameIndex << endl;
-            break;
-        case CONSTANT_Fieldref:
-            u2 classIndex = u2Read(file);
-            u2 nameAndTypeIndex = u2Read(file);
-            cout << "class index: " << hex << classIndex << endl;
-            cout << "name and type index: " << hex << nameAndTypeIndex << endl;
-            break;
-        case CONSTANT_Methodref:
-            u2 classIndex = u2Read(file);
-            u2 nameAndTypeIndex = u2Read(file);
-            cout << "class index: " << hex << classIndex << endl;
-            cout << "name and type index: " << hex << nameAndTypeIndex << endl;
-            break;
-        case CONSTANT_InterfaceMethodref:
-            u2 classIndex = u2Read(file);
-            u2 nameAndTypeIndex = u2Read(file);
-            cout << "class index: " << hex << classIndex << endl;
-            cout << "name and type index: " << hex << nameAndTypeIndex << endl;
-            break;
-        case CONSTANT_String:
-            u2 stringIndex = u2Read(file);
-            cout << "string index: " << hex << stringIndex << endl;
-            break;
-        case CONSTANT_Integer:
-            u4 bytes4 = u4Read(file);
-            cout << "bytes4: " << hex << bytes4 << endl;
-            break;
-        case CONSTANT_Float:
-            u4 bytes4 = u4Read(file);
-            cout << "bytes4: " << hex << bytes4 << endl;
-            break;
-        case CONSTANT_Long:
-            u8 bytes8 = u
-
-                return 0;
-        }
+    return 0;
+}

@@ -8,7 +8,7 @@ class CpInfo
 {
     public:
         u1 tag;
-        union
+        union info
         {
             CONSTANT_Class_info Class;
             CONSTANT_Fieldref_info Fieldref;
@@ -24,6 +24,7 @@ class CpInfo
         } info;
         
         CpInfo(u1 tag);
+        ~CpInfo();
 };
 
 
