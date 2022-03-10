@@ -12,27 +12,28 @@
 
 using namespace std;
 
-class ClassFile{
-    private:
-        u4 magic;
-        u2 minor_version;
-        u2 major_version;
-        u2 constant_pool_count;
-        vector<CpInfo*> constant_pool;
-        u2 access_flags;
-        u2 this_class;
-        u2 super_class;
-        u2 interfaces_count;
-        vector<u2 *> interfaces;
-        u2 fields_count;
-        vector<FieldInfo *> fields;
-        u2 methods_count;
-        vector<MethodInfo *> methods;
-        u2 attributes_count;
-        vector<AttributeInfo *> attributes; 
+class ClassFile
+{
+private:
+    u4 magic;
+    u2 minor_version;
+    u2 major_version;
+    u2 constant_pool_count;
+    vector<CpInfo *> constant_pool;
+    u2 access_flags;
+    u2 this_class;
+    u2 super_class;
+    u2 interfaces_count;
+    vector<u2> interfaces;
+    u2 fields_count;
+    vector<FieldInfo *> fields;
+    u2 methods_count;
+    vector<MethodInfo *> methods;
+    u2 attributes_count;
+    vector<AttributeInfo *> attributes;
 
-    public:
-        ClassFile(string file);
+public:
+    ClassFile(string file);
 };
 
 #endif

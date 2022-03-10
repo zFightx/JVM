@@ -9,14 +9,13 @@ using namespace std;
 
 class FieldInfo
 {
-    public:
-        u2 access_flags;
-        u2 name_index;
-        u2 descriptor_index;
-        u2 attributes_count;
-        vector<AttributeInfo *> attributes;
-        FieldInfo();
+public:
+    u2 access_flags;
+    u2 name_index;
+    u2 descriptor_index;
+    u2 attributes_count;
+    vector<AttributeInfo *> attributes;
+    FieldInfo(u2 access_flags, u2 name_index, u2 descriptor_index, u2 attributes_count);
 };
-
 
 #endif
