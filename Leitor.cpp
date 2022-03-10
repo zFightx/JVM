@@ -35,7 +35,7 @@ int main()
     // ClassFile *cf = new ClassFile();
     // ifstream file("Simple.class", ios::binary);
 
-    ClassFile *class_file = new ClassFile("Simple.class");
+    ClassFile *class_file = new ClassFile("Pig.class");
     
 
     delete class_file;

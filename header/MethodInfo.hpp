@@ -10,15 +10,14 @@ using namespace std;
 
 class MethodInfo
 {
-    private:
-    public:
-        u2 access_flags;
-        u2 name_index;
-        u2 descriptor_index;
-        u2 attributes_count;
-        vector<AttributeInfo *> attributes;
-        MethodInfo();
+private:
+public:
+    u2 access_flags;
+    u2 name_index;
+    u2 descriptor_index;
+    u2 attributes_count;
+    vector<AttributeInfo *> attributes;
+    MethodInfo(u2 access_flags, u2 name_index, u2 descriptor_index, u2 attributes_count);
 };
-
 
 #endif
