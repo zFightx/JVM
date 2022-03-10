@@ -175,6 +175,12 @@ void ClassFile::CreateInterfaces(ifstream &file)
         u2 interface = ReadFile::u2Read(file);
         this->interfaces.push_back((int)interface);
     }
+
+    cout << "Qtd Interfaces: " << this->interfaces_count << endl;
+    for (unsigned i = 0; i < this->interfaces_count; i++)
+    {
+        cout << "Interface " << dec << (int) this->interfaces[i] << endl;
+    }
 }
 
 void ClassFile::CreateFieldInfo(ifstream &file)
@@ -199,5 +205,21 @@ void ClassFile::CreateFieldInfo(ifstream &file)
         }
 
         this->fields.push_back(field);
+    }
+
+    cout << "Qtd Fields: " << this->fields_count << endl;
+    for (unsigned i = 0; i < this->fields_count; i++)
+    {
+        cout << "Field Access F." << hex << (int) this->fields[i]->access_flags << endl;
+        cout << "Field Name I." << dec << (int) this->fields[i]->name_index << " <" << (char *) this->constant_pool[this->fields[i]->name_index-1]->info.Utf8.bytes << ">" << endl;
+        cout << "Field Desc I." << dec << (int) this->fields[i]->descriptor_index << endl;
+        cout << "Field Attr C." << dec << (int) this->fields[i]->attributes_count << endl;
+
+        for (unsigned j = 0; j < this->fields[i]->attributes_count; j++){
+            cout << "Field Attr Name I." << dec << (int) this->fields[i]->attributes[j]->attribute_name_index << endl;
+            cout << "Field Attr Length." << dec << (int) this->fields[i]->attributes[j]->attribute_length << endl;
+            cout << "Field Attr ConstantValue." << dec << (int) this->fields[i]->attributes[j]->info.ConstantValue.constantvalue_index << endl;
+
+        }
     }
 }
