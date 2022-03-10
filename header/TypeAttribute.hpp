@@ -27,9 +27,9 @@ struct Code_attribute
     u4 code_length;
     u1 *code;
     u2 exception_table_length;
-    ExceptionHandler *exception_table;
+    ExceptionHandler * exception_table;
     u2 attributes_count;
-    AttributeInfo *attributes;
+    AttributeInfo * attributes;
 };
 
 struct Exceptions_attribute
@@ -46,6 +46,11 @@ struct InnerClasses_attribute
 
 struct Synthetic_attribute
 {
+};
+
+struct SourceFile_attribute
+{
+    u2 sourcefile_index;
 };
 
 #endif

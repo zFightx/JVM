@@ -30,13 +30,16 @@ private:
     u2 methods_count;
     vector<MethodInfo *> methods;
     u2 attributes_count;
-    vector<AttributeInfo *> attributes;
+    AttributeInfo * attributes;
 
 public:
     ClassFile(string file);
     void CreateConstantPool(ifstream &file);
     void CreateInterfaces(ifstream &file);
     void CreateFieldInfo(ifstream &file);
+    void CreateMethodInfo(ifstream &file);
+
+    AttributeInfo * CreateAttributeInfo(ifstream &file, u2 attributes_count);
 };
 
 #endif

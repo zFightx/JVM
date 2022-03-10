@@ -15,6 +15,8 @@ public:
     static u2 u2Read(ifstream &file);
     static u4 u4Read(ifstream &file);
     static u8 u8Read(ifstream &file);
+
+    static string readByteString(u1 *bytes, u2 length);
 };
 
 #endif

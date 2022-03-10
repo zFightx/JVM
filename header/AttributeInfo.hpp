@@ -18,8 +18,10 @@ public:
         Exceptions_attribute Exceptions;
         InnerClasses_attribute InnerClasses;
         Synthetic_attribute Synthetic;
+        SourceFile_attribute SourceFile;
+        
     } info;
-
+    AttributeInfo();
     AttributeInfo(u2 attribute_name_index, u4 attribute_length);
 };
 

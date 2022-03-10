@@ -47,3 +47,4 @@ u8 ReadFile::u8Read(ifstream &file)
 
     return bytes8;
 }
+

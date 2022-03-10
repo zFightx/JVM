@@ -10,6 +10,7 @@ public:
     u2 outer_class_info_index;
     u2 inner_name_index;
     u2 inner_class_access_flags;
+    Classes();
     Classes(u2 inner_class_info_index, u2 outer_class_info_index, u2 inner_name_index, u2 inner_class_access_flags);
 };
 

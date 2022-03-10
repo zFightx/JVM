@@ -5,7 +5,12 @@
     "ios": "cpp",
     "ostream": "cpp",
     "new": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "typeinfo": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "string": "cpp",
+    "vector": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }
