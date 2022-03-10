@@ -32,7 +32,7 @@ ClassFile::ClassFile(string file)
         CpInfo *cp = new CpInfo(tag);
 
         this->constant_pool.push_back(cp);
-
+        
         switch (tag)
         {
             case CONSTANT_Class:{
