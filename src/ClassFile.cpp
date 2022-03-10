@@ -1,4 +1,4 @@
-#include <string>
+#include <string.h>
 #include <iostream>
 
 #include "../header/ClassFile.hpp"
@@ -22,7 +22,7 @@ ClassFile::ClassFile(string file)
 {
     ifstream file_stream(file, ios::in | ios::binary);
 
-    file_stream.seekg(0, ios::beg);     // seek to the beginning of the file
+    file_stream.seekg(0, ios::beg); // seek to the beginning of the file
 
     this->magic = ReadFile::u4Read(file_stream);
     this->minor_version = ReadFile::u2Read(file_stream);
@@ -35,16 +35,12 @@ ClassFile::ClassFile(string file)
     this->this_class = ReadFile::u2Read(file_stream);
     this->super_class = ReadFile::u2Read(file_stream);
 
-    
     this->CreateInterfaces(file_stream);
-    
-    
+
     this->CreateFieldInfo(file_stream);
 
-    
     this->CreateMethodInfo(file_stream);
 
-    
     this->attributes_count = ReadFile::u2Read(file_stream);
     this->attributes = this->CreateAttributeInfo(file_stream, this->attributes_count);
 
@@ -57,84 +53,95 @@ ClassFile::ClassFile(string file)
 
     cout << "finalizou com C_Count: " << dec << this->constant_pool_count - 1 << " e com armazenado: " << this->constant_pool.size() << endl;
 
-
     cout << "Qtd Interfaces: " << this->interfaces_count << endl;
     for (unsigned i = 0; i < this->interfaces_count; i++)
     {
-        cout << "Interface " << dec << (int) this->interfaces[i] << endl;
+        cout << "Interface " << dec << (int)this->interfaces[i] << endl;
     }
 
     cout << "Qtd Fields: " << this->fields_count << endl;
     for (unsigned i = 0; i < this->fields_count; i++)
     {
 
-        u1 *bytes = this->constant_pool[this->fields[i]->name_index-1]->info.Utf8.bytes;
-        u2 length = this->constant_pool[this->fields[i]->name_index-1]->info.Utf8.length;
+        u1 *bytes = this->constant_pool[this->fields[i]->name_index - 1]->info.Utf8.bytes;
+        u2 length = this->constant_pool[this->fields[i]->name_index - 1]->info.Utf8.length;
 
-        char array[length+1];
+        char array[length + 1];
         memcpy(array, bytes, length);
 
         array[length] = '\0';
 
         string name = array;
 
-        cout << "Field Access F." << hex << (int) this->fields[i]->access_flags << endl;
-        cout << "Field Name I." << dec << (int) this->fields[i]->name_index << " <" << name << ">" << endl;
-        cout << "Field Desc I." << dec << (int) this->fields[i]->descriptor_index << endl;
-        cout << "Field Attr C." << dec << (int) this->fields[i]->attributes_count << endl;
+        cout << "Field Access F." << hex << (int)this->fields[i]->access_flags << endl;
+        cout << "Field Name I." << dec << (int)this->fields[i]->name_index << " <" << name << ">" << endl;
+        cout << "Field Desc I." << dec << (int)this->fields[i]->descriptor_index << endl;
+        cout << "Field Attr C." << dec << (int)this->fields[i]->attributes_count << endl;
 
-        for (unsigned j = 0; j < this->fields[i]->attributes_count; j++){
-            cout << "Field Attr Name I." << dec << (int) this->fields[i]->attributes[j]->attribute_name_index << endl;
-            cout << "Field Attr Length." << dec << (int) this->fields[i]->attributes[j]->attribute_length << endl;
-            cout << "Field Attr ConstantValue." << dec << (int) this->fields[i]->attributes[j]->info.ConstantValue.constantvalue_index << endl;
-
+        for (unsigned j = 0; j < this->fields[i]->attributes_count; j++)
+        {
+            cout << "Field Attr Name I." << dec << (int)this->fields[i]->attributes[j]->attribute_name_index << endl;
+            cout << "Field Attr Length." << dec << (int)this->fields[i]->attributes[j]->attribute_length << endl;
+            cout << "Field Attr ConstantValue." << dec << (int)this->fields[i]->attributes[j]->info.ConstantValue.constantvalue_index << endl;
         }
     }
 
     cout << "--Methods--" << endl;
-    cout << "Qtd Methods: " << this->methods_count << endl;	
-    for(unsigned i = 0; i < this->methods_count; i++){
-        cout << "Acc. flags: " <<this->methods[i]->access_flags << endl;
-        cout << "Name index: " <<this->methods[i]->name_index << endl;
-        cout << "Descr. index: " <<this->methods[i]->descriptor_index << endl;
-        cout << "Attr. Count: " <<this->methods[i]->attributes_count << endl;
+    cout << "Qtd Methods: " << this->methods_count << endl;
+    for (unsigned i = 0; i < this->methods_count; i++)
+    {
+        cout << "Acc. flags: " << this->methods[i]->access_flags << endl;
+        cout << "Name index: " << this->methods[i]->name_index << endl;
+        cout << "Descr. index: " << this->methods[i]->descriptor_index << endl;
+        cout << "Attr. Count: " << this->methods[i]->attributes_count << endl;
 
-        for (unsigned j = 0; j < this->methods[i]->attributes_count; j++){
-            cout << "Attr. Name I: " <<this->methods[i]->attributes[j]->attribute_name_index << endl;
-            cout << "Attr. Length: " <<this->methods[i]->attributes[j]->attribute_length << endl;
-            cout << "Max Stack" << ": " << this->methods[i]->attributes[j]->info.Code.max_stack << endl;
-            cout << "Max Locals" << ": " << this->methods[i]->attributes[j]->info.Code.max_locals << endl;
-            cout << "Code Length" << ": " << this->methods[i]->attributes[j]->info.Code.code_length << endl;
-            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.code_length; k++){
+        for (unsigned j = 0; j < this->methods[i]->attributes_count; j++)
+        {
+            cout << "Attr. Name I: " << this->methods[i]->attributes[j]->attribute_name_index << endl;
+            cout << "Attr. Length: " << this->methods[i]->attributes[j]->attribute_length << endl;
+            cout << "Max Stack"
+                 << ": " << this->methods[i]->attributes[j]->info.Code.max_stack << endl;
+            cout << "Max Locals"
+                 << ": " << this->methods[i]->attributes[j]->info.Code.max_locals << endl;
+            cout << "Code Length"
+                 << ": " << this->methods[i]->attributes[j]->info.Code.code_length << endl;
+            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.code_length; k++)
+            {
                 cout << "Code: " << hex << (int)this->methods[i]->attributes[j]->info.Code.code[k] << endl;
             }
-            
-            cout << "Exception Table Length" << ": " << this->methods[i]->attributes[j]->info.Code.exception_table_length << endl;
-            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.exception_table_length; k++){
-                cout << "Exception Table" << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].start_pc << endl;
-                cout << "Exception Table" << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].end_pc << endl;
-                cout << "Exception Table" << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].handler_pc << endl;
-                cout << "Exception Table" << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].catch_type << endl;
+
+            cout << "Exception Table Length"
+                 << ": " << this->methods[i]->attributes[j]->info.Code.exception_table_length << endl;
+            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.exception_table_length; k++)
+            {
+                cout << "Exception Table"
+                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].start_pc << endl;
+                cout << "Exception Table"
+                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].end_pc << endl;
+                cout << "Exception Table"
+                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].handler_pc << endl;
+                cout << "Exception Table"
+                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].catch_type << endl;
             }
 
-            cout << "Attributes Count" << ": " << this->methods[i]->attributes[j]->info.Code.attributes_count << endl;
-            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.attributes_count; k++){
-                cout << "Attr. name index" << ": " << this->methods[i]->attributes[j]->info.Code.attributes[k].attribute_name_index << endl;
-                cout << "Attr. length" << ": " << this->methods[i]->attributes[j]->info.Code.attributes[k].attribute_length << endl;
+            cout << "Attributes Count"
+                 << ": " << this->methods[i]->attributes[j]->info.Code.attributes_count << endl;
+            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.attributes_count; k++)
+            {
+                cout << "Attr. name index"
+                     << ": " << this->methods[i]->attributes[j]->info.Code.attributes[k].attribute_name_index << endl;
+                cout << "Attr. length"
+                     << ": " << this->methods[i]->attributes[j]->info.Code.attributes[k].attribute_length << endl;
             }
-
         }
     }
-
 
     cout << "Printando os Atributos Classe " << endl;
 
     for (unsigned i = 0; i < this->attributes_count; i++)
     {
-        cout << dec << (int) this->attributes[i].attribute_name_index << endl;
+        cout << dec << (int)this->attributes[i].attribute_name_index << endl;
     }
-
-
 }
 
 void ClassFile::CreateConstantPool(ifstream &file)
@@ -289,18 +296,19 @@ void ClassFile::CreateFieldInfo(ifstream &file)
         //     field->attributes.push_back(attribute);
         // }
 
-        AttributeInfo * attributes = this->CreateAttributeInfo(file, attributes_count);
+        AttributeInfo *attributes = this->CreateAttributeInfo(file, attributes_count);
         field->attributes.push_back(attributes);
 
         this->fields.push_back(field);
     }
 }
 
-void ClassFile::CreateMethodInfo(ifstream &file){
+void ClassFile::CreateMethodInfo(ifstream &file)
+{
     this->methods_count = ReadFile::u2Read(file);
     for (unsigned i = 0; i < this->methods_count; i++)
     {
-        
+
         u2 access_flags = ReadFile::u2Read(file);
         u2 name_index = ReadFile::u2Read(file);
         u2 descriptor_index = ReadFile::u2Read(file);
@@ -311,26 +319,27 @@ void ClassFile::CreateMethodInfo(ifstream &file){
         // cout << "Entrando attribute" << endl;
         AttributeInfo *attribute = CreateAttributeInfo(file, attributes_count);
         method->attributes.push_back(attribute);
-       
 
         this->methods.push_back(method);
-    }   
+    }
 }
 
-AttributeInfo * ClassFile::CreateAttributeInfo(ifstream &file, u2 attributes_count){
+AttributeInfo *ClassFile::CreateAttributeInfo(ifstream &file, u2 attributes_count)
+{
     // cout << "Chamada de CreateAttributeInfo" << endl;
     AttributeInfo *attributes = new AttributeInfo[attributes_count];
-    
-    for(unsigned i = 0; i < attributes_count; i++){
+
+    for (unsigned i = 0; i < attributes_count; i++)
+    {
         u2 attribute_name_index = ReadFile::u2Read(file);
         u4 attribute_length = ReadFile::u4Read(file);
 
         attributes[i] = AttributeInfo(attribute_name_index, attribute_length);
 
-        u1 *bytes = this->constant_pool[attribute_name_index-1]->info.Utf8.bytes;
-        u2 length = this->constant_pool[attribute_name_index-1]->info.Utf8.length;
-        
-        char array[length+1];
+        u1 *bytes = this->constant_pool[attribute_name_index - 1]->info.Utf8.bytes;
+        u2 length = this->constant_pool[attribute_name_index - 1]->info.Utf8.length;
+
+        char array[length + 1];
         memcpy(array, bytes, length);
 
         array[length] = '\0';
@@ -338,74 +347,81 @@ AttributeInfo * ClassFile::CreateAttributeInfo(ifstream &file, u2 attributes_cou
         string name = array;
 
         cout << name << endl;
-    
+
         // cout << name << endl;
-        if(name == "SourceFile")
+        if (name == "SourceFile")
         {
             u2 sourcefile_index = ReadFile::u2Read(file);
             attributes[i].info.SourceFile.sourcefile_index = sourcefile_index;
         }
-        else if(name == "ConstantValue"){
+        else if (name == "ConstantValue")
+        {
             attributes[i].info.ConstantValue.constantvalue_index = ReadFile::u2Read(file);
         }
-        else if(name == "InnerClasses")
+        else if (name == "InnerClasses")
         {
             u2 number_of_classes = ReadFile::u2Read(file);
             attributes[i].info.InnerClasses.number_of_classes = number_of_classes;
 
             attributes[i].info.InnerClasses.classes = new Classes[number_of_classes];
 
-            for(unsigned j = 0; j < number_of_classes; j++){
+            for (unsigned j = 0; j < number_of_classes; j++)
+            {
                 u2 inner_class_info_index = ReadFile::u2Read(file);
                 u2 outer_class_info_index = ReadFile::u2Read(file);
                 u2 inner_name_index = ReadFile::u2Read(file);
                 u2 inner_class_access_flags = ReadFile::u2Read(file);
 
-                attributes[i].info.InnerClasses.classes[j] = Classes(inner_class_info_index,outer_class_info_index,inner_name_index,inner_class_access_flags);
+                attributes[i].info.InnerClasses.classes[j] = Classes(inner_class_info_index, outer_class_info_index, inner_name_index, inner_class_access_flags);
             }
-        } 
-        else if (name == "Code"){
-            attributes[i].info.Code.max_stack = ReadFile::u2Read(file);
-                    attributes[i].info.Code.max_locals = ReadFile::u2Read(file);
-                    attributes[i].info.Code.code_length = ReadFile::u4Read(file);
-
-                    u1 *code = new u1[attributes[i].info.Code.code_length];
-                    for (unsigned k = 0; k < attributes[i].info.Code.code_length; k++){
-                        u1 opcode = ReadFile::u1Read(file);
-                        code[k] = opcode;
-                    }
-
-                    attributes[i].info.Code.code = code;
-
-                    attributes[i].info.Code.exception_table_length = ReadFile::u2Read(file);
-                    
-                    ExceptionHandler *ExceptionTable = new ExceptionHandler[attributes[i].info.Code.exception_table_length];
-                    for (unsigned k = 0; k < attributes[i].info.Code.exception_table_length; k++){
-                        u2 start_pc = ReadFile::u2Read(file);
-                        u2 end_pc = ReadFile::u2Read(file);
-                        u2 handler_pc = ReadFile::u2Read(file);
-                        u2 catch_type = ReadFile::u2Read(file);
-
-                        ExceptionHandler handler = ExceptionHandler(start_pc, end_pc, handler_pc, catch_type);
-                        ExceptionTable[k] = handler;
-                    }
-                    attributes[i].info.Code.exception_table = ExceptionTable;
-
-                    attributes[i].info.Code.attributes_count = ReadFile::u2Read(file);
-                    // cout << "Entrando Atribute via Code" << endl;
-                    attributes[i].info.Code.attributes = CreateAttributeInfo(file, attributes[i].info.Code.attributes_count);
         }
-        else if(name == "Exceptions"){
+        else if (name == "Code")
+        {
+            attributes[i].info.Code.max_stack = ReadFile::u2Read(file);
+            attributes[i].info.Code.max_locals = ReadFile::u2Read(file);
+            attributes[i].info.Code.code_length = ReadFile::u4Read(file);
+
+            u1 *code = new u1[attributes[i].info.Code.code_length];
+            for (unsigned k = 0; k < attributes[i].info.Code.code_length; k++)
+            {
+                u1 opcode = ReadFile::u1Read(file);
+                code[k] = opcode;
+            }
+
+            attributes[i].info.Code.code = code;
+
+            attributes[i].info.Code.exception_table_length = ReadFile::u2Read(file);
+
+            ExceptionHandler *ExceptionTable = new ExceptionHandler[attributes[i].info.Code.exception_table_length];
+            for (unsigned k = 0; k < attributes[i].info.Code.exception_table_length; k++)
+            {
+                u2 start_pc = ReadFile::u2Read(file);
+                u2 end_pc = ReadFile::u2Read(file);
+                u2 handler_pc = ReadFile::u2Read(file);
+                u2 catch_type = ReadFile::u2Read(file);
+
+                ExceptionHandler handler = ExceptionHandler(start_pc, end_pc, handler_pc, catch_type);
+                ExceptionTable[k] = handler;
+            }
+            attributes[i].info.Code.exception_table = ExceptionTable;
+
+            attributes[i].info.Code.attributes_count = ReadFile::u2Read(file);
+            // cout << "Entrando Atribute via Code" << endl;
+            attributes[i].info.Code.attributes = CreateAttributeInfo(file, attributes[i].info.Code.attributes_count);
+        }
+        else if (name == "Exceptions")
+        {
             u2 number_of_exceptions = ReadFile::u2Read(file);
             attributes[i].info.Exceptions.number_of_exceptions = number_of_exceptions;
             attributes[i].info.Exceptions.exception_index_table = new u2[number_of_exceptions];
-            for(unsigned j = 0; j < number_of_exceptions; j++){
+            for (unsigned j = 0; j < number_of_exceptions; j++)
+            {
                 attributes[i].info.Exceptions.exception_index_table[j] = ReadFile::u2Read(file);
             }
         }
         else
         {
-            for (unsigned j = 0 ; j < attributes[i].attribute_length; j++)
+            for (unsigned j = 0; j < attributes[i].attribute_length; j++)
             {
                 ReadFile::u1Read(file);
             }
