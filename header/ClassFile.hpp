@@ -34,6 +34,9 @@ private:
 
 public:
     ClassFile(string file);
+    void CreateConstantPool(ifstream &file);
+    void CreateInterfaces(ifstream &file);
+    void CreateFieldInfo(ifstream &file);
 };
 
 #endif
