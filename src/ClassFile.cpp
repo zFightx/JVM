@@ -177,6 +177,7 @@ ClassFile::ClassFile(string file)
             u2 attribute_name_index = ReadFile::u2Read(file_stream);
             u4 attribute_length = ReadFile::u4Read(file_stream);
             AttributeInfo *attribute = new AttributeInfo(attribute_name_index, attribute_length);
+
             attribute->info.ConstantValue.constantvalue_index = ReadFile::u2Read(file_stream);
             field->attributes.push_back(attribute);
         }
