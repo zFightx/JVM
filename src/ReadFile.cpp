@@ -12,7 +12,7 @@ u2 ReadFile::u2Read(ifstream &file)
     u2 u2;
     file.read((char *)&u2, sizeof(u2));
     u2 = ((u2 & 0xFF) << 8) | ((u2 & 0xFF00) >> 8); // swap bytes to big endian
-    cout << "u2Read: " << hex << u2 << endl;
+    // cout << "u2Read: " << hex << u2 << endl;
     return u2;
 }
 
@@ -28,8 +28,8 @@ u4 ReadFile::u4Read(ifstream &file)
     u4 rightmostByte = (bytes4 & 0xFF000000) >> 24;
     u4 result = leftmostByte | leftMiddleByte | rightMiddleByte | rightmostByte;
 
-    cout << "bytes4: " << hex << result << endl;
-    return bytes4;
+    // cout << "bytes4: " << hex << result << endl;
+    return result;
 }
 
 u8 ReadFile::u8Read(ifstream &file)
@@ -43,7 +43,7 @@ u8 ReadFile::u8Read(ifstream &file)
         byte = u1Read(file);
         bytes8 = (bytes8 << 8) | byte;
     }
-    cout << "bytes8: " << hex << bytes8 << endl;
+    // cout << "bytes8: " << hex << bytes8 << endl;
 
     return bytes8;
 }
