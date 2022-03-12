@@ -387,64 +387,68 @@ void ClassFile::PrintMethodInfo()
     cout << "----- Methods -----" << endl;
     cout << "Quantidade de metodos: " << endl;
     cout << methods_count << endl;
+
+    string name;
     vector<MethodInfo *> methods = this->methods;
     for (unsigned i = 0; i < methods_count; i++)
     {
         u2 name_index = methods[i]->name_index;
-        vector<CpInfo *> constant_pool = this->constant_pool;
-        u1 *bytes = constant_pool[name_index - 1]->info.Utf8.bytes;
-        u2 length = constant_pool[name_index - 1]->info.Utf8.length;
-        cout << "[" << i << "]" << ReadFile::readByteString(bytes, length) << endl;
+        CpInfo *utf8 = this->constant_pool[name_index - 1];
+        u1 *bytes = utf8->info.Utf8.bytes;
+        u2 length = utf8->info.Utf8.length;
+        name = ReadFile::readByteString(bytes, length);
+        cout << "[" << i << "]" << name << endl;
     }
 
     cout << "Selecione o metodo que deseja inspecionar: " << endl;
-    int selectedMethod;
-    cin >> selectedMethod;
-    for (unsigned i = 0; i < this->methods_count; i++)
+    int selectedMethodNumber;
+    cin >> selectedMethodNumber;
+
+    cout << "----- Metodo Selecionado -----" << endl;
+    MethodInfo *selectedMethod = methods[selectedMethodNumber];
+    name = ReadFile::readByteString(constant_pool[selectedMethod->name_index - 1]->info.Utf8.bytes, constant_pool[selectedMethod->name_index - 1]->info.Utf8.length);
+    cout << "Acc. flags: " << selectedMethod->access_flags << endl;
+    cout << "Name index: " << selectedMethod->name_index << endl;
+    cout << "Descr. index: " << selectedMethod->descriptor_index << endl;
+    cout << "Attr. Count: " << selectedMethod->attributes_count << endl;
+
+    for (unsigned j = 0; j < selectedMethod->attributes_count; j++)
     {
-        cout << "Acc. flags: " << this->methods[i]->access_flags << endl;
-        cout << "Name index: " << this->methods[i]->name_index << ReadFile::readByteString(this->constant_pool[this->methods[i]->name_index]->info.Utf8.bytes, this->constant_pool[this->methods[i]->name_index]->info.Utf8.length) << endl;
-        cout << "Descr. index: " << this->methods[i]->descriptor_index << endl;
-        cout << "Attr. Count: " << this->methods[i]->attributes_count << endl;
-
-        for (unsigned j = 0; j < this->methods[i]->attributes_count; j++)
+        cout << "Attr. Name I: " << selectedMethod->attributes[j]->attribute_name_index << endl;
+        cout << "Attr. Length: " << selectedMethod->attributes[j]->attribute_length << endl;
+        cout << "Max Stack"
+             << ": " << selectedMethod->attributes[j]->info.Code.max_stack << endl;
+        cout << "Max Locals"
+             << ": " << selectedMethod->attributes[j]->info.Code.max_locals << endl;
+        cout << "Code Length"
+             << ": " << selectedMethod->attributes[j]->info.Code.code_length << endl;
+        for (unsigned k = 0; k < selectedMethod->attributes[j]->info.Code.code_length; k++)
         {
-            cout << "Attr. Name I: " << this->methods[i]->attributes[j]->attribute_name_index << endl;
-            cout << "Attr. Length: " << this->methods[i]->attributes[j]->attribute_length << endl;
-            cout << "Max Stack"
-                 << ": " << this->methods[i]->attributes[j]->info.Code.max_stack << endl;
-            cout << "Max Locals"
-                 << ": " << this->methods[i]->attributes[j]->info.Code.max_locals << endl;
-            cout << "Code Length"
-                 << ": " << this->methods[i]->attributes[j]->info.Code.code_length << endl;
-            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.code_length; k++)
-            {
-                cout << "Code: " << hex << (int)this->methods[i]->attributes[j]->info.Code.code[k] << endl;
-            }
+            cout << "Code: " << hex << (int)selectedMethod->attributes[j]->info.Code.code[k] << endl;
+        }
 
-            cout << "Exception Table Length"
-                 << ": " << this->methods[i]->attributes[j]->info.Code.exception_table_length << endl;
-            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.exception_table_length; k++)
-            {
-                cout << "Except Table start pc"
-                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].start_pc << endl;
-                cout << "Except Table end pc"
-                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].end_pc << endl;
-                cout << "Except Table handler pc"
-                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].handler_pc << endl;
-                cout << "Except Table catch type"
-                     << ": " << this->methods[i]->attributes[j]->info.Code.exception_table[k].catch_type << endl;
-            }
+        cout << "Exception Table Length"
+             << ": " << selectedMethod->attributes[j]->info.Code.exception_table_length << endl;
+        for (unsigned k = 0; k < selectedMethod->attributes[j]->info.Code.exception_table_length; k++)
+        {
+            cout << "Except Table start pc"
+                 << ": " << selectedMethod->attributes[j]->info.Code.exception_table[k].start_pc << endl;
+            cout << "Except Table end pc"
+                 << ": " << selectedMethod->attributes[j]->info.Code.exception_table[k].end_pc << endl;
+            cout << "Except Table handler pc"
+                 << ": " << selectedMethod->attributes[j]->info.Code.exception_table[k].handler_pc << endl;
+            cout << "Except Table catch type"
+                 << ": " << selectedMethod->attributes[j]->info.Code.exception_table[k].catch_type << endl;
+        }
 
-            cout << "Attributes Count"
-                 << ": " << this->methods[i]->attributes[j]->info.Code.attributes_count << endl;
-            for (unsigned k = 0; k < this->methods[i]->attributes[j]->info.Code.attributes_count; k++)
-            {
-                cout << "Attr. name index"
-                     << ": " << this->methods[i]->attributes[j]->info.Code.attributes[k].attribute_name_index << endl;
-                cout << "Attr. length"
-                     << ": " << this->methods[i]->attributes[j]->info.Code.attributes[k].attribute_length << endl;
-            }
+        cout << "Attributes Count"
+             << ": " << selectedMethod->attributes[j]->info.Code.attributes_count << endl;
+        for (unsigned k = 0; k < selectedMethod->attributes[j]->info.Code.attributes_count; k++)
+        {
+            cout << "Attr. name index"
+                 << ": " << selectedMethod->attributes[j]->info.Code.attributes[k].attribute_name_index << endl;
+            cout << "Attr. length"
+                 << ": " << selectedMethod->attributes[j]->info.Code.attributes[k].attribute_length << endl;
         }
     }
 }
