@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+
 #include "header/ClassFile.hpp"
 #include "header/Dados.hpp"
 #include "header/ReadFile.hpp"
@@ -32,13 +33,14 @@ void printBinaryFile(string fileName)
 
 int main()
 {
+    setlocale(LC_ALL, "Portuguese");
     // ClassFile *cf = new ClassFile();
     // ifstream file("Simple.class", ios::binary);
 
     ClassFile *class_file = new ClassFile("Pig.class");
-    
 
-    delete class_file;
+    u1 bytes[9] = {0x50, 0x69, 0x67, 0x73, 0xC3, 0x83, 0xC2, 0xA7, 0x61};
+    ReadFile::readByteString(bytes, 9);
 
     return 0;
 }
