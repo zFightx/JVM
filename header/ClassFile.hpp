@@ -30,7 +30,7 @@ private:
     u2 methods_count;
     vector<MethodInfo *> methods;
     u2 attributes_count;
-    AttributeInfo * attributes;
+    AttributeInfo *attributes;
 
 public:
     ClassFile(string file);
@@ -39,8 +39,7 @@ public:
     void CreateFieldInfo(ifstream &file);
     void CreateMethodInfo(ifstream &file);
 
-    AttributeInfo * CreateAttributeInfo(ifstream &file, u2 attributes_count);
-
+    AttributeInfo *CreateAttributeInfo(ifstream &file, u2 attributes_count);
 
     void MenuClassFile();
     void GeneralInformation();
@@ -48,7 +47,8 @@ public:
     void MenuInterfaces();
     void MenuFields();
     void MenuAttributes();
-    void PrintAttributes(AttributeInfo * attributes, u2 attributes_count);
+    void PrintAttributes(AttributeInfo *attributes, u2 attributes_count);
+    void PrintMethodInfo();
 };
 
 #endif
