@@ -241,7 +241,7 @@ void ClassFile::MenuConstantPool(){
         switch (cp->tag)
         {
             case CONSTANT_Class: {
-                cout << "[" << i+1 << "]" << " CONSTANT_Class_info" << endl;
+                cout << "[" << dec << i+1 << "]" << " CONSTANT_Class_info" << endl;
                 break;
             }
             case CONSTANT_Fieldref: {
