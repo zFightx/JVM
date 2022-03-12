@@ -37,6 +37,8 @@ int main()
 
     ClassFile *class_file = new ClassFile("Pig.class");
     
+    class_file->MenuClassFile();
+
 
     delete class_file;
 

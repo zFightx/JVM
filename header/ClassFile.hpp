@@ -40,6 +40,15 @@ public:
     void CreateMethodInfo(ifstream &file);
 
     AttributeInfo * CreateAttributeInfo(ifstream &file, u2 attributes_count);
+
+
+    void MenuClassFile();
+    void GeneralInformation();
+    void MenuConstantPool();
+    void MenuInterfaces();
+    void MenuFields();
+    void MenuAttributes();
+    void PrintAttributes(AttributeInfo * attributes, u2 attributes_count);
 };
 
 #endif

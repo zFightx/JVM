@@ -10,7 +10,8 @@
     "array": "cpp",
     "deque": "cpp",
     "string": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "string_view": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }

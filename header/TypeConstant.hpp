@@ -31,7 +31,7 @@ struct CONSTANT_InterfaceMethodref_info
 
 struct CONSTANT_NameAndType_info
 {
-    u2 class_index;
+    u2 name_index;
     u2 descriptor_index;
 };
 
