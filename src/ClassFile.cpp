@@ -966,7 +966,7 @@ void ClassFile::PrintAttributes(AttributeInfo *attributes, u2 attributes_count)
 void ClassFile::CreateConstantPool(ifstream &file)
 {
     this->constant_pool_count = ReadFile::u2Read(file);
-    cout << "Count Pool " << this->constant_pool_count << endl;
+    
     for (unsigned i = 0; i < this->constant_pool_count - 1; i++)
     {
         u1 tag = ReadFile::u1Read(file);
@@ -1167,9 +1167,8 @@ AttributeInfo *ClassFile::CreateAttributeInfo(ifstream &file, u2 attributes_coun
         
         string name = ReadFile::readByteString(bytes, length);
 
-        cout << name << endl;
-
         // cout << name << endl;
+
         if (name == "SourceFile")
         {
             u2 sourcefile_index = ReadFile::u2Read(file);
@@ -1247,7 +1246,7 @@ AttributeInfo *ClassFile::CreateAttributeInfo(ifstream &file, u2 attributes_coun
                 ReadFile::u1Read(file);
             }
         }
-        // attributes.push_back(attribute);
+        
     }
     return attributes;
 }
