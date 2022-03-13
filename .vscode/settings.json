@@ -8,7 +8,8 @@
     "deque": "cpp",
     "string": "cpp",
     "vector": "cpp",
-    "string_view": "cpp"
+    "string_view": "cpp",
+    "map": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }

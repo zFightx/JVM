@@ -38,8 +38,10 @@ int main()
 
     // ClassFile *cf = new ClassFile();
     // ifstream file("Simple.class", ios::binary);
-
-    ClassFile *class_file = new ClassFile("Pig.class");
+    string file = "";
+    cout << "Por favor, digite o nome do arquivo: ";
+    cin >> file;
+    ClassFile *class_file = new ClassFile(file);
 
     class_file->MenuClassFile();
 
