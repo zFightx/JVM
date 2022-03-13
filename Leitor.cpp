@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -34,6 +35,7 @@ void printBinaryFile(string fileName)
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
+
     // ClassFile *cf = new ClassFile();
     // ifstream file("Simple.class", ios::binary);
 

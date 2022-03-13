@@ -47,8 +47,9 @@ public:
     void MenuInterfaces();
     void MenuFields();
     void MenuAttributes();
+    void MenuMethodInfo();
     void PrintAttributes(AttributeInfo *attributes, u2 attributes_count);
-    void PrintMethodInfo();
+    void PrintAccessFlags(u2 access_flags, int flagType);
 };
 
 #endif

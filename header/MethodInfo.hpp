@@ -16,7 +16,7 @@ public:
     u2 name_index;
     u2 descriptor_index;
     u2 attributes_count;
-    vector<AttributeInfo *> attributes;
+    AttributeInfo *attributes;
     MethodInfo(u2 access_flags, u2 name_index, u2 descriptor_index, u2 attributes_count);
 };
 
