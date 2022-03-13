@@ -308,7 +308,7 @@ void ClassFile::MenuConstantPool()
     while (opcao != 0)
     {
         cout << endl
-             << "Digite uma opcao: ";
+             << "Digite uma opcao de Constant Pool: ";
         cin >> opcao;
 
         if (opcao - 1 >= 0 && opcao - 1 < this->constant_pool_count - 1)
@@ -534,7 +534,7 @@ void ClassFile::MenuInterfaces()
     while (opcao != 0)
     {
         cout << endl
-             << "Digite uma opcao: ";
+             << "Digite uma opcao de Interfaces: ";
         cin >> opcao;
 
         if (opcao - 1 >= 0 && opcao - 1 < this->interfaces_count)
@@ -570,7 +570,7 @@ void ClassFile::MenuFields()
     while (opcao != 0)
     {
         cout << endl
-             << "Digite uma opcao: ";
+             << "Digite uma opcao de Fields: ";
         cin >> opcao;
 
         if (opcao - 1 >= 0 && opcao - 1 < this->fields_count)
