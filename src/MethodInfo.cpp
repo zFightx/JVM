@@ -8,3 +8,7 @@ MethodInfo::MethodInfo(u2 access_flags, u2 name_index, u2 descriptor_index, u2 a
     this->descriptor_index = descriptor_index;
     this->attributes_count = attributes_count;
 }
+
+MethodInfo::~MethodInfo(){
+    // delete this->attributes;
+}

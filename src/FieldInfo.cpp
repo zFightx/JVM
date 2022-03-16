@@ -7,3 +7,7 @@ FieldInfo::FieldInfo(u2 access_flags, u2 name_index, u2 descriptor_index, u2 att
     this->descriptor_index = descriptor_index;
     this->attributes_count = attributes_count;
 }
+
+FieldInfo::~FieldInfo(){
+    // delete this->attributes;
+}

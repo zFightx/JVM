@@ -13,6 +13,7 @@ class Opcodes{
         static map<int, pair<string, int> > opcodes;
 
         static void CreateOpcodes();
+        static void PrintOpcodes(u1* code, int size);
 
 
 };

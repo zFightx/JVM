@@ -34,12 +34,14 @@ private:
 
 public:
     ClassFile(string file);
+    ~ClassFile();
     void CreateConstantPool(ifstream &file);
     void CreateInterfaces(ifstream &file);
     void CreateFieldInfo(ifstream &file);
     void CreateMethodInfo(ifstream &file);
 
     AttributeInfo *CreateAttributeInfo(ifstream &file, u2 attributes_count);
+    void DeleteAttributes(AttributeInfo *attributes, u2 attributes_count);
 
     void MenuClassFile();
     void GeneralInformation();

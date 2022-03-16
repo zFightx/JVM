@@ -20,5 +20,7 @@ int main()
 
     class_file->MenuClassFile();
 
+    delete class_file;
+
     return 0;
 }

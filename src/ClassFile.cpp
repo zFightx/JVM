@@ -41,6 +41,54 @@ ClassFile::ClassFile(string file)
 
     this->attributes_count = ReadFile::u2Read(file_stream);
     this->attributes = this->CreateAttributeInfo(file_stream, this->attributes_count);
+
+    file_stream.close();
+} 
+
+ClassFile::~ClassFile(){
+    for(unsigned i = 0; this->constant_pool.size(); i++){
+        delete this->constant_pool[i];
+    }
+
+    for(unsigned i = 0; this->fields.size(); i++){
+        this->DeleteAttributes(this->fields[i]->attributes, this->fields[i]->attributes_count);
+        delete this->fields[i];
+    }
+
+    for(unsigned i = 0; this->methods.size(); i++){
+        this->DeleteAttributes(this->methods[i]->attributes, this->methods[i]->attributes_count);
+
+        delete this->methods[i];
+    }
+
+    this->DeleteAttributes(this->attributes, this->attributes_count);
+}
+
+void ClassFile::DeleteAttributes(AttributeInfo *attributes, u2 attributes_count){
+    for(unsigned i = 0; i <attributes_count; i++){
+        u2 attribute_name_index = attributes[i].attribute_name_index;
+
+        u1 *bytes = this->constant_pool[attribute_name_index - 1]->info.Utf8.bytes;
+        u2 length = this->constant_pool[attribute_name_index - 1]->info.Utf8.length;
+        
+        string name = ReadFile::readByteString(bytes, length);
+
+        if (name == "InnerClasses")
+        {
+            delete attributes[i].info.InnerClasses.classes;
+        }
+        else if (name == "Code")
+        {
+            delete attributes[i].info.Code.code;
+            delete attributes[i].info.Code.exception_table;
+
+            this->DeleteAttributes(attributes[i].info.Code.attributes, attributes[i].info.Code.attributes_count);
+        }
+        else if (name == "Exceptions")
+        {
+            delete attributes[i].info.Exceptions.exception_index_table;
+        }
+    }
 }
 //////////////////////////////////////////////////////////////////////////////////
 

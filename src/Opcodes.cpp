@@ -174,8 +174,8 @@ void Opcodes::CreateOpcodes()
     opcodes_map[0xa7] = make_pair("goto", 2);
     opcodes_map[0xa8] = make_pair("jsr", 2);
     opcodes_map[0xa9] = make_pair("ret", 1);
-    opcodes_map[0xaa] = make_pair("tableswitch", 5);  // REVISAR
-    opcodes_map[0xab] = make_pair("lookupswitch", 4); // REVISAR
+    opcodes_map[0xaa] = make_pair("tableswitch", -1);  // REVISAR
+    opcodes_map[0xab] = make_pair("lookupswitch", -1); // REVISAR
     opcodes_map[0xac] = make_pair("ireturn", 0);
     opcodes_map[0xad] = make_pair("lreturn", 0);
     opcodes_map[0xae] = make_pair("freturn", 0);
@@ -204,6 +204,69 @@ void Opcodes::CreateOpcodes()
     opcodes_map[0xc5] = make_pair("multianewarray", 3); // REVISAR
     opcodes_map[0xc6] = make_pair("ifnull", 2);
     opcodes_map[0xc7] = make_pair("ifnonnull", 2);
-    opcodes_map[0xc8] = make_pair("goto_w", 1);
-    opcodes_map[0xc9] = make_pair("jsr_w", 1);
+    opcodes_map[0xc8] = make_pair("goto_w", 4);
+    opcodes_map[0xc9] = make_pair("jsr_w", 4);
 }
+
+void Opcodes::PrintOpcodes(u1* code, int size){
+    
+    
+    map<int, pair<string,int>> opcodes_map = opcodes;
+
+    for (int i = 0; i < size; i++){
+        u1 opcode = code[i];
+        string opcode_mnemonic = opcodes_map[opcode].first;
+        int opcode_argument_bytes = opcodes_map[opcode].second;
+    
+
+    switch(opcode_argument_bytes){
+        
+
+        case 2:
+            switch(opcode){
+                case 0x11:{
+                    u1 byte1 = code[i+1];
+                    u1 byte2 = code[i+2];
+                    int16_t value = (byte1 << 8) | byte2;
+                    cout << opcode_mnemonic << " " << value << endl;
+
+                    break;
+                }
+                case 0x13:{
+                    u1 byte1 = code[i+1];
+                    u1 byte2 = code[i+2];
+                    uint16_t value = (byte1 << 8) | byte2;
+                    cout << opcode_mnemonic << " " << value << endl;
+
+                    break;
+                }
+            
+
+                    
+
+                case 0x9f:
+                case 0xa0:
+                case 0xa1:
+                case 0xa2:
+                case 0xa3:
+                case 0xa4:
+                case 0xa5:
+                case 0xa6:{
+                    
+                    u1 branchbyte1 = code[i+1];
+                    u1 branchbyte2 = code[i+2];
+                    int16_t offset = (branchbyte1 << 8) | branchbyte2;
+                    cout << opcode_mnemonic << " " << offset << endl;
+                    break;
+                }
+            
+                    
+                
+            }
+        
+
+    }
+    }
+
+}
+
