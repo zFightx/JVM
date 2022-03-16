@@ -224,22 +224,21 @@ void Opcodes::PrintOpcodes(u1* code, int size){
 
         case 2:
             switch(opcode){
-                case 0x11:{
+                case 0x11:{ // sipush
                     u1 byte1 = code[i+1];
                     u1 byte2 = code[i+2];
                     int16_t value = (byte1 << 8) | byte2;
                     cout << opcode_mnemonic << " " << value << endl;
-
                     break;
                 }
-                case 0x13:{
+                case 0x13:
+                case 0x14:{ // ldc2_w
                     u1 byte1 = code[i+1];
                     u1 byte2 = code[i+2];
                     uint16_t value = (byte1 << 8) | byte2;
                     cout << opcode_mnemonic << " " << value << endl;
-
                     break;
-                }
+                } 
             
 
                     
