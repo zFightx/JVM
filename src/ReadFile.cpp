@@ -132,6 +132,7 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
         string descriptor = ReadFile::readByteString(bytes, length);
 
         str = name + "." + name_and_type + " : " + descriptor;
+        break;
     }
     case CONSTANT_Methodref:
     {
@@ -152,7 +153,30 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
         string descriptor = ReadFile::readByteString(bytes, length);
 
         str = name + "." + name_and_type + " : " + descriptor;
+        break;
     }
+    case CONSTANT_InterfaceMethodref:
+    {
+        u2 class_name_index = constant_pool[constant_info->info.InterfaceMethodref.class_index - 1]->info.Class.name_index;
+        u1 *bytes = constant_pool[class_name_index - 1]->info.Utf8.bytes;
+        u2 length = constant_pool[class_name_index - 1]->info.Utf8.length;
+        string name = ReadFile::readByteString(bytes, length);
+
+        u2 name_index = constant_pool[constant_info->info.InterfaceMethodref.name_and_type_index - 1]->info.NameAndType.name_index;
+        u2 descriptor_index = constant_pool[constant_info->info.InterfaceMethodref.name_and_type_index - 1]->info.NameAndType.descriptor_index;
+        bytes = constant_pool[name_index - 1]->info.Utf8.bytes;
+        length = constant_pool[name_index - 1]->info.Utf8.length;
+        string name_and_type = ReadFile::readByteString(bytes, length);
+
+        bytes = constant_pool[descriptor_index - 1]->info.Utf8.bytes;
+        length = constant_pool[descriptor_index - 1]->info.Utf8.length;
+        string descriptor = ReadFile::readByteString(bytes, length);
+
+        str = name + "." + name_and_type + " : " + descriptor;
+
+        break;
+    }
+    
     case CONSTANT_Float:
     {
         int bits = (int)constant_info->info.Float.bytes;

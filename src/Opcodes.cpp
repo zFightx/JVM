@@ -240,6 +240,9 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
                 u1 byte1 = code[i + 1];
                 u1 byte2 = code[i + 2];
                 uint16_t index = (byte1 << 8) | byte2;
+                if(opcode == 0x13){
+                    
+                }
                 string str = ReadFile::readString(index, constant_pool);
                 cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
                 break;
