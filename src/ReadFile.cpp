@@ -288,3 +288,13 @@ uint16_t ReadFile::getCodeUShort(u1 *code, int i )
     uint16_t value = (byte1 << 8) | byte2;
     return value;
 }
+
+int32_t ReadFile::getCodeInt(u1 *code, int i )
+{
+    u1 byte1 = code[i + 1];
+    u1 byte2 = code[i + 2];
+    u1 byte3 = code[i + 3];
+    u1 byte4 = code[i + 4];
+    int32_t value = (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
+    return value;
+}

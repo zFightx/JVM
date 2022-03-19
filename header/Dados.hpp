@@ -3,8 +3,8 @@
 
 typedef unsigned char u1;
 typedef unsigned short u2;
-typedef unsigned long u4;
-typedef unsigned long long u8;
+typedef unsigned int u4;
+typedef unsigned long u8;
 
 #define CLASS 1
 #define FIELD 2

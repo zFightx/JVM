@@ -1,6 +1,8 @@
 #include "../header/Opcodes.hpp"
 #include "../header/ReadFile.hpp"
 
+using namespace std;
+
 void Opcodes::CreateOpcodes()
 {
     map<int, pair<string, int>> opcodes_map = opcodes;
@@ -190,9 +192,9 @@ void Opcodes::CreateOpcodes()
     opcodes_map[0xb6] = make_pair("invokevirtual", 2);
     opcodes_map[0xb7] = make_pair("invokespecial", 2);
     opcodes_map[0xb8] = make_pair("invokestatic", 2);
-    opcodes_map[0xb9] = make_pair("invokeinterface", 3); // REVISAR
+    opcodes_map[0xb9] = make_pair("invokeinterface", 4); // REVISAR
     // opcodes_map[0xba] = make_pair("invokedynamic", 4 );
-    opcodes_map[0xbb] = make_pair("new", 1);
+    opcodes_map[0xbb] = make_pair("new", 2);
     opcodes_map[0xbc] = make_pair("newarray", 1);
     opcodes_map[0xbd] = make_pair("anewarray", 2);
     opcodes_map[0xbe] = make_pair("arraylength", 0);
@@ -201,7 +203,7 @@ void Opcodes::CreateOpcodes()
     // opcodes_map[0xc1] = make_pair("instanceof", 2 );
     // opcodes_map[0xc2] = make_pair("monitorenter", 0 );
     // opcodes_map[0xc3] = make_pair("monitorexit", 0 );
-    opcodes_map[0xc4] = make_pair("wide", 1);           // REVISAR
+    opcodes_map[0xc4] = make_pair("wide", -1);          // REVISAR
     opcodes_map[0xc5] = make_pair("multianewarray", 3); // REVISAR
     opcodes_map[0xc6] = make_pair("ifnull", 2);
     opcodes_map[0xc7] = make_pair("ifnonnull", 2);
@@ -219,30 +221,130 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
         u1 opcode = code[i];
         string opcode_mnemonic = opcodes_map[opcode].first;
         int opcode_argument_bytes = opcodes_map[opcode].second;
+        cout << i << " " << endl; 
 
         switch (opcode_argument_bytes)
         {
+        case -1:
+        {
+           switch(opcode)
+           {
+               case 0xaa: // tableswitch
+               {
+                   int padding = (4 - ((i+1) % 4)) % 4;
+                   i += padding;
 
+                   int default_offset = ReadFile::getCodeInt(code, i);
+                   i += 4;
+
+                   int low_value = ReadFile::getCodeInt(code, i);
+                   i += 4;
+
+                   int high_value = ReadFile::getCodeInt(code, i);
+                   i += 4;
+
+                   cout << "tableswitch" << low_value << " to " << high_value << ": " << endl;
+
+                   for (int j = low_value; j <= high_value; j++)
+                   {
+                       int offset = ReadFile::getCodeInt(code, i);
+                       i += 4;
+                       cout << j  << ": "<< offset << endl;
+                   }
+
+                   cout << "default: " << default_offset << endl;
+                   break;
+               }
+               
+           } 
+        }
+        case 0:
+        {
+            cout << opcode_mnemonic << endl;
+            break;
+        }
+        case 1:
+        {
+            switch (opcode)
+            {
+            case 0x10: // bipush
+            case 0x12: // ldc
+            {
+                u1 argument = code[i + 1];
+                cout << opcode_mnemonic << " #" << (int)argument << endl;
+                break;
+            }
+
+            case 0x15: // iload
+            case 0x16: // lload
+            case 0x17: // fload
+            case 0x18: // dload
+            case 0x19: // aload
+            case 0x36: // istore
+            case 0x37: // lstore
+            case 0x38: // fstore
+            case 0x39: // dstore
+            case 0x3a: // astore
+            case 0xa9: // ret
+            {
+                u1 argument = code[i + 1];
+                cout << opcode_mnemonic << " " << (int)argument << endl;
+                break;
+            }
+            case 0xbc: // newarray
+            {
+                u1 atype = code[i + 1];
+                string type;
+                switch ((int)atype)
+                {
+                case 4:
+                    type = "(boolean)";
+                    break;
+                case 5:
+                    type = "(char)";
+                    break;
+                case 6:
+                    type = "(float)";
+                    break;
+                case 7:
+                    type = "(double)";
+                    break;
+                case 8:
+                    type = "(byte)";
+                    break;
+                case 9:
+                    type = "(short)";
+                    break;
+                case 10:
+                    type = "(int)";
+                    break;
+                case 11:
+                    type = "(long)";
+                    break;
+                }
+
+                cout << opcode_mnemonic << " " << (int)atype << type << endl;
+                break;
+            }
+            }
+            i = i + 1;
+            break;
+        }
         case 2:
+        {
             switch (opcode)
             {
             case 0x11:
             { // sipush
-                u1 byte1 = code[i + 1];
-                u1 byte2 = code[i + 2];
-                int16_t value = (byte1 << 8) | byte2;
+                int16_t value = ReadFile::getCodeShort(code, i);
                 cout << opcode_mnemonic << " " << value << endl;
                 break;
             }
-            case 0x13: // ldc
+            case 0x13: // ldc_w
             case 0x14:
             { // ldc2_w
-                u1 byte1 = code[i + 1];
-                u1 byte2 = code[i + 2];
-                uint16_t index = (byte1 << 8) | byte2;
-                if(opcode == 0x13){
-                    
-                }
+
+                uint16_t index = ReadFile::getCodeUShort(code, i);
                 string str = ReadFile::readString(index, constant_pool);
                 cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
                 break;
@@ -251,7 +353,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             { // iinc
                 u1 index = code[i + 1];
                 char cons = code[i + 2];
-                cout << opcode_mnemonic << " #" << index << " " << cons << endl;
+                cout << opcode_mnemonic << " " << index << " by " << dec << (int)cons << endl;
                 break;
             }
             case 0x99: // ifeq
@@ -261,9 +363,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             case 0x9d: // ifgt
             case 0x9e:
             { // ifle
-                u1 branchbyte1 = code[i + 1];
-                u1 branchbyte2 = code[i + 2];
-                int16_t value = (branchbyte1 << 8) | branchbyte2;
+                int16_t value = ReadFile::getCodeShort(code, i);
                 cout << opcode_mnemonic << " " << value << endl;
                 break;
             }
@@ -277,22 +377,76 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             case 0xa6:
             {
 
-                u1 branchbyte1 = code[i + 1];
-                u1 branchbyte2 = code[i + 2];
-                int16_t offset = (branchbyte1 << 8) | branchbyte2;
+                int16_t offset = ReadFile::getCodeShort(code, i);
                 cout << opcode_mnemonic << " " << offset << endl;
                 break;
             }
             case 0xa7: // goto
             case 0xa8:
             { // jsr
-                u1 branchbyte1 = code[i + 1];
-                u1 branchbyte2 = code[i + 2];
-                int16_t offset = (branchbyte1 << 8) | branchbyte2;
+                int16_t offset = ReadFile::getCodeShort(code, i);
+                cout << opcode_mnemonic << " " << offset << endl;
+                break;
+            }
+            case 0xb2: // getstatic
+            case 0xb3: // putstatic
+            case 0xb4: // getfield
+            case 0xb5: // putfield
+            case 0xb6: // invokevirtual
+            case 0xb7: // invokespecial
+            case 0xb8: // invokestatic
+            case 0xbb: // new
+            {
+                uint16_t index = ReadFile::getCodeUShort(code, i);
+                string str = ReadFile::readString(index, constant_pool);
+                cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
+                break;
+            }
+
+            case 0xbd: // anewarray
+            {
+                uint16_t index = ReadFile::getCodeUShort(code, i);
+                string str = ReadFile::readString(index, constant_pool);
+                cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
+                break;
+            }
+            case 0xc6: // ifnull
+            {
+
+                int16_t offset = ReadFile::getCodeShort(code, i);
+                cout << opcode_mnemonic << " " << offset << endl;
+                break;
+            }
+            case 0xc7: // ifnonnull
+            {
+                int16_t offset = ReadFile::getCodeShort(code, i);
                 cout << opcode_mnemonic << " " << offset << endl;
                 break;
             }
             }
+            i = i + 2;
+            break;
+        }
+        case 3:
+        { // multianewarray
+            uint16_t index = ReadFile::getCodeUShort(code, i);
+            u1 dimensions = code[i + 3];
+            string str = ReadFile::readString(index, constant_pool);
+            cout << opcode_mnemonic << " #" << index << " " << dimensions << "<" << str << " >" << endl;
+            i = i + 3;
+            break;
+        }
+        case 4:
+        { // invokeinterface
+
+            uint16_t index = ReadFile::getCodeUShort(code, i);
+            u1 count = code[i + 3];
+            u1 zero = code[i + 4];
+            string str = ReadFile::readString(index, constant_pool);
+            cout << opcode_mnemonic << " #" << index << " " << count << "<" << str << " >" << endl;
+            i = i + 4;
+            break;
+        }
         }
     }
 }

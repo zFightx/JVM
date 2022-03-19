@@ -22,6 +22,7 @@ public:
 
     static int16_t getCodeShort(u1 *code, int i);
     static uint16_t getCodeUShort(u1 *code, int i);
+    static int32_t getCodeInt(u1 *code, int i);
 };
 
 #endif

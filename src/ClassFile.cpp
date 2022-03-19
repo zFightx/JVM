@@ -16,6 +16,10 @@ ClassFile::ClassFile(string file)
     this->minor_version = ReadFile::u2Read(file_stream);
     this->major_version = ReadFile::u2Read(file_stream);
 
+    // cout << "Magic: " << hex << (int) this->magic << endl;
+    // cout << "minor_version: " << this->minor_version << endl;
+    // cout << "major_version: " << this->major_version << endl;
+
     this->CreateConstantPool(file_stream);
 
     this->access_flags = ReadFile::u2Read(file_stream);
@@ -34,25 +38,28 @@ ClassFile::ClassFile(string file)
 
 ClassFile::~ClassFile()
 {
-    for (unsigned i = 0; this->constant_pool.size(); i++)
+    this->DeleteAttributes(this->attributes, this->attributes_count);
+
+    // for (unsigned i = 0; this->methods_count; i++)
+    // {
+    //     cout << this->methods[i]->attributes << " | " << this->methods[i]->attributes_count << endl;
+    //     this->DeleteAttributes(this->methods[i]->attributes, this->methods[i]->attributes_count);
+
+    //     delete this->methods[i];
+    // }
+    // for (unsigned i = 0; this->fields_count; i++)
+    // {
+    //     this->DeleteAttributes(this->fields[i]->attributes, this->fields[i]->attributes_count);
+    //     delete this->fields[i];
+    // }
+
+    for (unsigned i = 0; this->constant_pool_count-1; i++)
     {
+        // if(this->constant_pool[i]->tag == 1)
+            // delete [] this->constant_pool[i]->info.Utf8.bytes;
+        
         delete this->constant_pool[i];
     }
-
-    for (unsigned i = 0; this->fields.size(); i++)
-    {
-        this->DeleteAttributes(this->fields[i]->attributes, this->fields[i]->attributes_count);
-        delete this->fields[i];
-    }
-
-    for (unsigned i = 0; this->methods.size(); i++)
-    {
-        this->DeleteAttributes(this->methods[i]->attributes, this->methods[i]->attributes_count);
-
-        delete this->methods[i];
-    }
-
-    this->DeleteAttributes(this->attributes, this->attributes_count);
 }
 
 void ClassFile::DeleteAttributes(AttributeInfo *attributes, u2 attributes_count)
@@ -68,18 +75,17 @@ void ClassFile::DeleteAttributes(AttributeInfo *attributes, u2 attributes_count)
 
         if (name == "InnerClasses")
         {
-            delete attributes[i].info.InnerClasses.classes;
+            delete [] attributes[i].info.InnerClasses.classes;
         }
         else if (name == "Code")
         {
-            delete attributes[i].info.Code.code;
-            delete attributes[i].info.Code.exception_table;
-
             this->DeleteAttributes(attributes[i].info.Code.attributes, attributes[i].info.Code.attributes_count);
+            delete [] attributes[i].info.Code.code;
+            delete [] attributes[i].info.Code.exception_table;
         }
         else if (name == "Exceptions")
         {
-            delete attributes[i].info.Exceptions.exception_index_table;
+            delete [] attributes[i].info.Exceptions.exception_index_table;
         }
     }
 }
@@ -1330,6 +1336,7 @@ void ClassFile::CreateConstantPool(ifstream &file)
         }
     }
 }
+
 void ClassFile::CreateInterfaces(ifstream &file)
 {
     this->interfaces_count = ReadFile::u2Read(file);
