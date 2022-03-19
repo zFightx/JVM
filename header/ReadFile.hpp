@@ -19,6 +19,9 @@ public:
 
     static string readByteString(u1 *bytes, u2 length);
     static string readString(int index, vector<CpInfo *> constantPool);
+
+    static int16_t getCodeShort(u1 *code, int i);
+    static uint16_t getCodeUShort(u1 *code, int i);
 };
 
 #endif

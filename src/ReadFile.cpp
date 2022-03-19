@@ -176,7 +176,20 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
 
         break;
     }
-    
+    case CONSTANT_String:
+    {
+        u2 string_index = constant_info->info.String.string_index;
+        u1 *bytes = constant_pool[string_index - 1]->info.Utf8.bytes;
+        u2 length = constant_pool[string_index - 1]->info.Utf8.length;
+        str = ReadFile::readByteString(bytes, length);
+        break;
+    }
+    case CONSTANT_Integer:
+    {
+        u4 value = (int)constant_info->info.Integer.bytes;
+        str = to_string(value);
+        break;
+    }
     case CONSTANT_Float:
     {
         int bits = (int)constant_info->info.Float.bytes;
@@ -204,8 +217,74 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
 
             str = to_string((float)result);
         }
+        break;
     }
+    case CONSTANT_Long:
+    {
+        u4 high_bytes = constant_info->info.Long.high_bytes;
+        u4 low_bytes = constant_info->info.Long.low_bytes;
+
+        long long value = ((long long)high_bytes << 32) + low_bytes;
+
+        str = to_string(value);
+        
+        break;
+    }
+    case CONSTANT_Double:
+    {
+        u4 high_bytes = constant_info->info.Double.high_bytes;
+        u4 low_bytes = constant_info->info.Double.low_bytes;
+
+        long long bits = ((long long)high_bytes << 32) + low_bytes;
+
+        long s = ((bits >> 63) == 0) ? 1 : -1;
+        long e = ((bits >> 52) & (long)0x7ffL);
+        long long m = (e == 0) ? (bits & 0xfffffffffffffL) << 1 : (bits & 0xfffffffffffffL) | 0x10000000000000L;
+
+        double result = s * m * pow(2, e - 1075);
+
+        str = to_string(result);
+
+        break;
+    }
+    case CONSTANT_NameAndType:{
+        u2 name_index = constant_info->info.NameAndType.name_index;
+        u2 descriptor_index = constant_info->info.NameAndType.descriptor_index;
+        u1 *bytes = constant_pool[name_index - 1]->info.Utf8.bytes;
+        u2 length = constant_pool[name_index - 1]->info.Utf8.length;
+        string name = ReadFile::readByteString(bytes, length);
+
+        bytes = constant_pool[descriptor_index - 1]->info.Utf8.bytes;
+        length = constant_pool[descriptor_index - 1]->info.Utf8.length;
+        string descriptor = ReadFile::readByteString(bytes, length);
+
+        str = name + " : " + descriptor;
+        break;
+
+    }
+    case CONSTANT_Utf8:{
+        u1 *bytes = constant_info->info.Utf8.bytes;
+        u2 length = constant_info->info.Utf8.length;
+        str = ReadFile::readByteString(bytes, length);
+        break;
     }
 
+}
     return str;
+}
+
+int16_t ReadFile::getCodeShort(u1 *code, int i )
+{
+    u1 byte1 = code[i + 1];
+    u1 byte2 = code[i + 2];
+    int16_t value = (byte1 << 8) | byte2;
+    return value;
+}
+
+uint16_t ReadFile::getCodeUShort(u1 *code, int i )
+{
+    u1 byte1 = code[i + 1];
+    u1 byte2 = code[i + 2];
+    uint16_t value = (byte1 << 8) | byte2;
+    return value;
 }
