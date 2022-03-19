@@ -1,6 +1,8 @@
 #include "../header/ReadFile.hpp"
+#include "../header/Dados.hpp"
 
 #include <sstream>
+#include <cmath>
 
 u1 ReadFile::u1Read(ifstream &file)
 {
@@ -91,6 +93,95 @@ string ReadFile::readByteString(u1 *bytes, u2 length)
         }
     }
     str[length] = '\0';
+
+    return str;
+}
+
+string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
+{
+    CpInfo *constant_info = constant_pool[index - 1];
+    u1 tag = constant_info->tag;
+    u1 *bytes;
+    u2 length;
+    string str;
+
+    switch (tag)
+    {
+    case CONSTANT_Class:
+    {
+        bytes = constant_info->info.Utf8.bytes;
+        length = constant_info->info.Utf8.length;
+        str = ReadFile::readByteString(bytes, length);
+        break;
+    }
+    case CONSTANT_Fieldref:
+    {
+        u2 class_name_index = constant_pool[constant_info->info.Fieldref.class_index - 1]->info.Class.name_index;
+        u1 *bytes = constant_pool[class_name_index - 1]->info.Utf8.bytes;
+        u2 length = constant_pool[class_name_index - 1]->info.Utf8.length;
+        string name = ReadFile::readByteString(bytes, length);
+
+        u2 name_index = constant_pool[constant_info->info.Fieldref.name_and_type_index - 1]->info.NameAndType.name_index;
+        u2 descriptor_index = constant_pool[constant_info->info.Fieldref.name_and_type_index - 1]->info.NameAndType.descriptor_index;
+        bytes = constant_pool[name_index - 1]->info.Utf8.bytes;
+        length = constant_pool[name_index - 1]->info.Utf8.length;
+        string name_and_type = ReadFile::readByteString(bytes, length);
+
+        bytes = constant_pool[descriptor_index - 1]->info.Utf8.bytes;
+        length = constant_pool[descriptor_index - 1]->info.Utf8.length;
+        string descriptor = ReadFile::readByteString(bytes, length);
+
+        str = name + "." + name_and_type + " : " + descriptor;
+    }
+    case CONSTANT_Methodref:
+    {
+
+        u2 class_name_index = constant_pool[constant_info->info.Methodref.class_index - 1]->info.Class.name_index;
+        u1 *bytes = constant_pool[class_name_index - 1]->info.Utf8.bytes;
+        u2 length = constant_pool[class_name_index - 1]->info.Utf8.length;
+        string name = ReadFile::readByteString(bytes, length);
+
+        u2 name_index = constant_pool[constant_info->info.Methodref.name_and_type_index - 1]->info.NameAndType.name_index;
+        u2 descriptor_index = constant_pool[constant_info->info.Methodref.name_and_type_index - 1]->info.NameAndType.descriptor_index;
+        bytes = constant_pool[name_index - 1]->info.Utf8.bytes;
+        length = constant_pool[name_index - 1]->info.Utf8.length;
+        string name_and_type = ReadFile::readByteString(bytes, length);
+
+        bytes = constant_pool[descriptor_index - 1]->info.Utf8.bytes;
+        length = constant_pool[descriptor_index - 1]->info.Utf8.length;
+        string descriptor = ReadFile::readByteString(bytes, length);
+
+        str = name + "." + name_and_type + " : " + descriptor;
+    }
+    case CONSTANT_Float:
+    {
+        int bits = (int)constant_info->info.Float.bytes;
+
+        if (bits == 0x7f800000)
+        {
+            str = "+inf";
+        }
+        else if (bits == 0xff800000)
+        {
+
+            str = "-inf";
+        }
+        else if ((bits >= 0x7f800001 && bits <= 0x7fffffff) || (bits >= 0xff800001 && bits <= 0xffffffff))
+        {
+            str = "NaN";
+        }
+        else
+        {
+            int s = ((bits >> 31) == 0) ? 1 : -1;
+            int e = ((bits >> 23) & 0xff);
+            int m = (e == 0) ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
+
+            float result = s * m * pow(2.0, e - 150);
+
+            str = to_string((float)result);
+        }
+    }
+    }
 
     return str;
 }

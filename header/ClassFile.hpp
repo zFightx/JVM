@@ -52,6 +52,7 @@ public:
     void MenuMethodInfo();
     void PrintAttributes(AttributeInfo *attributes, u2 attributes_count);
     void PrintAccessFlags(u2 access_flags, int flagType);
+    string readString(int index);
 };
 
 #endif

@@ -5,17 +5,17 @@
 #include <vector>
 #include <map>
 #include "Dados.hpp"
+#include "CpInfo.hpp"
 
 using namespace std;
 
-class Opcodes{
-    public: 
-        static map<int, pair<string, int> > opcodes;
+class Opcodes
+{
+public:
+    static map<int, pair<string, int>> opcodes;
 
-        static void CreateOpcodes();
-        static void PrintOpcodes(u1* code, int size);
-
-
+    static void CreateOpcodes();
+    static void PrintOpcodes(u1 *code, int size, vector<CpInfo *> constantPool);
 };
 
 #endif

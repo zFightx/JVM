@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "Dados.hpp"
+#include "CpInfo.hpp"
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
     static u8 u8Read(ifstream &file);
 
     static string readByteString(u1 *bytes, u2 length);
+    static string readString(int index, vector<CpInfo *> constantPool);
 };
 
 #endif
