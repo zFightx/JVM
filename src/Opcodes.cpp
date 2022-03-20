@@ -229,14 +229,6 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
     Opcodes::CreateOpcodes();
     map<int, pair<string, int>> &opcodes_map = opcodes;
 
-    static int count = 1;
-    if (count == 2)
-    {
-        cout << "size: " << size << endl;
-        cout << constant_pool.size() << endl;
-    }
-    count++;
-
     for (int i = 0; i < size; i++)
     {
         u1 opcode = code[i];
@@ -244,7 +236,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
         string opcode_mnemonic = opcodes_map[(int)opcode].first;
         int opcode_argument_bytes = opcodes_map[(int)opcode].second;
 
-        cout << i << " " << endl;
+        cout << i << " ";
 
         switch (opcode_argument_bytes)
         {
@@ -355,7 +347,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             {
                 u1 argument = code[i + 1];
                 string str = ReadFile::readString(argument, constant_pool);
-                cout << opcode_mnemonic << " #" << (int)argument << "<" << str << ">" << endl;
+                cout << opcode_mnemonic << " #" << (int)argument << " <" << str << ">" << endl;
                 break;
             }
 
@@ -430,7 +422,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
 
                 uint16_t index = ReadFile::getCodeUShort(code, i);
                 string str = ReadFile::readString(index, constant_pool);
-                cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
+                cout << opcode_mnemonic << " #" << index << " <" << str << " >" << endl;
 
                 break;
             }
@@ -482,18 +474,11 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             case 0xb8: // invokestatic
             case 0xbb: // new
             {
-                uint16_t index = ReadFile::getCodeUShort(code, i);
-                if (count == 2)
-                {
-                    cout << "index read" << endl;
-                }
-                string str = ReadFile::readString(index, constant_pool);
 
-                cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
-                if (count == 2)
-                {
-                    cout << "syagsyuasgua" << endl;
-                }
+                uint16_t index = ReadFile::getCodeUShort(code, i);
+                string str = ReadFile::readString(index, constant_pool);
+                cout << opcode_mnemonic << " #" << index << " <" << str << " >" << endl;
+
                 break;
             }
 
@@ -501,7 +486,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             {
                 uint16_t index = ReadFile::getCodeUShort(code, i);
                 string str = ReadFile::readString(index, constant_pool);
-                cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
+                cout << opcode_mnemonic << " #" << index << " <" << str << " >" << endl;
                 break;
             }
             case 0xc6: // ifnull
@@ -526,7 +511,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             uint16_t index = ReadFile::getCodeUShort(code, i);
             u1 dimensions = code[i + 3];
             string str = ReadFile::readString(index, constant_pool);
-            cout << opcode_mnemonic << " #" << index << " " << dimensions << "<" << str << " >" << endl;
+            cout << opcode_mnemonic << " #" << index << " " << dimensions << " <" << str << " >" << endl;
             i = i + 3;
             break;
         }
@@ -540,7 +525,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
                 u1 count = code[i + 3];
                 u1 zero = code[i + 4];
                 string str = ReadFile::readString(index, constant_pool);
-                cout << opcode_mnemonic << " #" << index << " " << count << "<" << str << " >" << endl;
+                cout << opcode_mnemonic << " #" << index << " " << count << " <" << str << " >" << endl;
                 break;
             }
             case 0xc8: // goto_w

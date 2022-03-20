@@ -1157,14 +1157,7 @@ void ClassFile::PrintAttributes(AttributeInfo *attributes, u2 attributes_count)
             cout << endl
                  << "\t\t----Bytecode---- " << endl;
 
-            try
-            {
-                Opcodes::PrintOpcodes(code, code_length, this->constant_pool);
-            }
-            catch (exception &e)
-            {
-                cout << "Exception: " << e.what() << endl;
-            }
+            Opcodes::PrintOpcodes(code, code_length, this->constant_pool);
 
             for (unsigned k = 0; k < code_length; k++)
             {
@@ -1194,6 +1187,7 @@ void ClassFile::PrintAttributes(AttributeInfo *attributes, u2 attributes_count)
                  << "\t\t----Misc----" << endl;
             cout << "\t\tMax stack: " << dec << max_stack << endl;
             cout << "\t\tMax locals: " << dec << max_locals << endl;
+            cout << "\t\tCode length: " << dec << code_length << endl;
 
             u2 attributes_count = attributes[i].info.Code.attributes_count;
             cout << endl;

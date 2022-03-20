@@ -101,6 +101,7 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
 {
     CpInfo *constant_info = constant_pool[index - 1];
     u1 tag = constant_info->tag;
+
     u1 *bytes;
     u2 length;
     string str;
@@ -109,8 +110,10 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
     {
     case CONSTANT_Class:
     {
-        bytes = constant_info->info.Utf8.bytes;
-        length = constant_info->info.Utf8.length;
+        u2 name_index = constant_info->info.Class.name_index;
+        CpInfo *utf8_info = constant_pool[name_index - 1];
+        bytes = utf8_info->info.Utf8.bytes;
+        length = utf8_info->info.Utf8.length;
         str = ReadFile::readByteString(bytes, length);
         break;
     }
@@ -227,7 +230,7 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
         long long value = ((long long)high_bytes << 32) + low_bytes;
 
         str = to_string(value);
-        
+
         break;
     }
     case CONSTANT_Double:
@@ -247,7 +250,8 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
 
         break;
     }
-    case CONSTANT_NameAndType:{
+    case CONSTANT_NameAndType:
+    {
         u2 name_index = constant_info->info.NameAndType.name_index;
         u2 descriptor_index = constant_info->info.NameAndType.descriptor_index;
         u1 *bytes = constant_pool[name_index - 1]->info.Utf8.bytes;
@@ -260,20 +264,19 @@ string ReadFile::readString(int index, vector<CpInfo *> constant_pool)
 
         str = name + " : " + descriptor;
         break;
-
     }
-    case CONSTANT_Utf8:{
+    case CONSTANT_Utf8:
+    {
         u1 *bytes = constant_info->info.Utf8.bytes;
         u2 length = constant_info->info.Utf8.length;
         str = ReadFile::readByteString(bytes, length);
         break;
     }
-
-}
+    }
     return str;
 }
 
-int16_t ReadFile::getCodeShort(u1 *code, int i )
+int16_t ReadFile::getCodeShort(u1 *code, int i)
 {
     u1 byte1 = code[i + 1];
     u1 byte2 = code[i + 2];
@@ -281,7 +284,7 @@ int16_t ReadFile::getCodeShort(u1 *code, int i )
     return value;
 }
 
-uint16_t ReadFile::getCodeUShort(u1 *code, int i )
+uint16_t ReadFile::getCodeUShort(u1 *code, int i)
 {
     u1 byte1 = code[i + 1];
     u1 byte2 = code[i + 2];
@@ -289,7 +292,7 @@ uint16_t ReadFile::getCodeUShort(u1 *code, int i )
     return value;
 }
 
-int32_t ReadFile::getCodeInt(u1 *code, int i )
+int32_t ReadFile::getCodeInt(u1 *code, int i)
 {
     u1 byte1 = code[i + 1];
     u1 byte2 = code[i + 2];
