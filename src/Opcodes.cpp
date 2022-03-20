@@ -3,9 +3,21 @@
 
 using namespace std;
 
+map<int, pair<string, int>> Opcodes::opcodes;
+
 void Opcodes::CreateOpcodes()
 {
-    map<int, pair<string, int>> opcodes_map = opcodes;
+    static bool created = false;
+    if (!created)
+    {
+        created = true;
+    }
+    else
+    {
+        return;
+    }
+
+    map<int, pair<string, int>> &opcodes_map = opcodes;
 
     opcodes_map[0x00] = make_pair("nop", 0);
     opcodes_map[0x01] = make_pair("aconst_null", 0);
@@ -214,49 +226,120 @@ void Opcodes::CreateOpcodes()
 void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
 {
 
-    map<int, pair<string, int>> opcodes_map = opcodes;
+    Opcodes::CreateOpcodes();
+    map<int, pair<string, int>> &opcodes_map = opcodes;
+
+    static int count = 1;
+    if (count == 2)
+    {
+        cout << "size: " << size << endl;
+        cout << constant_pool.size() << endl;
+    }
+    count++;
 
     for (int i = 0; i < size; i++)
     {
         u1 opcode = code[i];
-        string opcode_mnemonic = opcodes_map[opcode].first;
-        int opcode_argument_bytes = opcodes_map[opcode].second;
-        cout << i << " " << endl; 
+
+        string opcode_mnemonic = opcodes_map[(int)opcode].first;
+        int opcode_argument_bytes = opcodes_map[(int)opcode].second;
+
+        cout << i << " " << endl;
 
         switch (opcode_argument_bytes)
         {
         case -1:
         {
-           switch(opcode)
-           {
-               case 0xaa: // tableswitch
-               {
-                   int padding = (4 - ((i+1) % 4)) % 4;
-                   i += padding;
+            switch (opcode)
+            {
+            case 0xaa: // tableswitch
+            {
+                int padding = (4 - ((i + 1) % 4)) % 4;
+                i += padding;
 
-                   int default_offset = ReadFile::getCodeInt(code, i);
-                   i += 4;
+                int default_offset = ReadFile::getCodeInt(code, i);
+                i += 4;
 
-                   int low_value = ReadFile::getCodeInt(code, i);
-                   i += 4;
+                int low_value = ReadFile::getCodeInt(code, i);
+                i += 4;
 
-                   int high_value = ReadFile::getCodeInt(code, i);
-                   i += 4;
+                int high_value = ReadFile::getCodeInt(code, i);
+                i += 4;
 
-                   cout << "tableswitch" << low_value << " to " << high_value << ": " << endl;
+                cout << opcode_mnemonic << " " << low_value << " to " << high_value << ": " << endl;
 
-                   for (int j = low_value; j <= high_value; j++)
-                   {
-                       int offset = ReadFile::getCodeInt(code, i);
-                       i += 4;
-                       cout << j  << ": "<< offset << endl;
-                   }
+                for (int j = low_value; j <= high_value; j++)
+                {
+                    int offset = ReadFile::getCodeInt(code, i);
+                    i += 4;
+                    cout << j << ": " << offset << endl;
+                }
 
-                   cout << "default: " << default_offset << endl;
-                   break;
-               }
-               
-           } 
+                cout << "default: " << default_offset << endl;
+                break;
+            }
+
+            case 0xab: // lookupswitch
+            {
+                int padding = (4 - ((i + 1) % 4)) % 4;
+                i += padding;
+
+                int default_offset = ReadFile::getCodeInt(code, i);
+                i += 4;
+
+                int npairs = ReadFile::getCodeInt(code, i);
+                i += 4;
+
+                cout << opcode_mnemonic << " " << npairs << ": " << endl;
+
+                for (int j = 0; j < npairs; j++)
+                {
+                    int match = ReadFile::getCodeInt(code, i);
+                    i += 4;
+                    int offset = ReadFile::getCodeInt(code, i);
+                    i += 4;
+                    cout << j << ": " << match << ": " << offset << endl;
+                }
+
+                cout << "default: " << default_offset << endl;
+                break;
+            }
+            case 0xc4: // wide
+            {
+                i += 1;
+                u1 opcode_wide = code[i];
+                cout << opcode_mnemonic << " " << opcode_wide;
+                switch (opcode_wide)
+                {
+                case 0x15: // iload
+                case 0x16: // lload
+                case 0x17: // fload
+                case 0x18: // dload
+                case 0x19: // aload
+                case 0x36: // istore
+                case 0x37: // lstore
+                case 0x38: // fstore
+                case 0x39: // dstore
+                case 0x3a: // astore
+                case 0xa9: // ret
+                {
+                    int index = ReadFile::getCodeShort(code, i);
+                    i += 2;
+                    cout << " " << index << endl;
+                    break;
+                }
+                case 0x84: // iinc
+                {
+                    int index = ReadFile::getCodeShort(code, i);
+                    i += 2;
+                    int const_val = ReadFile::getCodeInt(code, i);
+                    i += 2;
+                    cout << " " << index << " " << const_val << endl;
+                    break;
+                }
+                }
+            }
+            }
         }
         case 0:
         {
@@ -271,7 +354,8 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             case 0x12: // ldc
             {
                 u1 argument = code[i + 1];
-                cout << opcode_mnemonic << " #" << (int)argument << endl;
+                string str = ReadFile::readString(argument, constant_pool);
+                cout << opcode_mnemonic << " #" << (int)argument << "<" << str << ">" << endl;
                 break;
             }
 
@@ -347,6 +431,7 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
                 uint16_t index = ReadFile::getCodeUShort(code, i);
                 string str = ReadFile::readString(index, constant_pool);
                 cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
+
                 break;
             }
             case 0x84:
@@ -398,8 +483,17 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             case 0xbb: // new
             {
                 uint16_t index = ReadFile::getCodeUShort(code, i);
+                if (count == 2)
+                {
+                    cout << "index read" << endl;
+                }
                 string str = ReadFile::readString(index, constant_pool);
+
                 cout << opcode_mnemonic << " #" << index << "<" << str << " >" << endl;
+                if (count == 2)
+                {
+                    cout << "syagsyuasgua" << endl;
+                }
                 break;
             }
 
@@ -437,16 +531,33 @@ void Opcodes::PrintOpcodes(u1 *code, int size, vector<CpInfo *> constant_pool)
             break;
         }
         case 4:
-        { // invokeinterface
+            switch (opcode)
+            {
+            case 0xb9:
+            { // invokeinterface
 
-            uint16_t index = ReadFile::getCodeUShort(code, i);
-            u1 count = code[i + 3];
-            u1 zero = code[i + 4];
-            string str = ReadFile::readString(index, constant_pool);
-            cout << opcode_mnemonic << " #" << index << " " << count << "<" << str << " >" << endl;
-            i = i + 4;
-            break;
-        }
+                uint16_t index = ReadFile::getCodeUShort(code, i);
+                u1 count = code[i + 3];
+                u1 zero = code[i + 4];
+                string str = ReadFile::readString(index, constant_pool);
+                cout << opcode_mnemonic << " #" << index << " " << count << "<" << str << " >" << endl;
+                break;
+            }
+            case 0xc8: // goto_w
+            {
+                int32_t offset = ReadFile::getCodeInt(code, i);
+                cout << opcode_mnemonic << " " << offset << endl;
+                break;
+            }
+            case 0xc9: // jsr_w
+            {
+                int32_t offset = ReadFile::getCodeInt(code, i);
+                cout << opcode_mnemonic << " " << offset << endl;
+                break;
+            }
+                i = i + 4;
+                break;
+            }
         }
     }
 }

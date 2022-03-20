@@ -1,10 +1,12 @@
+#include <stdint.h>
+
 #ifndef __Dados_HPP__
 #define __Dados_HPP__
 
-typedef unsigned char u1;
-typedef unsigned short u2;
-typedef unsigned int u4;
-typedef unsigned long u8;
+typedef uint8_t u1;
+typedef uint16_t u2;
+typedef uint32_t u4;
+typedef uint64_t u8;
 
 #define CLASS 1
 #define FIELD 2

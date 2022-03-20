@@ -1,11 +1,13 @@
 #include <string.h>
 #include <iostream>
 #include <cmath>
+#include <exception>
 
 #include "../header/ClassFile.hpp"
 #include "../header/ReadFile.hpp"
 #include "../header/AttributeInfo.hpp"
 #include "../header/ExceptionHandler.hpp"
+#include "../header/Opcodes.hpp"
 
 ClassFile::ClassFile(string file)
 {
@@ -52,8 +54,11 @@ ClassFile::~ClassFile()
         delete this->fields[i];
     }
 
-    for (unsigned i = 0; i < this->constant_pool_count-1; i++)
+    for (unsigned i = 0; this->constant_pool_count - 1; i++)
     {
+        // if(this->constant_pool[i]->tag == 1)
+        // delete [] this->constant_pool[i]->info.Utf8.bytes;
+
         delete this->constant_pool[i];
     }
 }
@@ -71,21 +76,21 @@ void ClassFile::DeleteAttributes(AttributeInfo *attributes, u2 attributes_count)
 
         if (name == "InnerClasses")
         {
-            delete [] attributes[i].info.InnerClasses.classes;
+            delete[] attributes[i].info.InnerClasses.classes;
         }
         else if (name == "Code")
         {
             this->DeleteAttributes(attributes[i].info.Code.attributes, attributes[i].info.Code.attributes_count);
-            delete [] attributes[i].info.Code.code;
-            delete [] attributes[i].info.Code.exception_table;
+            delete[] attributes[i].info.Code.code;
+            delete[] attributes[i].info.Code.exception_table;
         }
         else if (name == "Exceptions")
         {
-            delete [] attributes[i].info.Exceptions.exception_index_table;
+            delete[] attributes[i].info.Exceptions.exception_index_table;
         }
     }
 
-    delete [] attributes;
+    delete[] attributes;
 }
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -115,7 +120,6 @@ void ClassFile::MenuClassFile()
     //          << "Digite uma opcao: ";
     //     cin >> opcao;
 
-        
     // }
 }
 
@@ -216,7 +220,8 @@ void ClassFile::GeneralInformation()
     string string_this_class = ReadFile::readByteString(this_class->info.Utf8.bytes, this_class->info.Utf8.length);
     string string_super_class = ReadFile::readByteString(super_class->info.Utf8.bytes, super_class->info.Utf8.length);
 
-    cout << "General Information" << endl << endl;
+    cout << "General Information" << endl
+         << endl;
     cout << "\tMinor version: " << this->minor_version << endl;
     cout << "\tMajor version: " << dec << (int)this->major_version << " [" << major_version << "]" << endl;
     cout << "\tConstant pool count: " << this->constant_pool_count << endl;
@@ -249,28 +254,28 @@ void ClassFile::MenuConstantPool()
         {
             cout << "\t[" << dec << i + 1 << "]"
                  << " (large numeric continued)" << endl;
-            
+
             cout << endl;
             break;
         }
         case CONSTANT_Class:
         {
             cout << "\t[" << dec << i + 1 << "]"
-                << " CONSTANT_Class_info" << endl;
-            
+                 << " CONSTANT_Class_info" << endl;
+
             u1 *bytes = this->constant_pool[cp->info.Class.name_index - 1]->info.Utf8.bytes;
             u2 length = this->constant_pool[cp->info.Class.name_index - 1]->info.Utf8.length;
             string name = ReadFile::readByteString(bytes, length);
 
             cout << endl
-                << "\t\tClass name: cp_info #" << cp->info.Class.name_index << " <" << name << ">" << endl;            
+                 << "\t\tClass name: cp_info #" << cp->info.Class.name_index << " <" << name << ">" << endl;
             cout << endl;
             break;
         }
         case CONSTANT_Fieldref:
         {
             cout << "\t[" << i + 1 << "]"
-                << " CONSTANT_Fieldref_info" << endl;
+                 << " CONSTANT_Fieldref_info" << endl;
             u2 class_name_index = this->constant_pool[cp->info.Fieldref.class_index - 1]->info.Class.name_index;
             u1 *bytes = this->constant_pool[class_name_index - 1]->info.Utf8.bytes;
             u2 length = this->constant_pool[class_name_index - 1]->info.Utf8.length;
@@ -287,17 +292,17 @@ void ClassFile::MenuConstantPool()
             string descriptor = ReadFile::readByteString(bytes, length);
 
             cout << endl
-                << "\t\tClass name: cp_info #" << cp->info.Fieldref.class_index << " <" << name
-                << ">" << endl;
+                 << "\t\tClass name: cp_info #" << cp->info.Fieldref.class_index << " <" << name
+                 << ">" << endl;
             cout << "\t\tName and type: cp_info #" << cp->info.Fieldref.name_and_type_index << " <" << name_and_type << " : " << descriptor
-                << ">" << endl;
+                 << ">" << endl;
             cout << endl;
             break;
         }
         case CONSTANT_Methodref:
         {
             cout << "\t[" << i + 1 << "]"
-                << " CONSTANT_Methodref_info" << endl;
+                 << " CONSTANT_Methodref_info" << endl;
             u2 class_name_index = this->constant_pool[cp->info.Methodref.class_index - 1]->info.Class.name_index;
             u1 *bytes = this->constant_pool[class_name_index - 1]->info.Utf8.bytes;
             u2 length = this->constant_pool[class_name_index - 1]->info.Utf8.length;
@@ -314,18 +319,18 @@ void ClassFile::MenuConstantPool()
             string descriptor = ReadFile::readByteString(bytes, length);
 
             cout << endl
-                << "\t\tClass name: cp_info #" << cp->info.Methodref.class_index << " <" << name
-                << ">" << endl;
+                 << "\t\tClass name: cp_info #" << cp->info.Methodref.class_index << " <" << name
+                 << ">" << endl;
             cout << "\t\tName and type: cp_info #" << cp->info.Methodref.name_and_type_index << " <" << name_and_type << " : " << descriptor
-                << ">" << endl;
+                 << ">" << endl;
             cout << endl;
             break;
         }
         case CONSTANT_InterfaceMethodref:
         {
             cout << "\t[" << i + 1 << "]"
-                << " CONSTANT_InterfaceMethodref_info" << endl;
-            
+                 << " CONSTANT_InterfaceMethodref_info" << endl;
+
             u2 class_name_index = this->constant_pool[cp->info.InterfaceMethodref.class_index - 1]->info.Class.name_index;
             u1 *bytes = this->constant_pool[class_name_index - 1]->info.Utf8.bytes;
             u2 length = this->constant_pool[class_name_index - 1]->info.Utf8.length;
@@ -342,17 +347,17 @@ void ClassFile::MenuConstantPool()
             string descriptor = ReadFile::readByteString(bytes, length);
 
             cout << endl
-                << "\t\tClass name: cp_info #" << cp->info.InterfaceMethodref.class_index << " <" << name
-                << ">" << endl;
+                 << "\t\tClass name: cp_info #" << cp->info.InterfaceMethodref.class_index << " <" << name
+                 << ">" << endl;
             cout << "\t\tName and type: cp_info #" << cp->info.InterfaceMethodref.name_and_type_index << " <" << name_and_type << " : " << descriptor
-                << ">" << endl;
+                 << ">" << endl;
             cout << endl;
             break;
         }
         case CONSTANT_String:
         {
             cout << "\t[" << i + 1 << "]"
-                << " CONSTANT_String_info" << endl;
+                 << " CONSTANT_String_info" << endl;
 
             u1 *bytes = this->constant_pool[cp->info.String.string_index - 1]->info.Utf8.bytes;
             u2 length = this->constant_pool[cp->info.String.string_index - 1]->info.Utf8.length;
@@ -361,8 +366,8 @@ void ClassFile::MenuConstantPool()
             // arrumar o cout
 
             cout << endl
-                << "\t\tString: cp_info #" << cp->info.String.string_index << " <" << name
-                << ">" << endl;
+                 << "\t\tString: cp_info #" << cp->info.String.string_index << " <" << name
+                 << ">" << endl;
             cout << endl;
             break;
         }
@@ -372,7 +377,7 @@ void ClassFile::MenuConstantPool()
                  << " CONSTANT_Integer_info" << endl;
 
             cout << endl
-                << "\t\tBytes: " << hex << (int)cp->info.Integer.bytes << endl;
+                 << "\t\tBytes: " << hex << (int)cp->info.Integer.bytes << endl;
             cout << "\t\tInteger: " << dec << (int)cp->info.Integer.bytes << endl;
             cout << endl;
             break;
@@ -384,22 +389,22 @@ void ClassFile::MenuConstantPool()
 
             int bits = (int)cp->info.Float.bytes;
             cout << endl
-                << "\t\tBytes: " << hex << bits << endl;
+                 << "\t\tBytes: " << hex << bits << endl;
 
             if (bits == 0x7f800000)
             {
                 cout << "\t\tFloat: "
-                    << "+inf" << endl;
+                     << "+inf" << endl;
             }
             else if (bits == 0xff800000)
             {
                 cout << "\t\tFloat: "
-                    << "-inf" << endl;
+                     << "-inf" << endl;
             }
             else if ((bits >= 0x7f800001 && bits <= 0x7fffffff) || (bits >= 0xff800001 && bits <= 0xffffffff))
             {
                 cout << "\t\tFloat: "
-                    << "NaN" << endl;
+                     << "NaN" << endl;
             }
             else
             {
@@ -417,15 +422,15 @@ void ClassFile::MenuConstantPool()
         case CONSTANT_Long:
         {
             cout << "\t[" << i + 1 << "]"
-                << " CONSTANT_Long_info" << endl;
-            
+                 << " CONSTANT_Long_info" << endl;
+
             u4 high_bytes = cp->info.Long.high_bytes;
             u4 low_bytes = cp->info.Long.low_bytes;
 
             long long result = ((long long)high_bytes << 32) + low_bytes;
 
             cout << endl
-                << "\t\tHigh bytes: " << hex << (u4)high_bytes << endl;
+                 << "\t\tHigh bytes: " << hex << (u4)high_bytes << endl;
             cout << "\t\tLow bytes: " << hex << (u4)low_bytes << endl;
             cout << "\t\tLong: " << dec << result << endl;
             cout << endl;
@@ -434,8 +439,8 @@ void ClassFile::MenuConstantPool()
         case CONSTANT_Double:
         {
             cout << "\t[" << i + 1 << "]"
-                << " CONSTANT_Double_info" << endl;
-            
+                 << " CONSTANT_Double_info" << endl;
+
             u4 high_bytes = cp->info.Double.high_bytes;
             u4 low_bytes = cp->info.Double.low_bytes;
 
@@ -448,7 +453,7 @@ void ClassFile::MenuConstantPool()
             double result = s * m * pow(2, e - 1075);
 
             cout << endl
-                << "\t\tHigh bytes: " << hex << (u4)high_bytes << endl;
+                 << "\t\tHigh bytes: " << hex << (u4)high_bytes << endl;
             cout << "\t\tLow bytes: " << hex << (u4)low_bytes << endl;
             cout << "\t\tLong: " << dec << result << endl;
             cout << endl;
@@ -458,7 +463,7 @@ void ClassFile::MenuConstantPool()
         {
             cout << "\t[" << i + 1 << "]"
                  << " CONSTANT_NameAndType_info" << endl;
-            
+
             u1 *bytes = this->constant_pool[cp->info.NameAndType.name_index - 1]->info.Utf8.bytes;
             u2 length = this->constant_pool[cp->info.NameAndType.name_index - 1]->info.Utf8.length;
             string name = ReadFile::readByteString(bytes, length);
@@ -468,10 +473,10 @@ void ClassFile::MenuConstantPool()
             string descriptor = ReadFile::readByteString(bytes, length);
 
             cout << endl
-                << "\t\tName: cp_info #" << cp->info.NameAndType.name_index << " <" << name
-                << ">" << endl;
+                 << "\t\tName: cp_info #" << cp->info.NameAndType.name_index << " <" << name
+                 << ">" << endl;
             cout << "\t\tDescriptor: cp_info #" << cp->info.NameAndType.descriptor_index << " <" << descriptor
-                << ">" << endl;
+                 << ">" << endl;
             cout << endl;
             break;
         }
@@ -485,10 +490,10 @@ void ClassFile::MenuConstantPool()
             string name = ReadFile::readByteString(bytes, length);
 
             cout << endl
-                << "\t\tLength of byte array: " << cp->info.Utf8.length << endl;
+                 << "\t\tLength of byte array: " << cp->info.Utf8.length << endl;
             cout << "\t\tLength of string: " << name.size() << endl;
-            cout << "\t\tString: " << name << endl;  
-            cout << endl;          
+            cout << "\t\tString: " << name << endl;
+            cout << endl;
             break;
         }
         }
@@ -856,7 +861,6 @@ void ClassFile::MenuMethodInfo()
 
         attributes_count = selectedMethod->attributes_count;
 
-        
         this->PrintAccessFlags(access_flags, METHOD);
         cout << "\tName: cp_info #" << name_index << " <" << name << ">" << endl;
         cout << "\tDescriptor: cp_info #" << descriptor_index << " " << descriptor << endl;
@@ -1045,7 +1049,7 @@ void ClassFile::PrintAccessFlags(u2 access_flags, int flagType)
         }
     }
 
-    if (access_flags_string.back() == ' ')
+    if (!access_flags_string.empty() && access_flags_string.back() == ' ')
     {
         access_flags_string.pop_back();
     }
@@ -1152,10 +1156,20 @@ void ClassFile::PrintAttributes(AttributeInfo *attributes, u2 attributes_count)
             // cout << "\t\tCode length: " << dec << code_length << endl;
             cout << endl
                  << "\t\t----Bytecode---- " << endl;
+
+            try
+            {
+                Opcodes::PrintOpcodes(code, code_length, this->constant_pool);
+            }
+            catch (exception &e)
+            {
+                cout << "Exception: " << e.what() << endl;
+            }
+
             for (unsigned k = 0; k < code_length; k++)
             {
                 u1 opcode = code[k];
-                cout << opcode << endl;
+                // cout << opcode << endl;
             }
 
             u2 exception_table_length = attributes[i].info.Code.exception_table_length;
