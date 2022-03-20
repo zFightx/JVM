@@ -57,7 +57,7 @@ string ReadFile::readByteString(u1 *bytes, u2 length)
     stringstream ss;
     int strLength = length + 1;
     int stringIndex = 0;
-    char *str = new char[strLength];
+    char str[strLength];
     for (int i = 0; i < length; i++)
     {
         u1 discriminatorBit = (bytes[i] & 0xFF) >> 4;

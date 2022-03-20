@@ -40,24 +40,20 @@ ClassFile::~ClassFile()
 {
     this->DeleteAttributes(this->attributes, this->attributes_count);
 
-    // for (unsigned i = 0; this->methods_count; i++)
-    // {
-    //     cout << this->methods[i]->attributes << " | " << this->methods[i]->attributes_count << endl;
-    //     this->DeleteAttributes(this->methods[i]->attributes, this->methods[i]->attributes_count);
-
-    //     delete this->methods[i];
-    // }
-    // for (unsigned i = 0; this->fields_count; i++)
-    // {
-    //     this->DeleteAttributes(this->fields[i]->attributes, this->fields[i]->attributes_count);
-    //     delete this->fields[i];
-    // }
-
-    for (unsigned i = 0; this->constant_pool_count-1; i++)
+    for (unsigned i = 0; i < this->methods_count; i++)
     {
-        // if(this->constant_pool[i]->tag == 1)
-            // delete [] this->constant_pool[i]->info.Utf8.bytes;
-        
+        this->DeleteAttributes(this->methods[i]->attributes, this->methods[i]->attributes_count);
+
+        delete this->methods[i];
+    }
+    for (unsigned i = 0; i < this->fields_count; i++)
+    {
+        this->DeleteAttributes(this->fields[i]->attributes, this->fields[i]->attributes_count);
+        delete this->fields[i];
+    }
+
+    for (unsigned i = 0; i < this->constant_pool_count-1; i++)
+    {
         delete this->constant_pool[i];
     }
 }
@@ -88,6 +84,8 @@ void ClassFile::DeleteAttributes(AttributeInfo *attributes, u2 attributes_count)
             delete [] attributes[i].info.Exceptions.exception_index_table;
         }
     }
+
+    delete [] attributes;
 }
 //////////////////////////////////////////////////////////////////////////////////
 
