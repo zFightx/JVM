@@ -241,7 +241,6 @@ void ClassFile::GeneralInformation()
 
 void ClassFile::MenuConstantPool()
 {
-    // int opcao = -1;
 
     cout << "Constant Pool" << endl;
 
