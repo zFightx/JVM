@@ -191,8 +191,8 @@ void Opcodes::CreateOpcodes()
     opcodes_map[0xa7] = make_pair("goto", 2);
     opcodes_map[0xa8] = make_pair("jsr", 2);
     opcodes_map[0xa9] = make_pair("ret", 1);
-    opcodes_map[0xaa] = make_pair("tableswitch", -1);  // REVISAR
-    opcodes_map[0xab] = make_pair("lookupswitch", -1); // REVISAR
+    opcodes_map[0xaa] = make_pair("tableswitch", -1);
+    opcodes_map[0xab] = make_pair("lookupswitch", -1);
     opcodes_map[0xac] = make_pair("ireturn", 0);
     opcodes_map[0xad] = make_pair("lreturn", 0);
     opcodes_map[0xae] = make_pair("freturn", 0);
@@ -206,7 +206,7 @@ void Opcodes::CreateOpcodes()
     opcodes_map[0xb6] = make_pair("invokevirtual", 2);
     opcodes_map[0xb7] = make_pair("invokespecial", 2);
     opcodes_map[0xb8] = make_pair("invokestatic", 2);
-    opcodes_map[0xb9] = make_pair("invokeinterface", 4); // REVISAR
+    opcodes_map[0xb9] = make_pair("invokeinterface", 4);
     // opcodes_map[0xba] = make_pair("invokedynamic", 4 );
     opcodes_map[0xbb] = make_pair("new", 2);
     opcodes_map[0xbc] = make_pair("newarray", 1);
@@ -217,8 +217,8 @@ void Opcodes::CreateOpcodes()
     // opcodes_map[0xc1] = make_pair("instanceof", 2 );
     // opcodes_map[0xc2] = make_pair("monitorenter", 0 );
     // opcodes_map[0xc3] = make_pair("monitorexit", 0 );
-    opcodes_map[0xc4] = make_pair("wide", -1);          // REVISAR
-    opcodes_map[0xc5] = make_pair("multianewarray", 3); // REVISAR
+    opcodes_map[0xc4] = make_pair("wide", -1);
+    opcodes_map[0xc5] = make_pair("multianewarray", 3);
     opcodes_map[0xc6] = make_pair("ifnull", 2);
     opcodes_map[0xc7] = make_pair("ifnonnull", 2);
     opcodes_map[0xc8] = make_pair("goto_w", 4);
