@@ -50,7 +50,7 @@ ClassFile::~ClassFile()
         delete this->fields[i];
     }
 
-    for (unsigned i = 0; this->constant_pool_count - 1; i++)
+    for (unsigned i = 0; i < this->constant_pool_count - 1; i++)
     {
         delete this->constant_pool[i];
     }
