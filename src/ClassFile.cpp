@@ -931,16 +931,7 @@ void ClassFile::PrintAccessFlags(u2 access_flags, int flagType)
 
     cout << "\tAccess flags: 0x";
     printf("%04x", access_flags);
-    /*
-    0x0001 = 0b0000000000000001 = 1 << 0; i = 0
-    0x0002 = 0b0000000000000010 = 1 << 1; i = 1
-    0x0004 = 0b0000000000000100 = 1 << 2; i = 2
-    0x0008 = 0b0000000000001000 = 1 << 3; i = 3
-    0x0010 = 0b0000000000010000 = 1 << 4; i = 4
-    0x0020 = 0b0000000000100000 = 1 << 5; i = 5
-    ..
-    0x8000 = 0b1000000000000000 = 1 << 15; i = 15
-    */
+
     for (int i = 0; i < 16; i++)
     {
         u2 flagBit = access_flags & (0x0001 << i);
