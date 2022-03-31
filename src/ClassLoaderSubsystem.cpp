@@ -1,11 +1,12 @@
 ﻿#include <iostream>
 
-#include "../header/Link.hpp"
+#include "../header/ClassLoaderSubsystem.hpp"
 #include "../header/Dados.hpp"
+#include "../header/ClassFile.hpp"
 
 using namespace std;
 
-void Link::verify(u4 cafeBabe, u2 minorVersion, u2 majorVersion, string sourceFileFontName, string fontName)
+void ClassLoaderSubsystem::verify(u4 cafeBabe, u2 minorVersion, u2 majorVersion, string sourceFileFontName, string fontName)
 
 {
     if (cafeBabe != 0xCAFEBABE)
@@ -33,4 +34,11 @@ void Link::verify(u4 cafeBabe, u2 minorVersion, u2 majorVersion, string sourceFi
         // cout << "Invalid source file name" << endl;
         exit(1);
     }
+}
+
+void ClassLoaderSubsystem::prepare(ClassFile *cf)
+{
+    // vector<CpInfo *> cp = cf->constant_pool;
+    // vector<MethodInfo *> methods = cf->methods;
+    // map <string, value>
 }

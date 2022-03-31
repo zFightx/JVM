@@ -7,12 +7,12 @@
 
 using namespace std;
 
-class Link
+class ClassLoaderSubsystem
 {
 public:
     static void verify(u4 cafeBabe, u2 minorVersion, u2 majorVersion, string sourceFileFontName, string fontName);
-    static void prepare(CpInfo *cp);
-    static void resolve();
+    static void prepare(ClassFile *cf);
+    static void resolve(ClassFile *cf);
 };
 
 #endif

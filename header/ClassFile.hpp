@@ -14,7 +14,8 @@ using namespace std;
 
 class ClassFile
 {
-private:
+
+public:
     u4 magic;
     u2 minor_version;
     u2 major_version;
@@ -32,7 +33,6 @@ private:
     u2 attributes_count;
     AttributeInfo *attributes;
 
-public:
     ClassFile(string file);
     ~ClassFile();
     void CreateConstantPool(ifstream &file);
@@ -52,6 +52,7 @@ public:
     void MenuMethodInfo();
     void PrintAttributes(AttributeInfo *attributes, u2 attributes_count);
     void PrintAccessFlags(u2 access_flags, int flagType);
+
     string readString(int index);
 };
 
