@@ -6,22 +6,22 @@
 
 using namespace std;
 
-typedef struct Value
+struct Value
 {
     char type;
     union
     {
-        int8_t byteValue;   // B
-        uint16_t charValue; // C
-        double doubleValue; // D
-        float floatValue;   // F
-        int32_t intValue;   // I
-        int64_t longValue;  // J
-        any objectValue;    // L
-        int16_t shortValue; // S
-        bool booleanValue;  // Z
-        any arrayValue;     // [
+        int8_t byte_value;   // B
+        uint16_t char_value; // C
+        double double_value; // D
+        float float_value;   // F
+        int32_t int_value;   // I
+        int64_t long_value;  // J
+        any object_value;    // L
+        int16_t short_value; // S
+        bool boolean_value;  // Z
+        any array_value;     // [
     } data;
-} value;
+};
 
 #endif

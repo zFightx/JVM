@@ -10,9 +10,8 @@
 class MethodAreaSection
 {
 public:
-    vector<CpInfo *> constant_pool;
-    vector<MethodInfo *> methods;
-    map<string, value> variables;
+    ClassFile * class_file;
+    map<string, Value> static_fields;
 
     MethodAreaSection(ClassFile *cf);
 };

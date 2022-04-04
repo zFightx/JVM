@@ -102,8 +102,14 @@ void ClassFile::GeneralInformation()
     CpInfo *cp = this->constant_pool[this->this_class - 1];
     CpInfo *this_class = this->constant_pool[cp->info.Class.name_index - 1];
 
-    cp = this->constant_pool[this->super_class - 1];
-    CpInfo *super_class = this->constant_pool[cp->info.Class.name_index - 1];
+    string string_this_class = ReadFile::readByteString(this_class->info.Utf8.bytes, this_class->info.Utf8.length);
+    string string_super_class = "invalid constant pool reference";
+
+    if(this->super_class != 0){
+        cp = this->constant_pool[this->super_class - 1];
+        CpInfo *super_class = this->constant_pool[cp->info.Class.name_index - 1];
+        string_super_class = ReadFile::readByteString(super_class->info.Utf8.bytes, super_class->info.Utf8.length);
+    }
 
     float major_version = 1.1;
 
@@ -191,8 +197,6 @@ void ClassFile::GeneralInformation()
     }
     }
 
-    string string_this_class = ReadFile::readByteString(this_class->info.Utf8.bytes, this_class->info.Utf8.length);
-    string string_super_class = ReadFile::readByteString(super_class->info.Utf8.bytes, super_class->info.Utf8.length);
 
     cout << "General Information" << endl
          << endl;
