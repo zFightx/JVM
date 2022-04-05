@@ -13,7 +13,7 @@ private:
     
 public:
     vector<Value> local_variables;
-    vector<int> operand_stack;
+    vector<Value> operand_stack;
     vector<CpInfo*> constant_pool;
 
     Frame();

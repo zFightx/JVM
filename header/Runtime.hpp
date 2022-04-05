@@ -5,6 +5,7 @@
 #include <map>
 
 #include "MethodAreaSection.hpp"
+#include "Frame.hpp"
 
 using namespace std;
 
@@ -14,11 +15,13 @@ private:
     
 public:
     map<string, MethodAreaSection *> method_area;
-    vector<Value> stack;
+    vector<Frame *> stack;
     int pc;
 
     Runtime(string class_name);
     ~Runtime();
+
+    
 };
 
 #endif
