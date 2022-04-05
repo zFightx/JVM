@@ -14,6 +14,8 @@ private:
     
 public:
     map<string, MethodAreaSection *> method_area;
+    vector<Value> stack;
+    int pc;
 
     Runtime(string class_name);
     ~Runtime();

@@ -18,6 +18,10 @@ public:
 
     Frame();
     ~Frame();
+
+    void AddLocalVariable(Value);
+    void AddOperandStack(int);
+    void SetContantPool(vector<CpInfo*> &cp);
 };
 
 #endif
