@@ -1,6 +1,7 @@
 ﻿#ifndef __OBJECTREF_HPP__
 #define __OBJECTREF_HPP__
 
+#include "ClassFile.hpp"
 #include "TypeValue.hpp"
 
 #include <string>
@@ -13,8 +14,12 @@ class ObjectRef
 public:
     map <string, Value> variables;
 
-    ObjectRef(/* args */);
+    ObjectRef(ClassFile *class_file);
     ~ObjectRef();
+
+    void AddVariable(string, Value);
+    void ChangeVariable(string, Value);
+    Value GetVariable(string);
 };
 
 #endif

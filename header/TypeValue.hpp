@@ -19,7 +19,7 @@ struct Value
         float float_value;   // F
         int32_t int_value;   // I
         int64_t long_value;  // J
-        ObjectRef object_value;    // L
+        ObjectRef *object_value;    // L
         int16_t short_value; // S
         bool boolean_value;  // Z
         any array_value;     // [

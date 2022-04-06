@@ -21,7 +21,10 @@ public:
     Runtime(string class_name);
     ~Runtime();
 
-    
+    void AddStack(Frame *fr);
+    void RemoveStack();
+
+    void AddMethodArea(string class_name);
 };
 
 #endif
