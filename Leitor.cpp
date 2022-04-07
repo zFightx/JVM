@@ -25,17 +25,19 @@ int main()
 
     Runtime *runtime = new Runtime(file);
 
-    map<string, MethodAreaSection*>::iterator it;
-    
+    map<string, MethodAreaSection *>::iterator it;
+
     for (it = runtime->method_area.begin(); it != runtime->method_area.end(); it++)
     {
-        cout << "printnaod" << " " << it->second->class_file->this_class << endl;
+        cout << "printnaod"
+             << " " << it->second->class_file->this_class << endl;
 
         map<string, Value>::iterator it2;
         for (it2 = it->second->static_fields.begin(); it2 != it->second->static_fields.end(); it2++)
         {
-            cout << "type : " << (int) it2->second.type << endl;
-            if(it2->second.type == 8){
+            cout << "type : " << (int)it2->second.type << endl;
+            if (it2->second.type == 8)
+            {
                 cout << it2->first << " : " << it2->second.data.object_value << endl;
             }
         }

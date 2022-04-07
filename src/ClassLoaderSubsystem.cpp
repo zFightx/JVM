@@ -47,12 +47,13 @@ void ClassLoaderSubsystem::Prepare(ClassFile *cf)
 void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSection *> &method_area)
 {
     // se classe ainda não carregada
-    if(!method_area.count(class_name)){
+    if (!method_area.count(class_name))
+    {
         ClassFile *class_file = new ClassFile(class_name);
         MethodAreaSection *new_method_area = new MethodAreaSection(class_file);
 
         u2 index = class_file->constant_pool[class_file->this_class - 1]->info.Class.name_index;
-        string this_class = ClassLoaderSubsystem::GetStringConstantPool(index, class_file->constant_pool);
+        string this_class = ReadFile::readString(index, class_file->constant_pool);
 
         vector<FieldInfo *> fields = class_file->fields;
 
@@ -60,8 +61,8 @@ void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSect
         {
             if (fields[i]->access_flags == 0x0008)
             {
-                string field_name = ClassLoaderSubsystem::GetStringConstantPool(fields[i]->name_index, class_file->constant_pool);
-                string field_descriptor = ClassLoaderSubsystem::GetStringConstantPool(fields[i]->descriptor_index, class_file->constant_pool);
+                string field_name = ReadFile::readString(fields[i]->name_index, class_file->constant_pool);
+                string field_descriptor = ReadFile::readString(fields[i]->descriptor_index, class_file->constant_pool);
 
                 Value value;
 
@@ -107,15 +108,21 @@ void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSect
                 new_method_area->static_fields.insert({field_name, value});
             }
         }
-        
+
         method_area.insert({this_class, new_method_area});
 
-        if(class_file->super_class != 0){
+        if (class_file->super_class != 0)
+        {
             u2 index = class_file->constant_pool[class_file->super_class - 1]->info.Class.name_index;
-            string super_class = ClassLoaderSubsystem::GetStringConstantPool(index, class_file->constant_pool);
-            ClassLoaderSubsystem::Resolve(super_class+".class", method_area);
+            string super_class = ReadFile::readString(index, class_file->constant_pool);
+            ClassLoaderSubsystem::Resolve(super_class + ".class", method_area);
         }
     }
+}
+
+void ClassLoaderSubsystem::Initialize(string class_name, map<string, MethodAreaSection *> &method_area)
+{
+    //    clinit > init > main;
 }
 
 string ClassLoaderSubsystem::GetStringConstantPool(u2 index, vector<CpInfo *> constant_pool)

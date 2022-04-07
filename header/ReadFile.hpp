@@ -18,7 +18,9 @@ public:
     static u8 u8Read(ifstream &file);
 
     static string readByteString(u1 *bytes, u2 length);
+    static pair<string, vector<string>> readStringPair(int index, vector<CpInfo *> constant_pool);
     static string readString(int index, vector<CpInfo *> constantPool);
+    static vector<string> readString(int index, vector<CpInfo *> constantPool, bool vectorRet);
 
     static int16_t getCodeShort(u1 *code, int i);
     static uint16_t getCodeUShort(u1 *code, int i);
