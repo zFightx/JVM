@@ -5,6 +5,9 @@ Runtime::Runtime(string class_name)
 {
     Runtime::main_class_name = class_name;
     this->AddMethodArea(class_name);
+
+    // this->func = &Runtime::Print;
+    // (this->*func)();
 }
 
 Runtime::~Runtime()

@@ -1,5 +1,5 @@
 #include "../header/ObjectRef.hpp"
-#include "../header/ClassLoaderSubsystem.hpp"
+#include "../header/ReadFile.hpp"
 
 ObjectRef::ObjectRef(ClassFile *class_file){
     vector<FieldInfo *> fields = class_file->fields;
@@ -10,8 +10,8 @@ ObjectRef::ObjectRef(ClassFile *class_file){
 
          // verifica se é não estática e não final
         if (field->access_flags != 0x0008 && field->access_flags != 0x0010) {
-            string field_name = ClassLoaderSubsystem::GetStringConstantPool(field->name_index, class_file->constant_pool);
-            string field_descriptor = ClassLoaderSubsystem::GetStringConstantPool(field->descriptor_index, class_file->constant_pool);
+            string field_name = ReadFile::readString(field->name_index, class_file->constant_pool);
+            string field_descriptor = ReadFile::readString(field->descriptor_index, class_file->constant_pool);
             
             Value value;
             
