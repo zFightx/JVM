@@ -12,8 +12,8 @@ using namespace std;
 class Runtime
 {
 private:
-    
 public:
+    static string main_class_name;
     map<string, MethodAreaSection *> method_area;
     vector<Frame *> stack;
     int pc;

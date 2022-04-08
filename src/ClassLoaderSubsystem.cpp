@@ -110,7 +110,7 @@ void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSect
         }
 
         method_area.insert({this_class, new_method_area});
-
+        // chamar Initialize da classe
         if (class_file->super_class != 0)
         {
             u2 index = class_file->constant_pool[class_file->super_class - 1]->info.Class.name_index;
@@ -120,18 +120,18 @@ void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSect
     }
 }
 
-void ClassLoaderSubsystem::Initialize(string class_name, map<string, MethodAreaSection *> &method_area)
+// se for a main class, empilhar o metodo main primeiro e depois o clinit, caso contrário, só empilhar o clinit
+void ClassLoaderSubsystem::Initialize(string class_name, ClassFile *class_file)
 {
-    //    clinit > init > main;
 }
 
-string ClassLoaderSubsystem::GetStringConstantPool(u2 index, vector<CpInfo *> constant_pool)
-{
-    CpInfo *cp = constant_pool[index - 1];
+// string ClassLoaderSubsystem::GetStringConstantPool(u2 index, vector<CpInfo *> constant_pool)
+// {
+//     CpInfo *cp = constant_pool[index - 1];
 
-    u1 *bytes = cp->info.Utf8.bytes;
-    u2 length = cp->info.Utf8.length;
-    string name = ReadFile::readByteString(bytes, length);
+//     u1 *bytes = cp->info.Utf8.bytes;
+//     u2 length = cp->info.Utf8.length;
+//     string name = ReadFile::readByteString(bytes, length);
 
-    return name;
-}
+//     return name;
+// }
