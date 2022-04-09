@@ -1,4 +1,5 @@
 #include "../header/Interpreter.hpp"
+#include "../header/Opcodes.hpp"
 
 Interpreter::Interpreter(Runtime * runtime){
     this->ConstructTable();
@@ -18,11 +19,18 @@ void Interpreter::ExecuteInterpreter(){
 
 void Interpreter::ExecuteFrame(){
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    int current_pc = this->runtime->GetCurrentPC();
     Code_attribute *current_code = current_frame->GetCode();
 
-    // Aqui devemos executar o code.
-
+    // Aqui devemos executar o code.    
+    while(this->runtime->stack.size() > 0){
+        int current_pc = this->runtime->GetCurrentPC();
+        u1 bytecode = current_code->code[current_pc];
+        
+        // executa o método indicado pelo bytecode
+        // não esquecer de verificar se o método existe.
+        PointerFunction method_func = this->instruction_table[bytecode];
+        (this->*method_func)();
+    }
     // Para isso precisamos saber quantas casas de PC andar a cada função (Fazer isso dentro da própria função)
 
     // Colocar invoker_frame dentro das funções de invoke, para sinalizar para quem deve atribuir os return.
