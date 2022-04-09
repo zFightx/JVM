@@ -16,7 +16,8 @@
     "tuple": "cpp",
     "type_traits": "cpp",
     "utility": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "cmath": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }

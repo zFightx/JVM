@@ -3,6 +3,7 @@
 #include "../header/Interpreter.hpp"
 #include "../header/Opcodes.hpp"
 #include "../header/ClassLoaderSubsystem.hpp"
+#include "../header/ReadFile.hpp"
 
 Interpreter::Interpreter(Runtime * runtime){
     this->ConstructTable();
@@ -133,8 +134,8 @@ void Interpreter::ConstructTable(){
     this->instruction_table[0x57] = &Interpreter::i_pop;
     this->instruction_table[0x58] = &Interpreter::i_pop2;
     this->instruction_table[0x59] = &Interpreter::i_dup;
-    this->instruction_table[0x5a] = &Interpreter::i_dup2_x1;
-    this->instruction_table[0x5b] = &Interpreter::i_dup2_x2;
+    this->instruction_table[0x5a] = &Interpreter::i_dup_x1;
+    this->instruction_table[0x5b] = &Interpreter::i_dup_x2;
     this->instruction_table[0x5c] = &Interpreter::i_dup2;
     this->instruction_table[0x5d] = &Interpreter::i_dup2_x1;
     this->instruction_table[0x5e] = &Interpreter::i_dup2_x2;
@@ -463,7 +464,7 @@ void Interpreter::i_bipush(){
     u1 byte = topFrame->code.code[topFrame->pc+1];
 
     Value value;
-    // value.printType = ValueType::BYTE;
+    // value.printType = BYTE_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = (int32_t) (int8_t) byte; // convertendo para inteiro e estendendo o sinal
 
@@ -515,7 +516,7 @@ void Interpreter::i_ldc(){
         utf8_string[i] = '\0';
         
         value.type = OBJECT_VALUE;
-        // value.data.object = new StringObject(utf8_string);
+        // value.data.object_value = new StringObject(utf8_string);
     } else if (entry->tag == CONSTANT_Integer) {
         // value.printType = INT_VALUE;
         value.type = INT_VALUE;
@@ -564,7 +565,7 @@ void Interpreter::i_ldc_w(){
         utf8_string[i] = '\0';
         
         value.type = OBJECT_VALUE;
-        // value.data.object = new StringObject(utf8_string);
+        // value.data.object_value = new StringObject(utf8_string);
     } else if (entry->tag == CONSTANT_Integer) {
         // value.printType = INT_VALUE;
         value.type = INT_VALUE;
@@ -1019,9 +1020,9 @@ void Interpreter::i_iaload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1044,9 +1045,9 @@ void Interpreter::i_laload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1073,9 +1074,9 @@ void Interpreter::i_faload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1098,9 +1099,9 @@ void Interpreter::i_daload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1127,9 +1128,9 @@ void Interpreter::i_aaload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1152,9 +1153,9 @@ void Interpreter::i_baload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1166,14 +1167,14 @@ void Interpreter::i_baload(){
     // }
 
     // Value value = array->getValue(index.data.intValue);
-    // assert(value.type == ValueType::BOOLEAN || value.type == ValueType::BYTE);
+    // assert(value.type == BYTE_VALUE || value.type == BYTE_VALUE);
     
-    // if (value.type == ValueType::BOOLEAN) {
+    // if (value.type == BYTE_VALUE) {
     //     value.data.intValue = (uint32_t) value.data.booleanValue;
-    //     value.printType = ValueType::BOOLEAN;
+    //     value.printType = BYTE_VALUE;
     // } else {
     //     value.data.intValue = (int32_t) value.data.byteValue;
-    //     value.printType = ValueType::BYTE;
+    //     value.printType = BYTE_VALUE;
     // }
     // value.type = ValueType::INT;
 
@@ -1189,9 +1190,9 @@ void Interpreter::i_caload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1202,12 +1203,12 @@ void Interpreter::i_caload(){
     //     exit(2);
     // }
 
-    // Value charValue = array->getValue(index.data.intValue);
-    // charValue.data.intValue = (uint32_t) charValue.data.charValue;
-    // charValue.printType = CHAR_VALUE;
-    // charValue.type = ValueType::INT;
+    // Value char_value = array->getValue(index.data.intValue);
+    // char_value.data.intValue = (uint32_t) char_value.data.char_value;
+    // char_value.printType = CHAR_VALUE;
+    // char_value.type = ValueType::INT;
     
-    // topFrame->AddOperandStack(charValue);
+    // topFrame->AddOperandStack(char_value);
     topFrame->pc += 1;
 }
 
@@ -1219,9 +1220,9 @@ void Interpreter::i_saload(){
     // assert(index.type == ValueType::INT);
     Value arrayref = topFrame->PopOperandStack();
     // assert(arrayref.type == ValueType::REFERENCE);
-    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
 
-    // array = (ArrayObject *) arrayref.data.object;
+    // array = (ArrayObject *) arrayref.data.object_value;
 
     // if (array == NULL) {
     //     cerr << "NullPointerException" << endl;
@@ -1360,159 +1361,694 @@ void Interpreter::i_astore(){
 }
 
 void Interpreter::i_istore_0(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    topFrame->ChangeLocalVariable(0, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_istore_1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    topFrame->ChangeLocalVariable(1, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_istore_2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    topFrame->ChangeLocalVariable(2, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_istore_3(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    topFrame->ChangeLocalVariable(3, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_lstore_0(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::LONG);
+    topFrame->ChangeLocalVariable(0, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(1, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_lstore_1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::LONG);
+    topFrame->ChangeLocalVariable(1, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(2, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_lstore_2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::LONG);
+    topFrame->ChangeLocalVariable(2, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(3, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_lstore_3(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::LONG);
+    topFrame->ChangeLocalVariable(3, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(4, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_fstore_0(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::FLOAT);
+    topFrame->ChangeLocalVariable(0, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_fstore_1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::FLOAT);
+    topFrame->ChangeLocalVariable(1, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_fstore_2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::FLOAT);
+    topFrame->ChangeLocalVariable(2, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_fstore_3(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::FLOAT);
+    topFrame->ChangeLocalVariable(4, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dstore_0(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::DOUBLE);
+    topFrame->ChangeLocalVariable(0, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(1, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dstore_1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::DOUBLE);
+    topFrame->ChangeLocalVariable(1, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(2, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dstore_2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::DOUBLE);
+    topFrame->ChangeLocalVariable(2, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(3, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dstore_3(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::DOUBLE);
+    topFrame->ChangeLocalVariable(3, value);
+
+    // value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::PADDING);
+    // topFrame->ChangeLocalVariable(4, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_astore_0(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::REFERENCE);
+    topFrame->ChangeLocalVariable(0, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_astore_1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::REFERENCE);
+    topFrame->ChangeLocalVariable(1, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_astore_2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::REFERENCE);
+    topFrame->ChangeLocalVariable(2, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_astore_3(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::REFERENCE);
+    topFrame->ChangeLocalVariable(3, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_iastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object_value;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue >= array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // value.printType = ValueType::INT;
+    
+    // assert(value.type == array->arrayContentType());
+    // array->changeValueAt(index.data.intValue, value);
+    
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_lastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::LONG);
+    Value padding = topFrame->PopOperandStack();
+    // assert(padding.type == ValueType::PADDING);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object_value;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue >= array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // assert(value.type == array->arrayContentType());
+    // array->changeValueAt(index.data.intValue, value);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_fastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::FLOAT);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object_value;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue >= array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // assert(value.type == array->arrayContentType());
+    // array->changeValueAt(index.data.intValue, value);
+	
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::DOUBLE);
+    Value padding = topFrame->PopOperandStack();
+    // assert(padding.type == ValueType::PADDING);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object_value)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object_value;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue >= array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // assert(value.type == array->arrayContentType());
+    // array->changeValueAt(index.data.intValue, value);
+	
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_aastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+	Value value = topFrame->PopOperandStack(); // Valor armazenado no index do array
+	// assert(value.type == ValueType::REFERENCE);
+    Value index = topFrame->PopOperandStack(); // Index do arary
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack(); // Referência ao array
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue >= array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+	// array->changeValueAt(index.data.intValue, value);
+    
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_bastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object;
+    // assert(array->arrayContentType() == BYTE_VALUE || array->arrayContentType() == BYTE_VALUE);
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue > array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // if (array->arrayContentType() == BYTE_VALUE) {
+    //     value.data.booleanValue = (value.data.intValue != 0) ? true : false;
+    //     value.type = BYTE_VALUE;
+    //     value.printType = BYTE_VALUE;
+    // } else {
+    //     value.data.byteValue = (uint8_t) value.data.intValue;
+    //     value.type = BYTE_VALUE;
+    //     value.printType = BYTE_VALUE;
+    // }
+    
+    // array->changeValueAt(index.data.intValue, value);
+	
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_castore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue > array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // value.data.char_value = (uint8_t) value.data.intValue;
+    // value.printType = ValueType::CHAR;
+    // value.type = ValueType::CHAR;
+    // array->changeValueAt(index.data.intValue, value);
+	
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_sastore(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+	// ArrayObject *array;
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type == ValueType::INT);
+    Value index = topFrame->PopOperandStack();
+    // assert(index.type == ValueType::INT);
+    Value arrayref = topFrame->PopOperandStack();
+    // assert(arrayref.type == ValueType::REFERENCE);
+    // assert((arrayref.data.object)->objectType() == ObjectType::ARRAY);
+
+    // array = (ArrayObject *) arrayref.data.object;
+
+    // if (array == NULL) {
+    //     cerr << "NullPointerException" << endl;
+    //     exit(1);
+    // }
+    // if (index.data.intValue > array->getSize() || index.data.intValue < 0) {
+    //     cerr << "ArrayIndexOutOfBoundsException" << endl;
+    //     exit(2);
+    // }
+
+    // value.data.shortValue = (int16_t) value.data.intValue;
+    // value.printType = ValueType::SHORT;
+    // value.type = ValueType::SHORT;
+    // array->changeValueAt(index.data.intValue, value);
+	
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_pop(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type != ValueType::LONG);
+    // assert(value.type != ValueType::DOUBLE);
 
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_pop2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+    topFrame->PopOperandStack();
+    topFrame->PopOperandStack();
 
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dup(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value = topFrame->PopOperandStack();
+    // assert(value.type != ValueType::LONG);
+    // assert(value.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value);
+    topFrame->PushOperandStack(value);
+
+    topFrame->pc += 1;
 }
 
-void Interpreter::i_dup2_x1(){
+void Interpreter::i_dup_x1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value_1 = topFrame->PopOperandStack();
+    // assert(value_1.type != ValueType::LONG);
+    // assert(value_1.type != ValueType::DOUBLE);
+    Value value_2 = topFrame->PopOperandStack();
+    // assert(value_2.type != ValueType::LONG);
+    // assert(value_2.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value_1);
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+
+    topFrame->pc += 1;
 }
 
-void Interpreter::i_dup2_x2(){
+void Interpreter::i_dup_x2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value_1 = topFrame->PopOperandStack();
+    Value value_2 = topFrame->PopOperandStack();
+    Value value_3 = topFrame->PopOperandStack();
+
+    // assert(value_1.type != ValueType::LONG);
+    // assert(value_1.type != ValueType::DOUBLE);
+    // assert(value_3.type != ValueType::LONG);
+    // assert(value_3.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value_1);
+    topFrame->PushOperandStack(value_3);
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_dup2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value_1 = topFrame->PopOperandStack();
+    Value value_2 = topFrame->PopOperandStack();
+    // assert(value_2.type != ValueType::LONG);
+    // assert(value_2.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+
+    topFrame->pc += 1;
+}
+
+void Interpreter::i_dup2_x1(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+
+    Value value_1 = topFrame->PopOperandStack();
+    Value value_2 = topFrame->PopOperandStack();
+    Value value_3 = topFrame->PopOperandStack();
+
+    // assert(value_2.type != ValueType::LONG);
+    // assert(value_2.type != ValueType::DOUBLE);
+    // assert(value_3.type != ValueType::LONG);
+    // assert(value_3.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+    topFrame->PushOperandStack(value_3);
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+
+    topFrame->pc += 1;
+}
+
+void Interpreter::i_dup2_x2(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
+
+    Value value_1 = topFrame->PopOperandStack();
+    Value value_2 = topFrame->PopOperandStack();
+    Value value_3 = topFrame->PopOperandStack();
+    Value value_4 = topFrame->PopOperandStack();
+
+    // assert(value_2.type != ValueType::LONG);
+    // assert(value_2.type != ValueType::DOUBLE);
+    // assert(value_4.type != ValueType::LONG);
+    // assert(value_4.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+    topFrame->PushOperandStack(value_4);
+    topFrame->PushOperandStack(value_3);
+    topFrame->PushOperandStack(value_2);
+    topFrame->PushOperandStack(value_1);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_swap(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+    Value value_1 = topFrame->PopOperandStack();
+    Value value_2 = topFrame->PopOperandStack();
+
+    // assert(value_1.type != ValueType::LONG);
+    // assert(value_1.type != ValueType::DOUBLE);
+    // assert(value_2.type != ValueType::LONG);
+    // assert(value_2.type != ValueType::DOUBLE);
+
+    topFrame->PushOperandStack(value_1);
+    topFrame->PushOperandStack(value_2);
+
+    topFrame->pc += 1;
 }
 
 void Interpreter::i_iadd(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+	Value value_2 = topFrame->PopOperandStack();
+	Value value_1 = topFrame->PopOperandStack();
+
+	// assert(value_2.type == ValueType::INT);
+	// assert(value_1.type == ValueType::INT);
+
+	value_1.data.int_value = value_1.data.int_value + (value_2.data.int_value);
+    // value_1.printType = ValueType::INT;
+    
+	topFrame->PushOperandStack(value_1);
+
+	topFrame->pc += 1;
 }
 
 void Interpreter::i_ladd(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+	Value value_2 = topFrame->PopOperandStack();
+	topFrame->PopOperandStack(); //padding
+	Value value_1 = topFrame->PopOperandStack();
+
+	// assert(value_2.type == ValueType::LONG);
+	// assert(value_1.type == ValueType::LONG);
+
+	value_1.data.long_value = value_1.data.long_value + (value_2.data.long_value);
+	topFrame->PushOperandStack(value_1);
+
+	topFrame->pc += 1;
 }
 
 void Interpreter::i_fadd(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+	Value value_2 = topFrame->PopOperandStack();
+	Value value_1 = topFrame->PopOperandStack();
+
+	// assert(value_2.type == ValueType::FLOAT);
+	// assert(value_1.type == ValueType::FLOAT);
+
+	value_1.data.float_value = value_1.data.float_value + (value_2.data.float_value);
+	topFrame->PushOperandStack(value_1);
+
+	topFrame->pc += 1;
 }
 
 void Interpreter::i_dadd(){
+    Frame *topFrame = this->runtime->GetCurrentFrame();
 
+	Value value_2 = topFrame->PopOperandStack();
+	topFrame->PopOperandStack();
+	Value value_1 = topFrame->PopOperandStack();
+
+	// assert(value_2.type == ValueType::DOUBLE);
+	// assert(value_1.type == ValueType::DOUBLE);
+
+	value_1.data.double_value = value_1.data.double_value + (value_2.data.double_value);
+	topFrame->PushOperandStack(value_1);
+
+	topFrame->pc += 1;
 }
 //  ALEXANDRE FAZENDO ATE AQUIIIIIIIIIIIIIIIIIIIIIIIII 
 
@@ -2113,14 +2649,14 @@ void Interpreter::i_iinc() {
     
     int32_t inc;
     if (wide) {
-        uint16_t constant = (topFrame->code.code[topFrame->pc+3] << 8) | code[4];
+        uint16_t constant = (topFrame->code.code[topFrame->pc+3] << 8) | topFrame->code.code[topFrame->pc+4];
         inc = (int32_t) (int16_t) constant;
     } else {
         u1 byte2 = topFrame->code.code[topFrame->pc+2];
     }
     
     localVariable.data.int_value += inc;
-    topFrame->changeLocalVariable(localVariable, index);
+    topFrame->ChangeLocalVariable(index, localVariable);
     
     topFrame->pc += wide ? 5 : 3;
     wide = false;
@@ -2134,10 +2670,10 @@ void Interpreter::i_i2l() {
 
 	// assert(value_1.type == INT_VALUE);
 
-	Value padding;
-	padding.type = ValueType::PADDING;
+	// Value padding;
+	// padding.type = ValueType::PADDING;
 
-	topFrame->PushOperandStack(padding);
+	// topFrame->PushOperandStack(padding);
 
     value_1.data.long_value = (int64_t) value_1.data.int_value;
 	value_1.type = LONG_VALUE;
@@ -2171,9 +2707,9 @@ void Interpreter::i_i2d() {
 
 	// assert(value_1.type == INT_VALUE);
 
-	Value padding;
-	padding.type = ValueType::PADDING;
-	topFrame->PushOperandStack(padding);
+	// Value padding;
+	// padding.type = ValueType::PADDING;
+	// topFrame->PushOperandStack(padding);
 
 	value_1.type = DOUBLE_VALUE;
 	value_1.data.double_value = (double) value_1.data.int_value;
@@ -2260,9 +2796,9 @@ void Interpreter::i_f2l() {
 
 	// assert(value_1.type == FLOAT_VALUE);
 
-	Value padding;
-	padding.type = ValueType::PADDING;
-	topFrame->PushOperandStack(padding);
+	// Value padding;
+	// padding.type = ValueType::PADDING;
+	// topFrame->PushOperandStack(padding);
 
 	value_1.type = LONG_VALUE;
 	value_1.data.long_value = (uint64_t) value_1.data.float_value;
@@ -2279,9 +2815,9 @@ void Interpreter::i_f2d() {
 
 	// assert(value_1.type == FLOAT_VALUE);
 
-	Value padding;
-	padding.type = ValueType::PADDING;
-	topFrame->PushOperandStack(padding);
+	// Value padding;
+	// padding.type = ValueType::PADDING;
+	// topFrame->PushOperandStack(padding);
 
 	value_1.type = DOUBLE_VALUE;
 	value_1.data.double_value = (double) value_1.data.float_value;
@@ -2347,7 +2883,7 @@ void Interpreter::i_i2b() {
 
 	// assert(value_1.type == INT_VALUE);
     
-    value_1.printType = ValueType::BYTE;
+    // value_1.printType = BYTE_VALUE;
     
     value_1.data.int_value = (int32_t) (int8_t) value_1.data.int_value;
 	topFrame->PushOperandStack(value_1);
@@ -2363,9 +2899,9 @@ void Interpreter::i_i2c() {
 
 	// assert(value_1.type == INT_VALUE);
 
-    value_1.printType = CHAR_VALUE;
+    // value_1.printType = CHAR_VALUE;
     
-    value_1.data.charValue = (uint32_t) (uint8_t) value_1.data.int_value;
+    value_1.data.char_value = (uint32_t) (uint8_t) value_1.data.int_value;
 	topFrame->PushOperandStack(value_1);
 
 	topFrame->pc += 1;
@@ -2379,7 +2915,7 @@ void Interpreter::i_i2s() {
 
 	// assert(value_1.type == INT_VALUE);
 
-    value_1.printType = SHORT_VALUE;
+    // value_1.printType = SHORT_VALUE;
     
     value_1.data.int_value = (int32_t) (int16_t) value_1.data.int_value;
 	topFrame->PushOperandStack(value_1);
@@ -2396,7 +2932,7 @@ void Interpreter::i_lcmp() {
 	Value value_1 = topFrame->PopOperandStack();
 	topFrame->PopOperandStack();
 	Value resultado;
-    resultado.printType = INT_VALUE;
+    // resultado.printType = INT_VALUE;
 	resultado.type = INT_VALUE;
 
 	// assert(value_2.type == LONG_VALUE);
@@ -2422,7 +2958,7 @@ void Interpreter::i_fcmpl() {
 	Value value_2 = topFrame->PopOperandStack();
 	Value value_1 = topFrame->PopOperandStack();
 	Value resultado;
-    resultado.printType = INT_VALUE;
+    // resultado.printType = INT_VALUE;
 	resultado.type = INT_VALUE;
 
 	// assert(value_2.type == FLOAT_VALUE);
@@ -2450,7 +2986,7 @@ void Interpreter::i_fcmpg() {
 	Value value_2 = topFrame->PopOperandStack();
 	Value value_1 = topFrame->PopOperandStack();
 	Value resultado;
-    resultado.printType = INT_VALUE;
+    // resultado.printType = INT_VALUE;
 	resultado.type = INT_VALUE;
 
 	// assert(value_2.type == FLOAT_VALUE);
@@ -2480,7 +3016,7 @@ void Interpreter::i_dcmpl() {
 	Value value_1 = topFrame->PopOperandStack();
 	topFrame->PopOperandStack();
 	Value resultado;
-    resultado.printType = INT_VALUE;
+    // resultado.printType = INT_VALUE;
 	resultado.type = INT_VALUE;
 
 	// assert(value_2.type == DOUBLE_VALUE);
@@ -2510,7 +3046,7 @@ void Interpreter::i_dcmpg() {
 	Value value_1 = topFrame->PopOperandStack();
 	topFrame->PopOperandStack();
 	Value resultado;
-    resultado.printType = INT_VALUE;
+    // resultado.printType = INT_VALUE;
 	resultado.type = INT_VALUE;
 
 	// assert(value_2.type == DOUBLE_VALUE);
@@ -2713,7 +3249,7 @@ void Interpreter::i_if_icmpge() {
 		u1 byte1 = topFrame->code.code[topFrame->pc+1];
 		
 		u1 byte2 = topFrame->code.code[topFrame->pc+2];
-		u1 byte2 = topFrame->code.code[topFrame->pc+2];
+
 		int16_t branchOffset = (byte1 << 8) | byte2;
 		topFrame->pc += branchOffset;
     } else {
@@ -2770,7 +3306,7 @@ void Interpreter::i_if_acmpeq() {
 	// assert(value1.type == ValueType::REFERENCE);
 	// assert(value2.type == ValueType::REFERENCE);
 	
-	if (value1.data.object == value2.data.object) {
+	if (value1.data.object_value == value2.data.object_value) {
 		
 		u1 byte1 = topFrame->code.code[topFrame->pc+1];
 		u1 byte2 = topFrame->code.code[topFrame->pc+2];
@@ -2790,7 +3326,7 @@ void Interpreter::i_if_acmpne() {
 	// assert(value1.type == ValueType::REFERENCE);
 	// assert(value2.type == ValueType::REFERENCE);
 
-	if (value1.data.object != value2.data.object) {
+	if (value1.data.object_value != value2.data.object_value) {
 		
 		u1 byte1 = topFrame->code.code[topFrame->pc+1];
 		u1 byte2 = topFrame->code.code[topFrame->pc+2];
@@ -2847,7 +3383,7 @@ void Interpreter::i_ret() {
 	Value value = topFrame->GetLocalVariable(index);
 
 	// assert(value.type == ValueType::RETURN_ADDR);
-	topFrame->changeLocalVariable(value, index);
+	topFrame->ChangeLocalVariable(index, value);
 
 	topFrame->pc = value.data.returnAddress;
 	wide = false;
@@ -2907,7 +3443,7 @@ void Interpreter::i_lookupswitch() {
     
     Frame *topFrame = Interpreter::runtime->GetCurrentFrame();
     
-    u1* code = topFrame->getCode(topFrame->pc);
+    u1* code = topFrame->code.code;
     u1 padding = 4 - (topFrame->pc + 1) % 4;
     padding = (padding == 4) ? 0 : padding;
     
@@ -2954,9 +3490,9 @@ void Interpreter::i_ireturn() {
     Value returnValue = topFrame->PopOperandStack();
     // assert(returnValue.type == INT_VALUE);
     
-    stackFrame.destroyTopFrame();
+    Interpreter::runtime->PopFrame();
     
-    Frame *newTopFrame = stackFrame.getTopFrame();
+    Frame *newTopFrame = Interpreter::runtime->GetCurrentFrame();
     newTopFrame->PushOperandStack(returnValue);
 }
 
@@ -2968,9 +3504,9 @@ void Interpreter::i_lreturn() {
     // assert(returnValue.type == LONG_VALUE);
     // assert(topFrame->PopOperandStack();().type == ValueType::PADDING); // o debaixo precisa ser padding
     
-    stackFrame.destroyTopFrame();
+    Interpreter::runtime->PopFrame();
     
-    Frame *newTopFrame = stackFrame.getTopFrame();
+    Frame *newTopFrame = Interpreter::runtime->GetCurrentFrame();
     Value padding;
     padding.type = ValueType::PADDING;
     newTopFrame->PushOperandStack(padding);
@@ -2984,9 +3520,9 @@ void Interpreter::i_freturn() {
     Value returnValue = topFrame->PopOperandStack();
     // assert(returnValue.type == FLOAT_VALUE);
     
-    stackFrame.destroyTopFrame();
+    Interpreter::runtime->PopFrame();
     
-    Frame *newTopFrame = stackFrame.getTopFrame();
+    Frame *newTopFrame = Interpreter::runtime->GetCurrentFrame();
     newTopFrame->PushOperandStack(returnValue);
 }
 
@@ -2998,9 +3534,9 @@ void Interpreter::i_dreturn() {
     // assert(returnValue.type == DOUBLE_VALUE);
     // assert(topFrame->PopOperandStack();().type == ValueType::PADDING); // o debaixo precisa ser padding
     
-    stackFrame.destroyTopFrame();
+    Interpreter::runtime->PopFrame();
     
-    Frame *newTopFrame = stackFrame.getTopFrame();
+    Frame *newTopFrame = Interpreter::runtime->GetCurrentFrame();
     
     Value padding;
     padding.type = ValueType::PADDING;
@@ -3015,41 +3551,42 @@ void Interpreter::i_areturn() {
     Value returnValue = topFrame->PopOperandStack();
     // assert(returnValue.type == ValueType::REFERENCE);
     
-    stackFrame.destroyTopFrame();
+    Interpreter::runtime->PopFrame();
     
-    Frame *newTopFrame = stackFrame.getTopFrame();
+    Frame *newTopFrame = Interpreter::runtime->GetCurrentFrame();
     newTopFrame->PushOperandStack(returnValue);
 }
 
 void Interpreter::i_return() {
     
-    stackFrame.destroyTopFrame();
+    Interpreter::runtime->PopFrame();
 }
 
 void Interpreter::i_getstatic() {
     
     Frame *topFrame = Interpreter::runtime->GetCurrentFrame();
-    cp_info *constantPool = *(topFrame->getConstantPool());
+    vector<CpInfo *> constantPool = (topFrame->constant_pool);
     
 
     u1 byte1 = topFrame->code.code[topFrame->pc+1];
     u1 byte2 = topFrame->code.code[topFrame->pc+2];
 
     uint16_t fieldIndex = (byte1 << 8) | byte2;
-    cp_info fieldCP = constantPool[fieldIndex-1];
+    CpInfo* fieldCP = constantPool[fieldIndex-1];
     // assert(fieldCP.tag == CONSTANT_Fieldref); // precisa ser um fieldRef
 
-    CONSTANT_Fieldref_info fieldRef = fieldCP.info.fieldref_info;
+    CONSTANT_Fieldref_info fieldRef = fieldCP->info.Fieldref;
 
-    string className = getFormattedConstant(constantPool, fieldRef.class_index);
+    string className = ReadFile::readString(fieldRef.class_index, constantPool);
 
-    cp_info nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
+    CpInfo* nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
     // assert(nameAndTypeCP.tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP.info.nameAndType_info;
+    CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP->info.NameAndType;
 
-    string fieldName = getFormattedConstant(constantPool, fieldNameAndType.name_index);
-    string fieldDescriptor = getFormattedConstant(constantPool, fieldNameAndType.descriptor_index);
+    vector<string> fieldNameVector = ReadFile::readString(fieldNameAndType.name_index, constantPool, true);
+    string fieldName = fieldNameVector[0];
+    string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
 
     // caso especial
     if (className == "java/lang/System" && fieldDescriptor == "Ljava/io/PrintStream;" ) {
@@ -3066,7 +3603,7 @@ void Interpreter::i_getstatic() {
             if (classRuntime->getClassFile()->super_class == 0) {
                 classRuntime = NULL;
             } else {
-                string superClassName = getFormattedConstant(classRuntime->getClassFile()->constant_pool, classRuntime->getClassFile()->super_class);
+                string superClassName = ReadFile::readString(classRuntime->getClassFile()->constant_pool, classRuntime->getClassFile()->super_class);
                 classRuntime = methodArea.loadClassNamed(superClassName);
             }
         } else {
@@ -3080,25 +3617,25 @@ void Interpreter::i_getstatic() {
     }
 
     // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
-    if (stackFrame.getTopFrame() != topFrame) return;
+    if (Interpreter::runtime->GetCurrentFrame() != topFrame) return;
     
     Value staticValue = classRuntime->getValueFromField(fieldName);
     switch (staticValue.type) {
-        case ValueType::BOOLEAN:
+        case BOOLEAN_VALUE:
             staticValue.type = INT_VALUE;
-            staticValue.printType = ValueType::BOOLEAN;
+            // staticValue.printType = BOOLEAN_VALUE;
             break;
-        case ValueType::BYTE:
+        case BYTE_VALUE:
             staticValue.type = INT_VALUE;
-            staticValue.printType = ValueType::BYTE;
+            // staticValue.printType = BYTE_VALUE;
             break;
         case SHORT_VALUE:
             staticValue.type = INT_VALUE;
-            staticValue.printType = SHORT_VALUE;
+            // staticValue.printType = SHORT_VALUE;
             break;
         case INT_VALUE:
             staticValue.type = INT_VALUE;
-            staticValue.printType = INT_VALUE;
+            // staticValue.printType = INT_VALUE;
             break;
         default:
             break;
@@ -3170,8 +3707,8 @@ void Interpreter::i_putstatic() {
     } else {
         switch (fieldDescriptor[0]) {
             case 'B':
-                topValue.type = ValueType::BYTE;
-                topValue.printType = ValueType::BYTE;
+                topValue.type = BYTE_VALUE;
+                topValue.printType = BYTE_VALUE;
                 break;
             case 'C':
                 topValue.type = CHAR_VALUE;
@@ -3182,8 +3719,8 @@ void Interpreter::i_putstatic() {
                 topValue.type = SHORT_VALUE;
                 break;
             case 'Z':
-                topValue.type = ValueType::BOOLEAN;
-                topValue.type = ValueType::BOOLEAN;
+                topValue.type = BYTE_VALUE;
+                topValue.type = BYTE_VALUE;
                 break;
         }
     }
@@ -3220,7 +3757,7 @@ void Interpreter::i_getfield() {
 
     Value objectValue = topFrame->PopOperandStack();
     // assert(objectValue.type == ValueType::REFERENCE);
-    Object *object = objectValue.data.object;
+    Object *object = objectValue.data.object_value;
     // assert(object->objectType() == ObjectType::CLASS_INSTANCE);
     ClassInstance *classInstance = (ClassInstance *) object;
 
@@ -3231,13 +3768,13 @@ void Interpreter::i_getfield() {
 
     Value fieldValue = classInstance->getValueFromField(fieldName);
     switch (fieldValue.type) {
-        case ValueType::BOOLEAN:
+        case BYTE_VALUE:
             fieldValue.type = INT_VALUE;
-            fieldValue.printType = ValueType::BOOLEAN;
+            fieldValue.printType = BYTE_VALUE;
             break;
-        case ValueType::BYTE:
+        case BYTE_VALUE:
             fieldValue.type = INT_VALUE;
-            fieldValue.printType = ValueType::BYTE;
+            fieldValue.printType = BYTE_VALUE;
             break;
         case SHORT_VALUE:
             fieldValue.type = INT_VALUE;
@@ -3293,8 +3830,8 @@ void Interpreter::i_putfield() {
     } else {
         switch (fieldDescriptor[0]) {
             case 'B':
-                valueToBeInserted.type = ValueType::BYTE;
-                valueToBeInserted.printType = ValueType::BYTE;
+                valueToBeInserted.type = BYTE_VALUE;
+                valueToBeInserted.printType = BYTE_VALUE;
                 break;
             case 'C':
                 valueToBeInserted.type = CHAR_VALUE;
@@ -3305,15 +3842,15 @@ void Interpreter::i_putfield() {
                 valueToBeInserted.printType = SHORT_VALUE;
                 break;
             case 'Z':
-                valueToBeInserted.type = ValueType::BOOLEAN;
-                valueToBeInserted.printType = ValueType::BOOLEAN;
+                valueToBeInserted.type = BYTE_VALUE;
+                valueToBeInserted.printType = BYTE_VALUE;
                 break;
         }
     }
 
     Value objectValue = topFrame->PopOperandStack();
     // assert(objectValue.type == ValueType::REFERENCE);
-    Object *object = objectValue.data.object;
+    Object *object = objectValue.data.object_value;
     // assert(object->objectType() == ObjectType::CLASS_INSTANCE);
     ClassInstance *classInstance = (ClassInstance *) object;
 
@@ -3358,14 +3895,14 @@ void Interpreter::i_invokevirtual() {
 
                 if (print_value.type == INT_VALUE) {
                     switch (print_value.printType) {
-                        case ValueType::BOOLEAN:
+                        case BYTE_VALUE:
                             printf("%s", print_value.data.booleanValue == 0 ? "false" : "true");
                             break;
-                        case ValueType::BYTE:
+                        case BYTE_VALUE:
                             printf("%d", print_value.data.byteValue);
                             break;
                         case CHAR_VALUE:
-                            printf("%c", print_value.data.charValue);
+                            printf("%c", print_value.data.char_value);
                             break;
                         case SHORT_VALUE:
                             printf("%d", print_value.data.shortValue);
@@ -3388,17 +3925,17 @@ void Interpreter::i_invokevirtual() {
                             printf("%lld", print_value.data.long_value);
                             break;
                         case ValueType::REFERENCE:
-                            // assert(print_value.data.object->objectType() == ObjectType::STRING_INSTANCE);
-                            printf("%s", ((StringObject *) print_value.data.object)->getString().c_str());
+                            // assert(print_value.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
+                            printf("%s", ((StringObject *) print_value.data.object_value)->getString().c_str());
                             break;
-                        case ValueType::BOOLEAN:
+                        case BYTE_VALUE:
                             printf("%s", print_value.data.booleanValue == 0 ? "false" : "true");
                             break;
-                        case ValueType::BYTE:
+                        case BYTE_VALUE:
                             printf("%d", print_value.data.byteValue);
                             break;
                         case CHAR_VALUE:
-                            printf("%c", print_value.data.charValue);
+                            printf("%c", print_value.data.char_value);
                             break;
                         case SHORT_VALUE:
                             printf("%d", print_value.data.shortValue);
@@ -3417,11 +3954,11 @@ void Interpreter::i_invokevirtual() {
             Value strValue2 = topFrame->PopOperandStack();
             // assert(strValue1.type == ValueType::REFERENCE);
             // assert(strValue2.type == ValueType::REFERENCE);
-            // assert(strValue1.data.object->objectType() == ObjectType::STRING_INSTANCE);
-            // assert(strValue2.data.object->objectType() == ObjectType::STRING_INSTANCE);
+            // assert(strValue1.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
+            // assert(strValue2.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
             
-            StringObject *str1 = (StringObject*) strValue1.data.object;
-            StringObject *str2 = (StringObject*) strValue2.data.object;
+            StringObject *str1 = (StringObject*) strValue1.data.object_value;
+            StringObject *str2 = (StringObject*) strValue2.data.object_value;
             
             Value result;
             result.printType = INT_VALUE;
@@ -3435,9 +3972,9 @@ void Interpreter::i_invokevirtual() {
         } else if (className == "java/lang/String" && methodName == "length") {	
             Value strValue = topFrame->PopOperandStack();
             // assert(strValue.type == ValueType::REFERENCE);		
-            // assert(strValue.data.object->objectType() == ObjectType::STRING_INSTANCE);		
+            // assert(strValue.data.object_value->objectType() == ObjectType::STRING_INSTANCE);		
                     
-            StringObject *str = (StringObject*) strValue.data.object;		
+            StringObject *str = (StringObject*) strValue.data.object_value;		
                     
             Value result;
             result.printType = INT_VALUE;
@@ -3482,7 +4019,7 @@ void Interpreter::i_invokevirtual() {
         // assert(objectValue.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
         args.insert(args.begin(), objectValue);
 
-        Object *object = objectValue.data.object;
+        Object *object = objectValue.data.object_value;
         // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
         ClassInstance *instance = (ClassInstance *) object;
 
@@ -3580,7 +4117,7 @@ void Interpreter::i_invokespecial() {
         // assert(objectValue.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
         args.insert(args.begin(), objectValue);
 
-        Object *object = objectValue.data.object;
+        Object *object = objectValue.data.object_value;
         // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
         ClassInstance *instance = (ClassInstance *) object;
 
@@ -3750,7 +4287,7 @@ void Interpreter::i_invokeinterface() {
         // assert(objectValue.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
         args.insert(args.begin(), objectValue);
 
-        Object *object = objectValue.data.object;
+        Object *object = objectValue.data.object_value;
         // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
         ClassInstance *instance = (ClassInstance *) object;
 
@@ -3799,7 +4336,7 @@ void Interpreter::i_new() {
     
     // Armazena referência na pilha
     Value objectref;
-    objectref.data.object = object;
+    objectref.data.object_value = object;
     objectref.type = ValueType::REFERENCE;
     topFrame->PushOperandStack(objectref);
     
@@ -3828,9 +4365,9 @@ void Interpreter::i_newarray() {
     
     switch (topFrame->code.code[topFrame->pc+1]) { // argumento representa tipo do array
         case 4:
-            array = new ArrayObject(ValueType::BOOLEAN);
-            value.type = ValueType::BOOLEAN;
-            value.printType = ValueType::BOOLEAN;
+            array = new ArrayObject(BYTE_VALUE);
+            value.type = BYTE_VALUE;
+            value.printType = BYTE_VALUE;
             for (int i = 0; i < count.data.int_value; i++) {
                 array->pushValue(value);
             }
@@ -3858,9 +4395,9 @@ void Interpreter::i_newarray() {
             }
             break;
         case 8:
-            array = new ArrayObject(ValueType::BYTE);
-            value.type = ValueType::BYTE;
-            value.printType = ValueType::BYTE;
+            array = new ArrayObject(BYTE_VALUE);
+            value.type = BYTE_VALUE;
+            value.printType = BYTE_VALUE;
             for (int i = 0; i < count.data.int_value; i++) {
                 array->pushValue(value);
             }
@@ -3892,7 +4429,7 @@ void Interpreter::i_newarray() {
     
     Value arrayref; // Referencia pro array na pilha de operandos
     arrayref.type = ValueType::REFERENCE;
-    arrayref.data.object = array;
+    arrayref.data.object_value = array;
     
     topFrame->PushOperandStack(arrayref);
     topFrame->pc += 2;
@@ -3933,14 +4470,14 @@ void Interpreter::i_anewarray() {
     // criando objeto da classe instanciada
     Value objectref;
     objectref.type = ValueType::REFERENCE;
-    objectref.data.object = new ArrayObject(ValueType::REFERENCE);
+    objectref.data.object_value = new ArrayObject(ValueType::REFERENCE);
     
     // populando array com NULL
     Value nullValue;
     nullValue.type = ValueType::REFERENCE;
-    nullValue.data.object = NULL;
+    nullValue.data.object_value = NULL;
     for (int i = 0; i < count.data.int_value; i++) {
-        ((ArrayObject *) objectref.data.object)->pushValue(nullValue);
+        ((ArrayObject *) objectref.data.object_value)->pushValue(nullValue);
     }
 
     topFrame->PushOperandStack(objectref);
@@ -3954,14 +4491,14 @@ void Interpreter::i_arraylength() {
     
     Value arrayref = topFrame->PopOperandStack();  
     // assert(arrayref.type == ValueType::REFERENCE);
-    if (arrayref.data.object == NULL) {
+    if (arrayref.data.object_value == NULL) {
         cerr << "NullPointerException" << endl;
         exit(1);
     }
     
     Value length;
     length.type = INT_VALUE;
-    length.data.int_value = ((ArrayObject *) arrayref.data.object)->getSize();
+    length.data.int_value = ((ArrayObject *) arrayref.data.object_value)->getSize();
     
     topFrame->PushOperandStack(length);
     topFrame->pc += 1 ;
@@ -3995,11 +4532,11 @@ void Interpreter::i_checkcast() {
     Value resultValue;
     resultValue.type = INT_VALUE;
     
-    if (objectrefValue.data.object == NULL) {
+    if (objectrefValue.data.object_value == NULL) {
         cerr << "ClassCastException" << endl;
         exit(1);
     } else {
-        Object *obj = objectrefValue.data.object;
+        Object *obj = objectrefValue.data.object_value;
         
         if (obj->objectType() == ObjectType::CLASS_INSTANCE) {
             ClassInstance *classInstance = (ClassInstance *) obj;
@@ -4061,10 +4598,10 @@ void Interpreter::i_instanceof() {
     Value resultValue;
     resultValue.type = INT_VALUE;
 
-    if (objectrefValue.data.object == NULL) {
+    if (objectrefValue.data.object_value == NULL) {
         resultValue.data.int_value = 0;
     } else {
-        Object *obj = objectrefValue.data.object;
+        Object *obj = objectrefValue.data.object_value;
         
         if (obj->objectType() == ObjectType::CLASS_INSTANCE) {
             ClassInstance *classInstance = (ClassInstance *) obj;
@@ -4157,7 +4694,7 @@ void Interpreter::i_multianewarray() {
             valueType = ValueType::REFERENCE;
             break;
         case 'B':
-            valueType = ValueType::BYTE;
+            valueType = BYTE_VALUE;
             break;
         case 'C':
             valueType = CHAR_VALUE;
@@ -4178,7 +4715,7 @@ void Interpreter::i_multianewarray() {
             valueType = SHORT_VALUE;
             break;
         case 'Z':
-            valueType = ValueType::BOOLEAN;
+            valueType = BYTE_VALUE;
             break;
         default:
             cerr << "Descritor invalido em multianewarray" << endl;
@@ -4197,7 +4734,7 @@ void Interpreter::i_multianewarray() {
     
     Value arrayValue;
     arrayValue.type = ValueType::REFERENCE;
-    arrayValue.data.object = array;
+    arrayValue.data.object_value = array;
     
     topFrame->PushOperandStack(arrayValue);
     
@@ -4211,7 +4748,7 @@ void Interpreter::i_ifnull() {
     Value referenceValue = topFrame->PopOperandStack();
     // assert(referenceValue.type == ValueType::REFERENCE);
     
-    if (referenceValue.data.object == NULL) {
+    if (referenceValue.data.object_value == NULL) {
         
         u1 byte1 = topFrame->code.code[topFrame->pc+1];
         u1 byte2 = topFrame->code.code[topFrame->pc+2];
@@ -4229,7 +4766,7 @@ void Interpreter::i_ifnonnull() {
     Value referenceValue = topFrame->PopOperandStack();
     // assert(referenceValue.type == ValueType::REFERENCE);
     
-    if (referenceValue.data.object != NULL) {
+    if (referenceValue.data.object_value != NULL) {
         
         u1 byte1 = topFrame->code.code[topFrame->pc+1];
         u1 byte2 = topFrame->code.code[topFrame->pc+2];
@@ -4248,7 +4785,7 @@ void Interpreter::i_goto_w() {
 	u1 byte1 = topFrame->code.code[topFrame->pc+1];
 	u1 byte2 = topFrame->code.code[topFrame->pc+2];
 	u1 byte3 = topFrame->code.code[topFrame->pc+3];
-	u1 byte4 = code[4];
+	u1 byte4 = topFrame->code.code[topFrame->pc+4];
 	int32_t branchOffset = (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
 
 	topFrame->pc += branchOffset;
@@ -4263,7 +4800,7 @@ void Interpreter::i_jsr_w() {
 	u1 byte1 = topFrame->code.code[topFrame->pc+1];
 	u1 byte2 = topFrame->code.code[topFrame->pc+2];
 	u1 byte3 = topFrame->code.code[topFrame->pc+3];
-	u1 byte4 = code[4];
+	u1 byte4 = topFrame->code.code[topFrame->pc+4];
 	int32_t branchOffset = (byte1 << 24) | (byte2 << 16) | (byte3 << 8)| byte4;
 
 	Value returnAddr;

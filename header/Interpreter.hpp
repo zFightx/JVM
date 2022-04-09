@@ -119,6 +119,8 @@ public:
     void i_pop();
     void i_pop2();
     void i_dup();
+    void i_dup_x1();
+    void i_dup_x2();
     void i_dup2_x1();
     void i_dup2_x2();
     void i_dup2();
