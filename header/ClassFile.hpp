@@ -54,6 +54,7 @@ public:
     void PrintAccessFlags(u2 access_flags, int flagType);
 
     string readString(int index);
+    MethodInfo* getMethodByName(string name);
 };
 
 #endif

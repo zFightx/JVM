@@ -4,6 +4,7 @@
 #include "../header/Dados.hpp"
 #include "../header/ClassFile.hpp"
 #include "../header/ReadFile.hpp"
+#include "../header/Runtime.hpp"
 
 using namespace std;
 
@@ -44,8 +45,10 @@ void ClassLoaderSubsystem::Prepare(ClassFile *cf)
     // map <string, value>
 }
 
-void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSection *> &method_area)
+void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
 {
+    map<string, MethodAreaSection *> &method_area = runtime->method_area;
+
     // se classe ainda não carregada
     if (!method_area.count(class_name))
     {
@@ -110,19 +113,28 @@ void ClassLoaderSubsystem::Resolve(string class_name, map<string, MethodAreaSect
         }
 
         method_area.insert({this_class, new_method_area});
+        
         // chamar Initialize da classe
+        ClassLoaderSubsystem::Initialize(class_name, class_file, runtime);
+
         if (class_file->super_class != 0)
         {
             u2 index = class_file->constant_pool[class_file->super_class - 1]->info.Class.name_index;
             string super_class = ReadFile::readString(index, class_file->constant_pool);
-            ClassLoaderSubsystem::Resolve(super_class + ".class", method_area);
+            ClassLoaderSubsystem::Resolve(super_class + ".class", runtime);
         }
     }
 }
 
 // se for a main class, empilhar o metodo main primeiro e depois o clinit, caso contrário, só empilhar o clinit
-void ClassLoaderSubsystem::Initialize(string class_name, ClassFile *class_file)
+void ClassLoaderSubsystem::Initialize(string class_name, ClassFile *class_file, Runtime *runtime)
 {
+    if (class_name == Runtime::main_class_name)
+    {   
+        runtime->InitializeFrame("main", class_file);
+    }
+
+    runtime->InitializeFrame("<clinit>", class_file);
 }
 
 // string ClassLoaderSubsystem::GetStringConstantPool(u2 index, vector<CpInfo *> constant_pool)

@@ -17,6 +17,7 @@ class Interpreter
 public:
     map<u1, PointerFunction> instruction_table;
     Runtime *runtime;
+    bool wide;
     
     Frame * invoker_frame;
 

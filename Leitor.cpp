@@ -7,6 +7,7 @@
 #include "header/Dados.hpp"
 #include "header/ReadFile.hpp"
 #include "header/Runtime.hpp"
+#include "header/Interpreter.hpp"
 
 using namespace std;
 
@@ -24,24 +25,9 @@ int main()
     // delete class_file;
 
     Runtime *runtime = new Runtime(file);
+    Interpreter *interpreter = new Interpreter(runtime);
 
-    map<string, MethodAreaSection *>::iterator it;
-
-    for (it = runtime->method_area.begin(); it != runtime->method_area.end(); it++)
-    {
-        cout << "printnaod"
-             << " " << it->second->class_file->this_class << endl;
-
-        map<string, Value>::iterator it2;
-        for (it2 = it->second->static_fields.begin(); it2 != it->second->static_fields.end(); it2++)
-        {
-            cout << "type : " << (int)it2->second.type << endl;
-            if (it2->second.type == 8)
-            {
-                cout << it2->first << " : " << it2->second.data.object_value << endl;
-            }
-        }
-    }
+    interpreter->ExecuteInterpreter();
 
     cout << "aqui" << endl;
     delete runtime;

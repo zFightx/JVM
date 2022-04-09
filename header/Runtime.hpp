@@ -16,13 +16,15 @@ public:
     static string main_class_name;
     map<string, MethodAreaSection *> method_area;
     vector<Frame *> stack;
-    int pc;
+    
 
     Runtime(string class_name);
     ~Runtime();
 
-    void AddStack(Frame *fr);
-    void RemoveStack();
+    void PushFrame(Frame *fr);
+    void PopFrame();
+    void InitializeFrame(string method_name, ClassFile *class_file);
+    Frame * GetCurrentFrame();
 
     void AddMethodArea(string class_name);
 };

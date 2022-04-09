@@ -1136,3 +1136,14 @@ AttributeInfo *ClassFile::CreateAttributeInfo(ifstream &file, u2 attributes_coun
     }
     return attributes;
 }
+
+MethodInfo* ClassFile::getMethodByName(string name){
+    for(unsigned i = 0; i < this->methods_count; i++){
+        MethodInfo *method = this->methods[i];
+        string method_name = ReadFile::readString(method->name_index, this->constant_pool);
+        if(method_name == name){
+            return method;
+        }
+    }
+    return NULL;
+}
