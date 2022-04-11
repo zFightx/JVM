@@ -21,6 +21,10 @@ public:
     * O tamanho do atributo.
     */
     u4 attribute_length;
+
+    /**
+    * Union de tipos do atributo.
+    */
     union Info
     {
         ConstantValue_attribute ConstantValue;
@@ -44,9 +48,8 @@ public:
 
     /**
      * @brief Sobrecarga do construtor com inicialização.
-     * @param attribute_name_indexibute_name_index O  
-     * @param attribute_length O tamanho do atributo.e o seu tamanho.
-     * @param attribute_length description
+     * @param attribute_name_index O nome do atributo.
+     * @param attribute_length O tamanho do atributo.
      */
     AttributeInfo(u2 attribute_name_index, u4 attribute_length);
 };

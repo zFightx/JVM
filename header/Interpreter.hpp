@@ -230,6 +230,8 @@ public:
     void i_ifnonnull();
     void i_goto_w();
     void i_jsr_w();
+
+    void populateMultiarray(vector<Value> *array, char valueType, vector<int> count);
 };
 
 #endif

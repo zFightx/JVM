@@ -28,11 +28,14 @@ Value Frame::GetLocalVariable(int index){
 }
 
 void Frame::ChangeLocalVariable(int index, Value value){
-    this->local_variables[index] = value;
+    // if(this->local_variables.size() > index)
+        this->local_variables[index] = value;
+    // else
+    //     this->local_variables.push_back(value);
 }
 
 void Frame::AddLocalVariable(Value value){
-    this->local_variables.push_back(value);
+    // this->local_variables.push_back(value);
 }
 
 void Frame::AddOperandStack(Value value){

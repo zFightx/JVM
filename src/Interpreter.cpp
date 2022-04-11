@@ -38,7 +38,7 @@ void Interpreter::ExecuteFrame(){
         // não esquecer de verificar se o método existe.
         PointerFunction method_func = this->instruction_table[bytecode];
         // cout << "EXECUTE 3" << endl;
-        cout << "Executando: " << Opcodes::opcodes[bytecode].first << endl;
+        // cout << "Executando: " << Opcodes::opcodes[bytecode].first << endl;
 
         (this->*method_func)();
     }
@@ -342,7 +342,7 @@ void Interpreter::i_iconst_4(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
+    value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 4;
 
@@ -355,7 +355,7 @@ void Interpreter::i_iconst_5(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
+    value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 5;
 
@@ -367,14 +367,14 @@ void Interpreter::i_iconst_5(){
 void Interpreter::i_lconst_0(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
-    // Value padding;
-    // padding.type = PADDING_VALUE;
+    Value padding;
+    padding.type = PADDING_VALUE;
 
     Value value;
     value.type = LONG_VALUE;
     value.data.long_value = 0;
 
-    // topFrame->PushOperandStack(padding);
+    topFrame->PushOperandStack(padding);
     topFrame->AddOperandStack(value);
 
     topFrame->pc += 1;
@@ -383,14 +383,14 @@ void Interpreter::i_lconst_0(){
 void Interpreter::i_lconst_1(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
-    // Value padding;
-    // padding.type = PADDING_VALUE;
+    Value padding;
+    padding.type = PADDING_VALUE;
 
     Value value;
     value.type = LONG_VALUE;
     value.data.long_value = 1;
 
-    // topFrame->PushOperandStack(padding);
+    topFrame->PushOperandStack(padding);
     topFrame->AddOperandStack(value);
 
     topFrame->pc += 1;
@@ -435,14 +435,14 @@ void Interpreter::i_fconst_2(){
 void Interpreter::i_dconst_0(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
-    // Value padding;
-    // padding.type = PADDING_VALUE;
+    Value padding;
+    padding.type = PADDING_VALUE;
 
     Value value;
     value.type = DOUBLE_VALUE;
     value.data.double_value = 0;
 
-    // topFrame->PushOperandStack(padding);
+    topFrame->PushOperandStack(padding);
     topFrame->AddOperandStack(value);
 
     topFrame->pc += 1;
@@ -451,14 +451,14 @@ void Interpreter::i_dconst_0(){
 void Interpreter::i_dconst_1(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
-    // Value padding;
-    // padding.type = PADDING_VALUE;
+    Value padding;
+    padding.type = PADDING_VALUE;
 
     Value value;
     value.type = DOUBLE_VALUE;
     value.data.double_value = 1;
 
-    // topFrame->PushOperandStack(padding);
+    topFrame->PushOperandStack(padding);
     topFrame->AddOperandStack(value);
 
     topFrame->pc += 1;
@@ -611,10 +611,10 @@ void Interpreter::i_ldc2_w(){
         value.type = LONG_VALUE;
         value.data.long_value = long_number;
         
-        // Value padding;
-        // padding.type = PADDING_VALUE;
+        Value padding;
+        padding.type = PADDING_VALUE;
         
-        // topFrame->PushOperandStack(padding);
+        topFrame->PushOperandStack(padding);
     } else if (entry->tag == CONSTANT_Double) {
         u4 highBytes = entry->info.Double.high_bytes;
         u4 lowBytes = entry->info.Double.low_bytes;
@@ -629,15 +629,16 @@ void Interpreter::i_ldc2_w(){
         value.type = DOUBLE_VALUE;
         value.data.double_value = double_number;
         
-        // Value padding;
-        // padding.type = PADDING_VALUE;
+        Value padding;
+        padding.type = PADDING_VALUE;
         
-        // topFrame->PushOperandStack(padding);
+        topFrame->PushOperandStack(padding);
     } else {
         cerr << "ldc2_w tentando acessar um elemento da CP invalido: " << entry->tag << endl;
         exit(1);
     }
     
+    // cout << "LDC_W2 : " << value.data.long_value << endl;
     topFrame->AddOperandStack(value);
     topFrame->pc += 3;
 }
@@ -646,7 +647,7 @@ void Interpreter::i_iload(){
     Frame *topFrame = this->runtime->GetCurrentFrame();
 
 	u1 byte1 = topFrame->code.code[topFrame->pc+1];
-	
+    // cout << "ILOAD BYTE1... " << (int) byte1 << endl;
 	int16_t index = (int16_t)byte1;
 
 	if (wide) {
@@ -662,7 +663,7 @@ void Interpreter::i_iload(){
 	// assert(((int16_t)(topFrame->sizeLocalVariables()) > index));
 	Value value = topFrame->GetLocalVariable(index);
 	// assert(value.type == INT_VALUE);
-
+    // cout << "ILOAD... " << topFrame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 	topFrame->AddOperandStack(value);
 }
 //! Essa função representa a função lload da JVM
@@ -687,10 +688,10 @@ void Interpreter::i_lload(){
 	
     // assert(value.type == LONG_VALUE);
 
-	// Value padding;
-	// padding.type = PADDING_VALUE;
+	Value padding;
+	padding.type = PADDING_VALUE;
 
-	// topFrame->pushIntoOperandStack(padding);
+	topFrame->AddOperandStack(padding);
 	topFrame->AddOperandStack(value);
 }
 //! Essa função representa a função fload da JVM
@@ -713,6 +714,9 @@ void Interpreter::i_fload(){
 	// assert(((int16_t)(topFrame->sizeLocalVariables()) > index));
 	Value value = topFrame->GetLocalVariable(index);
 	// assert(value.type == FLOAT_VALUE);
+
+    cout << "FLOAD: " << (int) byte1 << " : " << index << " : " << value.data.float_value << endl;
+
 	topFrame->AddOperandStack(value);
 }
 //! Essa função representa a função dload da JVM
@@ -737,10 +741,10 @@ void Interpreter::i_dload(){
 	Value value = topFrame->GetLocalVariable(index);
 	// assert(value.type == DOUBLE_VALUE);
 
-	// Value padding;
-	// padding.type = PADDING_VALUE;
+	Value padding;
+	padding.type = PADDING_VALUE;
 
-	// topFrame->pushIntoOperandStack(padding);
+	topFrame->AddOperandStack(padding);
 	topFrame->AddOperandStack(value);
 }
 //! Essa função representa a função aload da JVM
@@ -1148,7 +1152,7 @@ void Interpreter::i_aaload(){
         cerr << "ArrayIndexOutOfBoundsException" << endl;
         exit(2);
     }
-
+    // cout << "HERE" << endl;
     topFrame->AddOperandStack(array->at(index.data.int_value));
     topFrame->pc += 1;
 }
@@ -1270,9 +1274,10 @@ void Interpreter::i_istore(){
 	} else {
 		topFrame->pc += 2;
 	}
-
 	// assert(((int16_t)(topFrame->sizeLocalVariables()) > index));
 	topFrame->ChangeLocalVariable(index, value);
+
+    // cout << "ISTORE..." << topFrame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função lstore da JVM
 void Interpreter::i_lstore(){
@@ -1300,6 +1305,8 @@ void Interpreter::i_lstore(){
 	Value padding;
 	padding.type = PADDING_VALUE;
 	topFrame->ChangeLocalVariable(index + 1, padding);
+
+    // cout << "LSTORE..." << topFrame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função fstore da JVM
 void Interpreter::i_fstore(){
@@ -1311,6 +1318,7 @@ void Interpreter::i_fstore(){
 	u1 byte1 = topFrame->code.code[topFrame->pc+1];
 	int16_t index = (int16_t)byte1;
 
+    cout << "FSTORE wide: " << wide << endl;
 	if (wide) {
 		u1 byte2 = topFrame->code.code[topFrame->pc+2];
 		index = (byte1 << 8) | byte2;
@@ -1322,6 +1330,8 @@ void Interpreter::i_fstore(){
 
 	// assert(((int16_t)(topFrame->sizeLocalVariables()) > index));
 	topFrame->ChangeLocalVariable(index, value);
+
+    cout << "FSTORE..." << (int) byte1 << " : " << index << " : " << value.data.float_value << " wide: " << wide << endl;
 }
 //! Essa função representa a função dstore da JVM
 void Interpreter::i_dstore(){
@@ -1348,6 +1358,8 @@ void Interpreter::i_dstore(){
 	Value padding;
 	padding.type = PADDING_VALUE;
 	topFrame->ChangeLocalVariable(index + 1, padding);
+
+    // cout << "DSTORE..." << topFrame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função astore da JVM
 void Interpreter::i_astore(){
@@ -1370,6 +1382,8 @@ void Interpreter::i_astore(){
 
 	// assert(((int16_t)(topFrame->sizeLocalVariables()) > index));
 	topFrame->ChangeLocalVariable(index, value);
+
+    // cout << "ASTORE..." << topFrame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função istore_0 da JVM
 void Interpreter::i_istore_0(){
@@ -1531,7 +1545,7 @@ void Interpreter::i_dstore_1(){
 
     value = topFrame->PopOperandStack();
     // assert(value.type == PADDING_VALUE);
-    topFrame->ChangeLocalVariable(2, value);
+    topFrame->ChangeLocalVariable(2, value);    
 
     topFrame->pc += 1;
 }
@@ -1583,6 +1597,8 @@ void Interpreter::i_astore_1(){
     topFrame->ChangeLocalVariable(1, value);
 
     topFrame->pc += 1;
+
+    // cout << "ASTORE_1..." << topFrame->local_variables.size() << " : " << 1 << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função astore_2 da JVM
 void Interpreter::i_astore_2(){
@@ -2753,9 +2769,11 @@ void Interpreter::i_l2i() {
 
 	// assert(value_1.type == LONG_VALUE);
 
-    value_1.data.int_value = (int32_t) value_1.data.int_value;
+    value_1.data.int_value = (int32_t) value_1.data.long_value;
     // value_1.printType = INT_VALUE;
 	value_1.type = INT_VALUE;
+
+    cout << "L2I: " <<  value_1.data.int_value << endl;
 
 	topFrame->PushOperandStack(value_1);
 
@@ -2770,9 +2788,11 @@ void Interpreter::i_l2f() {
 	topFrame->PopOperandStack(); //padding
 
 	// assert(value_1.type == LONG_VALUE);
-
-	value_1.type = FLOAT_VALUE;
+    cout << "L2F: " <<  value_1.data.long_value << endl;
 	value_1.data.float_value = (float) value_1.data.long_value;
+	value_1.type = FLOAT_VALUE;
+
+    cout << "L2F: " <<  value_1.data.float_value << endl;
 
 	topFrame->PushOperandStack(value_1);
 
@@ -2787,10 +2807,12 @@ void Interpreter::i_l2d() {
 	//manter padding na pilha de operandos
 
 	// assert(value_1.type == LONG_VALUE);
-
+    
 	value_1.type = DOUBLE_VALUE;
 	value_1.data.double_value = (double) value_1.data.long_value;
 
+    cout << "L2D: " <<  value_1.data.double_value << endl;
+    
 	topFrame->PushOperandStack(value_1);
 
 	topFrame->pc += 1;
@@ -3268,6 +3290,8 @@ void Interpreter::i_if_icmpge() {
 	Value value1 = topFrame->PopOperandStack();
 	// assert(value1.type == INT_VALUE);
 	// assert(value2.type == INT_VALUE);
+
+    // cout << "Comparando... " << value2.data.int_value << " : " << value1.data.int_value << endl;
 	
 	if (value1.data.int_value >= value2.data.int_value) {
 		
@@ -3615,6 +3639,7 @@ void Interpreter::i_getstatic() {
     // string fieldName = fieldNameVector[0];
     string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
 
+    
     // caso especial
     if (className == "java/lang/System" && fieldDescriptor == "Ljava/io/PrintStream;" ) {
         topFrame->pc += 3;
@@ -3623,7 +3648,7 @@ void Interpreter::i_getstatic() {
     // fim do caso especial
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
     MethodAreaSection *area = method_area[className];
-
+    
     while (area != NULL) {
         if (area->static_fields.count(fieldName) == 0) {
             if (area->class_file->super_class == 0) {
@@ -3641,7 +3666,7 @@ void Interpreter::i_getstatic() {
             break;
         }
     }
-
+    
     if (area == NULL) {
         cerr << "NoSuchFieldError" << endl;
         exit(1);
@@ -3925,25 +3950,26 @@ void Interpreter::i_invokevirtual() {
             if (methodDescriptor != "()V") {
                 Value print_value = topFrame->PopOperandStack();
 
-                if (print_value.type == INT_VALUE) {
-                    switch (print_value.printType) {
-                        case BOOLEAN_VALUE:
-                            printf("%s", print_value.data.boolean_value == 0 ? "false" : "true");
-                            break;
-                        case BYTE_VALUE:
-                            printf("%d", print_value.data.byte_value);
-                            break;
-                        case CHAR_VALUE:
-                            printf("%c", print_value.data.char_value);
-                            break;
-                        case SHORT_VALUE:
-                            printf("%d", print_value.data.short_value);
-                            break;
-                        default:
-                            printf("%d", print_value.data.int_value);
-                            break;
-                    }
-                } else {
+                cout << "eh VALUETYPE: " << (int) print_value.type << endl;
+                // if (print_value.type == INT_VALUE) {
+                //     switch (print_value.printType) {
+                //         case BOOLEAN_VALUE:
+                //             printf("%s", print_value.data.boolean_value == 0 ? "false" : "true");
+                //             break;
+                //         case BYTE_VALUE:
+                //             printf("%d", print_value.data.byte_value);
+                //             break;
+                //         case CHAR_VALUE:
+                //             printf("%c", print_value.data.char_value);
+                //             break;
+                //         case SHORT_VALUE:
+                //             printf("%d", print_value.data.short_value);
+                //             break;
+                //         default:
+                //             printf("%d", print_value.data.int_value);
+                //             break;
+                //     }
+                // } else {
                     switch (print_value.type) {
                         case DOUBLE_VALUE:
                             topFrame->PopOperandStack(); // removendo padding
@@ -3972,12 +3998,15 @@ void Interpreter::i_invokevirtual() {
                         case SHORT_VALUE:
                             printf("%d", print_value.data.short_value);
                             break;
+                        case INT_VALUE:
+                            printf("%d", print_value.data.int_value);
+                            break;
                         default:
-                            cerr << "Tentando printar tipo de dado invalido: " << print_value.type << endl;
+                            cerr << "Tentando printar tipo de dado invalido: " << (int) print_value.type << endl;
                             exit(1);
                             break;
                     }
-                }
+                // }
             }
 
             if (methodName == "println") printf("\n");
@@ -4394,11 +4423,12 @@ void Interpreter::i_newarray() {
     
     vector<Value> *array = new vector<Value>; // array que será criado
     Value value; // elemento que irá popular o array
+    value.printType = -1;   // adicionado
     value.data.long_value = 0; // inicializando Value com 0s
     
     Value padding; // padding poderá ser usado
+    padding.printType = PADDING_VALUE; // adicionado
     padding.type = PADDING_VALUE;
-    
     
     switch (topFrame->code.code[topFrame->pc+1]) { // argumento representa tipo do array
         case 4:
@@ -4418,33 +4448,35 @@ void Interpreter::i_newarray() {
             break;
         case 6:
             value.type = FLOAT_VALUE;
+            value.printType = FLOAT_VALUE;  // adicionado 
             for (int i = 0; i < count.data.int_value; i++) {
                 array->push_back(value);
             }
             break;
         case 7:
             value.type = DOUBLE_VALUE;
+            value.printType = DOUBLE_VALUE; // adicionado
             for (int i = 0; i < count.data.int_value; i++) {
                 array->push_back(value);
             }
             break;
         case 8:
             value.type = BYTE_VALUE;
-            // value.printType = BYTE_VALUE;
+            value.printType = BYTE_VALUE;
             for (int i = 0; i < count.data.int_value; i++) {
                 array->push_back(value);
             }
             break;
         case 9:
             value.type = SHORT_VALUE;
-            // value.printType = SHORT_VALUE;
+            value.printType = SHORT_VALUE;
             for (int i = 0; i < count.data.int_value; i++) {
                 array->push_back(value);
             }
             break;
         case 10:
             value.type = INT_VALUE;
-            // value.printType = INT_VALUE;
+            value.printType = INT_VALUE;
             for (int i = 0; i < count.data.int_value; i++) {
                 array->push_back(value);
             }
@@ -4459,6 +4491,7 @@ void Interpreter::i_newarray() {
     
     Value arrayref; // Referencia pro array na pilha de operandos
     arrayref.type = ARRAY_VALUE;
+    arrayref.printType = ARRAY_VALUE;  // adicionado
     arrayref.data.array_value = array;
     
     topFrame->PushOperandStack(arrayref);
@@ -4618,7 +4651,6 @@ void Interpreter::i_instanceof() {
     Frame *topFrame = this->runtime->GetCurrentFrame();
     
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-
     
     u1 byte1 = topFrame->code.code[topFrame->pc+1];
     u1 byte2 = topFrame->code.code[topFrame->pc+2];
@@ -4635,43 +4667,47 @@ void Interpreter::i_instanceof() {
     Value resultValue;
     resultValue.type = INT_VALUE;
 
-    // if (objectrefValue.data.object_value == NULL) {
-    //     resultValue.data.int_value = 0;
-    // } else {
-    //     ObjectRef *obj = objectrefValue.data.object_value;
+    if (objectrefValue.data.object_value == NULL && objectrefValue.data.string_value == NULL) {
+        resultValue.data.int_value = 0;
+    } else {
+        ObjectRef *obj = objectrefValue.data.object_value;
         
-    //     if (obj->objectType() == ObjectType::CLASS_INSTANCE) {
-    //         ClassInstance *classInstance = (ClassInstance *) obj;
-    //         ClassRuntime *classRuntime = classInstance->getClassRuntime();
+        if (objectrefValue.type == OBJECT_VALUE) {
+            // ClassInstance *classInstance = (ClassInstance *) obj;
+            // ClassRuntime *classRuntime = classInstance->getClassRuntime();
+            ClassFile *classFile = obj->class_file;
             
-    //         bool found = false;
-    //         while (!found) {
-    //             ClassFile *classFile = classRuntime->getClassFile();
-    //             string currClassName = ReadFile::readString(classFile->constant_pool, classFile->this_class);
+            bool found = false;
+            while (!found) {
+                string currClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
                 
-    //             if (currClassName == className) {
-    //                 found = true;
-    //             } else {
-    //                 if (classFile->super_class == 0) {
-    //                     break;
-    //                 } else {
-    //                     string superClassName = ReadFile::readString(classFile->constant_pool, classFile->this_class);
-    //                     classRuntime = methodArea.loadClassNamed(superClassName);
-    //                 }
-    //             }
-    //         }
+                if (currClassName == className) {
+                    found = true;
+                } else {
+                    if (classFile->super_class == 0) {
+                        break;
+                    } else {
+                        string superClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
+                        ClassLoaderSubsystem::Resolve(superClassName, this->runtime);
+
+                        MethodAreaSection * area = method_area[superClassName];
+                        classFile = area->class_file;
+                        // classRuntime = methodArea.loadClassNamed(superClassName);
+                    }
+                }
+            }
             
-    //         resultValue.data.int_value = found ? 1 : 0;
-    //     } else if (obj->objectType() == ObjectType::STRING_INSTANCE) {
-    //         resultValue.data.int_value = (className == "java/lang/String" || className == "java/lang/Object") ? 1 : 0;
-    //     } else {
-    //         if (className == "java/lang/Object") {
-    //             resultValue.data.int_value = 1;
-    //         } else {
-    //             resultValue.data.int_value = 0;
-    //         }
-    //     }
-    // }
+            resultValue.data.int_value = found ? 1 : 0;
+        } else if (objectrefValue.type == STRING_VALUE) {
+            resultValue.data.int_value = (className == "java/lang/String" || className == "java/lang/Object") ? 1 : 0;
+        } else {
+            if (className == "java/lang/Object") {
+                resultValue.data.int_value = 1;
+            } else {
+                resultValue.data.int_value = 0;
+            }
+        }
+    }
     
     topFrame->PushOperandStack(resultValue);
     
@@ -4709,7 +4745,7 @@ void Interpreter::i_multianewarray() {
     // assert(dimensions >= 1);
 
     uint16_t classIndex = (byte1 << 8) | byte2;
-    CpInfo * classCP = constantPool[classIndex-1];
+    CpInfo *classCP = constantPool[classIndex-1];
     // assert(classCP.tag == CONSTANT_Class);
     
     CONSTANT_Class_info classInfo = classCP->info.Class;
@@ -4764,23 +4800,73 @@ void Interpreter::i_multianewarray() {
     
     // stack<int> count;
     vector<int> count;
+    vector<Value> *array = new vector<Value>();
+
     for (int i = 0; i < dimensions; i++) {
         Value dimLength = topFrame->PopOperandStack();
-        // assert(dimLength.type == INT_VALUE);
+        // assert(dimLength.type == INT_VALUE);        
         count.push_back(dimLength.data.int_value);
+
+        // vector<Value> *subarray = new vector<Value>();
+        // for (int j = 0; j < dimLength.data.int_value; j++) {
+        //     Value arrayvalue;
+        //     arrayvalue.type = valueType;
+        //     arrayvalue.data.long_value = 0;
+
+        //     subarray->push_back(arrayvalue);
+        // }
+
+        // Value subarray_ref;
+        // subarray_ref.type = ARRAY_VALUE;
+        // subarray_ref.data.array_value = subarray;
+        // array->push_back(subarray_ref);
     }
     
-    vector<Value> *array = new vector<Value>();
-    populateMultiarray(array, valueType, count);
+    this->populateMultiarray(array, valueType, count);
     
     Value arrayValue;
     arrayValue.type = ARRAY_VALUE;
     arrayValue.data.array_value = array;
     
+    // cout << "Matrix Dim: " << array->size() << endl;
+    // for(unsigned i = 0; i < array->size(); i ++){
+    //     cout << "Size: " << array->at(i).data.array_value->size() << endl;
+    // }
     topFrame->PushOperandStack(arrayValue);
     
     topFrame->pc += 4;
 }
+
+void Interpreter::populateMultiarray(vector<Value> *array, char valueType, vector<int> count) {
+    int currCount = count[count.size()-1];
+    count.pop_back();
+    
+    char arrayType = (count.size() > 1) ? ARRAY_VALUE : valueType;
+    // [[I
+    // 0 iconst_5
+    // 1 iconst_5
+    // 2 multianewarray #2 <[[I> dim 2
+    if (count.size() == 0) {
+        for (int i = 0; i < currCount; i++) {
+            Value subarrayValue;
+            subarrayValue.type = valueType;
+            subarrayValue.printType = valueType;
+            subarrayValue.data.long_value = 0;
+            array->push_back(subarrayValue);
+        }
+    } else {
+        for (int i = 0; i < currCount; i++) {
+            vector<Value> *subarray = new vector<Value>();
+            this->populateMultiarray(subarray, valueType, count);
+            
+            Value subarrayValue;
+            subarrayValue.type = ARRAY_VALUE;
+            subarrayValue.data.array_value = subarray;
+            array->push_back(subarrayValue);
+        }
+    }
+}
+
 //! Essa função representa a função ifnull da JVM
 void Interpreter::i_ifnull() {
     

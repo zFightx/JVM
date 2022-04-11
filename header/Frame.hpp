@@ -1,8 +1,9 @@
 #ifndef __FRAME_H__
 #define __FRAME_H__
 
-#include<iostream>
-#include<vector>
+#include <iostream>
+#include <vector>
+#include <map>
 
 #include "CpInfo.hpp"
 #include "TypeValue.hpp"
@@ -12,7 +13,7 @@ class Frame
 private:
     
 public:
-    vector<Value> local_variables;
+    map<int, Value> local_variables;
     vector<Value> operand_stack;
     vector<CpInfo*> constant_pool;
     Code_attribute code;
