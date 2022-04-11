@@ -18,9 +18,8 @@ void MethodInfo::getAttributeByName(string name, vector<CpInfo *> constant_pool,
     for(int i = 0; i < this->attributes_count; i++){
         AttributeInfo attr = this->attributes[i];
         string attr_name = ReadFile::readString(attr.attribute_name_index, constant_pool);
-        cout << attr_name << " " << name << endl;
+        
         if(attr_name == name){
-            cout << "ENCONTROU" << endl;
             copy = attr;
         }
     }

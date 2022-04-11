@@ -115,7 +115,7 @@ void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
         method_area.insert({this_class, new_method_area});
         
         // chamar Initialize da classe
-        ClassLoaderSubsystem::Initialize(class_name, class_file, runtime);
+        ClassLoaderSubsystem::Initialize(class_file, runtime);
 
         if (class_file->super_class != 0)
         {
@@ -127,14 +127,15 @@ void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
 }
 
 // se for a main class, empilhar o metodo main primeiro e depois o clinit, caso contrário, só empilhar o clinit
-void ClassLoaderSubsystem::Initialize(string class_name, ClassFile *class_file, Runtime *runtime)
-{
+void ClassLoaderSubsystem::Initialize(ClassFile *class_file, Runtime *runtime)
+{  
+    string class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool) + ".class";
     if (class_name == Runtime::main_class_name)
     {   
-        runtime->InitializeFrame("main", class_file);
+        runtime->InitializeFrame("main", "([Ljava/lang/String;)V", class_file, Runtime::args);
     }
 
-    runtime->InitializeFrame("<clinit>", class_file);
+    runtime->InitializeFrame("<clinit>", "()V", class_file);
 }
 
 // string ClassLoaderSubsystem::GetStringConstantPool(u2 index, vector<CpInfo *> constant_pool)

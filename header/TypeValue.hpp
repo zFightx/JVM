@@ -17,12 +17,17 @@ using namespace std;
 #define SHORT_VALUE 6 // S  6
 #define BOOLEAN_VALUE 7 // Z  7
 #define OBJECT_VALUE 8 // L  8
+#define RETURN_VALUE 9 // L  9
+#define STRING_VALUE 10 // L 10
+#define ARRAY_VALUE 11 // [ 11
+#define PADDING_VALUE 20 // 
 
 class ObjectRef;
 
 struct Value
 {
     char type;
+    char printType;
     union
     {
         int8_t byte_value;       // B  0
@@ -34,7 +39,9 @@ struct Value
         int16_t short_value;     // S  6
         bool boolean_value;      // Z  7
         ObjectRef *object_value; // L  8
-        // any array_value;         // [  3
+        u4 return_address;       // R   9
+        string *string_value;     // T  10
+        vector<Value> *array_value;  // [  11   
     } data;
 };
 

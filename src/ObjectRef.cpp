@@ -2,6 +2,7 @@
 #include "../header/ReadFile.hpp"
 
 ObjectRef::ObjectRef(ClassFile *class_file){
+    this->class_file = class_file;
     vector<FieldInfo *> fields = class_file->fields;
     u2 fields_count = class_file->fields_count;
 

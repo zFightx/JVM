@@ -23,6 +23,6 @@ public:
     ~MethodInfo();
 
     void getAttributeByName(string name, vector<CpInfo*> constant_pool, AttributeInfo &copy);
+    
 };
-
 #endif

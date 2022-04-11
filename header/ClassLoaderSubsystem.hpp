@@ -18,7 +18,7 @@ public:
     static void Prepare(ClassFile *cf);
     static void Resolve(string class_name, Runtime * runtime);
 
-    static void Initialize(string class_name, ClassFile *class_file, Runtime *runtime);
+    static void Initialize(ClassFile *class_file, Runtime *runtime);
 
     static string GetStringConstantPool(u2 index, vector<CpInfo *> constant_pool);
 };

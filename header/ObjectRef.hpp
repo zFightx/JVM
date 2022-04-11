@@ -9,12 +9,14 @@
 
 using namespace std;
 
+class ClassFile;
 struct Value;
 
 class ObjectRef
 {
 public:
     map<string, Value> variables;
+    ClassFile *class_file;
 
     ObjectRef(ClassFile *class_file);
     ~ObjectRef();

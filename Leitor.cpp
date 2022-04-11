@@ -11,20 +11,27 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char *argv[])
 {
     setlocale(LC_ALL, "Portuguese");
+    
+    string file = argv[1];
 
-    string file = "";
-    cout << "Por favor, digite o nome do arquivo: ";
-    cin >> file;
-    // ClassFile *class_file = new ClassFile(file);
+    vector<Value> *args = new vector<Value>();
+    for(unsigned i = 2; i < argc; i++){
+        Value value;
+        value.type = STRING_VALUE;
+        value.data.string_value = new string(argv[i]);
+        args->push_back(value);
+    }
 
-    // class_file->MenuClassFile();
-
-    // delete class_file;
-
-    Runtime *runtime = new Runtime(file);
+    vector<Value> args_java;
+    Value value;
+    value.type = ARRAY_VALUE;
+    value.data.array_value = args;
+    args_java.push_back(value);
+    
+    Runtime *runtime = new Runtime(file, args_java);
     Interpreter *interpreter = new Interpreter(runtime);
 
     interpreter->ExecuteInterpreter();

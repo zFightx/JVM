@@ -1,15 +1,14 @@
 #include "../header/Runtime.hpp"
 #include "../header/ClassLoaderSubsystem.hpp"
+#include "../header/ReadFile.hpp"
 
 string Runtime::main_class_name;
+vector<Value> Runtime::args;
 
-Runtime::Runtime(string class_name)
+Runtime::Runtime(string class_name, vector<Value> args)
 {
     Runtime::main_class_name = class_name;
-    // this->AddMethodArea(class_name);
-
-    // this->func = &Runtime::Print;
-    // (this->*func)();
+    Runtime::args = args;
 }
 
 Runtime::~Runtime()
@@ -26,8 +25,16 @@ void Runtime::PopFrame()
     this->stack.pop_back();
 }
 
-void Runtime::InitializeFrame(string method_name, ClassFile* class_file){
-    MethodInfo* method = class_file->getMethodByName(method_name);
+// Checa se a classe passada ja foi resolvida, se nao, resolve e entao busca um metodo de acordo com o nome e o descritor no class file
+void Runtime::InitializeFrame(string method_name, string descriptor, ClassFile* class_file, vector<Value> args){
+
+    // verificar se o method area existe para o class_name e se não existir criar
+    string class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool);
+    if (this->method_area.count(class_name) == 0){
+        ClassLoaderSubsystem::Resolve( class_name, this);
+    }
+
+    MethodInfo* method = class_file->getMethodByNameAndDescriptor(method_name, descriptor);
 
     if(method)
     {
@@ -36,12 +43,17 @@ void Runtime::InitializeFrame(string method_name, ClassFile* class_file){
         Code_attribute code = attr.info.Code;
         
         Frame *fr = new Frame(class_file->constant_pool, code);
+      
         this->PushFrame(fr);
+
+        for(unsigned i = 0 ; i < args.size(); i++){
+            fr->AddLocalVariable(args[i]);
+        }
     }
 }
 
 Frame * Runtime::GetCurrentFrame(){
-    return this->stack[0];
+    return this->stack[this->stack.size()-1];
 }
 
 

@@ -12,6 +12,14 @@
 
 using namespace std;
 
+/**
+ * Representa as informações do Field. -----/CONFERIR/-----
+ */
+class FieldInfo;
+
+/**
+ * Representa as informações do Field. -----/CONFERIR/-----
+ */
 class ClassFile
 {
 
@@ -55,6 +63,7 @@ public:
 
     string readString(int index);
     MethodInfo* getMethodByName(string name);
+    MethodInfo* getMethodByNameAndDescriptor(string name, string descriptor);
 };
 
 #endif

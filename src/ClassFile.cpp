@@ -1147,3 +1147,15 @@ MethodInfo* ClassFile::getMethodByName(string name){
     }
     return NULL;
 }
+
+MethodInfo* ClassFile::getMethodByNameAndDescriptor(string name, string descriptor){
+    for(unsigned i = 0; i < this->methods_count; i++){
+        MethodInfo *method = this->methods[i];
+        string method_name = ReadFile::readString(method->name_index, this->constant_pool);
+        string method_descriptor = ReadFile::readString(method->descriptor_index, this->constant_pool);
+        if(method_name == name && method_descriptor == descriptor){
+            return method;
+        }
+    }
+    return NULL;
+}
