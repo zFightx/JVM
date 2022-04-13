@@ -8,12 +8,23 @@
 #include "CpInfo.hpp"
 #include "TypeValue.hpp"
 
+/**                                    -------/CONFERIR TUDO/-------
+ * Representa as informações do Frame
+ */
 class Frame
 {
 private:
     
 public:
+
+    /**
+    * Tabela com o valor dos frames
+    */
     map<int, Value> local_variables;
+
+    /**
+    * 
+    */
     vector<Value> operand_stack;
     vector<CpInfo*> constant_pool;
     Code_attribute code;

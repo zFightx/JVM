@@ -47,7 +47,7 @@ void Runtime::InitializeFrame(string method_name, string descriptor, ClassFile* 
         this->PushFrame(fr);
 
         for(unsigned i = 0 ; i < args.size(); i++){
-            fr->AddLocalVariable(args[i]);
+            fr->ChangeLocalVariable(i, args[i]);
         }
     }
 }

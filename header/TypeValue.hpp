@@ -27,7 +27,6 @@ class ObjectRef;
 struct Value
 {
     char type;
-    char printType;
     union
     {
         int8_t byte_value;       // B  0
