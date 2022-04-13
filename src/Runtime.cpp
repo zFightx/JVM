@@ -27,11 +27,11 @@ void Runtime::PopFrame()
 
 // Checa se a classe passada ja foi resolvida, se nao, resolve e entao busca um metodo de acordo com o nome e o descritor no class file
 void Runtime::InitializeFrame(string method_name, string descriptor, ClassFile* class_file, vector<Value> args){
-
     // verificar se o method area existe para o class_name e se não existir criar
+
     string class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool);
     if (this->method_area.count(class_name) == 0){
-        ClassLoaderSubsystem::Resolve( class_name, this);
+        ClassLoaderSubsystem::Resolve(class_name, this);
     }
 
     MethodInfo* method = class_file->getMethodByNameAndDescriptor(method_name, descriptor);
@@ -41,7 +41,7 @@ void Runtime::InitializeFrame(string method_name, string descriptor, ClassFile* 
         AttributeInfo attr; 
         method->getAttributeByName("Code", class_file->constant_pool, attr);
         Code_attribute code = attr.info.Code;
-        
+
         Frame *fr = new Frame(class_file->constant_pool, code);
       
         this->PushFrame(fr);

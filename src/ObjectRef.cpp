@@ -1,5 +1,6 @@
 #include "../header/ObjectRef.hpp"
 #include "../header/ReadFile.hpp"
+#include "../header/FieldInfo.hpp"
 
 ObjectRef::ObjectRef(ClassFile *class_file){
     this->class_file = class_file;
@@ -14,45 +15,8 @@ ObjectRef::ObjectRef(ClassFile *class_file){
             string field_name = ReadFile::readString(field->name_index, class_file->constant_pool);
             string field_descriptor = ReadFile::readString(field->descriptor_index, class_file->constant_pool);
             
-            Value value;
+            Value value = FieldInfo::FieldInit(field_descriptor);
             
-            switch (field_descriptor[0]) {
-                case 'B':
-                    value.type = 0;
-                    value.data.byte_value = 0;
-                    break;
-                case 'C':
-                    value.type = 1;
-                    value.data.char_value = 0;
-                    break;
-                case 'D':
-                    value.type = 2;
-                    value.data.double_value = 0;
-                    break;
-                case 'F':
-                    value.type = 3;
-                    value.data.float_value = 0;
-                    break;
-                case 'I':
-                    value.type = 4;
-                    value.data.int_value = 0;
-                    break;
-                case 'J':
-                    value.type = 5;
-                    value.data.long_value = 0;
-                    break;
-                case 'S':
-                    value.type = 6;
-                    value.data.short_value = 0;
-                    break;
-                case 'Z':
-                    value.type = 7;
-                    value.data.char_value = false;
-                    break;
-                default:
-                    value.type = 8;
-                    value.data.object_value = NULL;
-            }
             
             this->AddVariable(field_name, value);
         }
@@ -60,13 +24,13 @@ ObjectRef::ObjectRef(ClassFile *class_file){
 }
 
 void ObjectRef::AddVariable(string name, Value value){
-    this->variables.insert({name, value});
+    this->variables[name] = value;
 }
 
 void ObjectRef::ChangeVariable(string name, Value value){
-    this->variables.at(name) = value;
+    this->variables[name] = value;
 }
 
 Value ObjectRef::GetVariable(string name){
-    return this->variables.at(name);
+    return this->variables[name];
 }

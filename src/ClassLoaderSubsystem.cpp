@@ -5,6 +5,7 @@
 #include "../header/ClassFile.hpp"
 #include "../header/ReadFile.hpp"
 #include "../header/Runtime.hpp"
+#include "../header/FieldInfo.hpp"
 
 using namespace std;
 
@@ -52,6 +53,8 @@ void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
     // se classe ainda não carregada
     if (!method_area.count(class_name))
     {
+        class_name = class_name.find(".class") != string::npos ? class_name : class_name + ".class";
+
         ClassFile *class_file = new ClassFile(class_name);
         MethodAreaSection *new_method_area = new MethodAreaSection(class_file);
 
@@ -59,7 +62,6 @@ void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
         string this_class = ReadFile::readString(index, class_file->constant_pool);
 
         vector<FieldInfo *> fields = class_file->fields;
-
         for (unsigned i = 0; i < class_file->fields_count; i++)
         {
             if (fields[i]->access_flags == 0x0008)
@@ -67,47 +69,7 @@ void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
                 string field_name = ReadFile::readString(fields[i]->name_index, class_file->constant_pool);
                 string field_descriptor = ReadFile::readString(fields[i]->descriptor_index, class_file->constant_pool);
 
-                Value value;
-
-                switch (field_descriptor[0])
-                {
-                case 'B':
-                    value.type = 0;
-                    value.data.byte_value = 0;
-                    break;
-                case 'C':
-                    value.type = 1;
-                    value.data.char_value = 0;
-                    break;
-                case 'D':
-                    value.type = 2;
-                    value.data.double_value = 0;
-                    break;
-                case 'F':
-                    value.type = 3;
-                    value.data.float_value = 0;
-                    break;
-                case 'I':
-                    value.type = 4;
-                    value.data.int_value = 0;
-                    break;
-                case 'J':
-                    value.type = 5;
-                    value.data.long_value = 0;
-                    break;
-                case 'S':
-                    value.type = 6;
-                    value.data.short_value = 0;
-                    break;
-                case 'Z':
-                    value.type = 7;
-                    value.data.char_value = false;
-                    break;
-                default:
-                    value.type = 8;
-                    value.data.object_value = NULL;
-                }
-
+                Value value = FieldInfo::FieldInit(field_descriptor);
                 new_method_area->static_fields.insert({field_name, value});
             }
         }
@@ -116,12 +78,11 @@ void ClassLoaderSubsystem::Resolve(string class_name, Runtime *runtime)
         
         // chamar Initialize da classe
         ClassLoaderSubsystem::Initialize(class_file, runtime);
-
         if (class_file->super_class != 0)
         {
             u2 index = class_file->constant_pool[class_file->super_class - 1]->info.Class.name_index;
             string super_class = ReadFile::readString(index, class_file->constant_pool);
-            ClassLoaderSubsystem::Resolve(super_class + ".class", runtime);
+            ClassLoaderSubsystem::Resolve(super_class, runtime);
         }
     }
 }

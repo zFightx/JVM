@@ -61,7 +61,7 @@ public:
      * @param field_descriptor descrição do field a ser inicializado
      * @return O field inicializado
      */
-    Value FieldInit(string field_descriptor);
+    static Value FieldInit(string field_descriptor);
 };
 
 #endif

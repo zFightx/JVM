@@ -509,7 +509,6 @@ void Interpreter::java_ldc(){
     
     if (entry->tag == CONSTANT_String) {
         CpInfo *utf8_entry = constant_pool[entry->info.String.string_index-1];
-        // assert(utf8_entry.tag == CONSTANT_Utf8);
         
         u1* bytes = utf8_entry->info.Utf8.bytes;
         char utf8_string[utf8_entry->info.Utf8.length+1];
@@ -2088,10 +2087,6 @@ void Interpreter::java_dadd(){
 
 	current_frame->pc += 1;
 }
-//  ALEXANDRE FAZENDO ATE AQUIIIIIIIIIIIIIIIIIIIIIIIII 
-
-//###################################################################################################################################
-//###################################################################################################################################
 
 //! Essa função representa a função isub da JVM
 void Interpreter::java_isub(){
@@ -3780,6 +3775,7 @@ void Interpreter::java_putstatic() {
         }
     }
 
+    // cout << "PUTSTATIC: " << fieldName << " : " << (int) topValue.type << endl;
     area->static_fields[fieldName] = topValue;
 
     current_frame->pc += 3;
@@ -3854,7 +3850,6 @@ void Interpreter::java_getfield() {
 }
 //! Essa função representa a função putfield da JVM
 void Interpreter::java_putfield() {
-    
     Frame *current_frame = this->runtime->GetCurrentFrame();
     vector<CpInfo *>constantPool = current_frame->constant_pool;
 
@@ -3871,12 +3866,11 @@ void Interpreter::java_putfield() {
 
     CpInfo *nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
     // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
-
     CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP->info.NameAndType;
 
     string fieldName = ReadFile::readString(fieldNameAndType.name_index, constantPool);
     string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
-
+    // cout << "PUTFIELD 4" << endl;
     Value valueToBeInserted = current_frame->PopOperandStack();
     if (valueToBeInserted.type == DOUBLE_VALUE || valueToBeInserted.type == LONG_VALUE) {
         current_frame->PopOperandStack(); // removendo padding
@@ -3916,7 +3910,7 @@ void Interpreter::java_invokevirtual() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
     
-    // vector<Value> save_operand_stack = current_frame->operand_stack;
+    vector<Value> save_operand_stack = current_frame->operand_stack;
     
     vector<CpInfo *>constantPool = current_frame->constant_pool;
 
@@ -4081,8 +4075,15 @@ void Interpreter::java_invokevirtual() {
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[className];
 
-        cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
+        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
         this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
+
+        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+            current_frame->operand_stack = save_operand_stack;
+            delete this->runtime->GetCurrentFrame();
+            this->runtime->PopFrame();
+            return;
+        }
     }
 
     current_frame->pc += 3;
@@ -4092,7 +4093,7 @@ void Interpreter::java_invokespecial() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
     
-    // vector<Value> save_operand_stack = current_frame->operand_stack;
+    vector<Value> save_operand_stack = current_frame->operand_stack;
     
     vector<CpInfo *> constantPool = current_frame->constant_pool;
     
@@ -4170,15 +4171,15 @@ void Interpreter::java_invokespecial() {
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[className];
 
-        cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
+        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
         this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
 
-        // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
-        // if (this->runtime->GetCurrentFrame() != current_frame) {
-        //     current_frame->setOperandStackFromBackup(operandStackBackup);
-        //     delete newFrame;
-        //     return;
-        // }
+        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+            current_frame->operand_stack = save_operand_stack;
+            delete this->runtime->GetCurrentFrame();
+            this->runtime->PopFrame();
+            return;
+        }
 
         // this->runtime->PushFrame(newFrame);
     }
@@ -4190,7 +4191,7 @@ void Interpreter::java_invokestatic() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
     
-    // stack<Value> operandStackBackup = current_frame->backupOperandStack();
+    vector<Value> save_operand_stack = current_frame->operand_stack;
     
     vector<CpInfo *> constantPool = current_frame->constant_pool;
     
@@ -4252,24 +4253,25 @@ void Interpreter::java_invokestatic() {
             }
         }
 
+        ClassLoaderSubsystem::Resolve(className, this->runtime);
+
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[className];
 
-        cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
+        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
         this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
 
+        // cout << "STATIC AQUI " << endl;
         // AttributeInfo attr_code;
         // MethodInfo *method = area->class_file->getMethodByName(methodName);
         // method->getAttributeByName("Code", area->class_file->constant_pool, attr_code);
         
-        // Frame *newFrame = new Frame(area->class_file->constant_pool, attr_code.info.Code);
-
-        // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
-        // if (stackFrame.getTopFrame() != current_frame) {
-        //     current_frame->setOperandStackFromBackup(operandStackBackup);
-        //     delete newFrame;
-        //     return;
-        // }
+        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+            current_frame->operand_stack = save_operand_stack;
+            delete this->runtime->GetCurrentFrame();
+            this->runtime->PopFrame();
+            return;
+        }
 
         // cout << "ADICIONOU" << endl;
         // this->runtime->PushFrame(newFrame);
@@ -4282,7 +4284,7 @@ void Interpreter::java_invokeinterface() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
     
-    // stack<Value> operandStackBackup = current_frame->backupOperandStack();
+    vector<Value> save_operand_stack = current_frame->operand_stack;
     
     vector<CpInfo *> constantPool = current_frame->constant_pool;
     
@@ -4350,15 +4352,15 @@ void Interpreter::java_invokeinterface() {
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[className];
 
-        cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
+        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
         this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
 
-        // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
-        // if (stackFrame.getTopFrame() != current_frame) {
-        //     current_frame->setOperandStackFromBackup(operandStackBackup);
-        //     delete newFrame;
-        //     return;
-        // }
+        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+            current_frame->operand_stack = save_operand_stack;
+            delete this->runtime->GetCurrentFrame();
+            this->runtime->PopFrame();
+            return;
+        }
 
         // this->runtime->PushFrame(newFrame);
     }

@@ -19,7 +19,7 @@ Value FieldInfo::FieldInit(string field_descriptor){
 
     if (field_descriptor == "Ljava/lang/String;"){
         value.type = 10;
-        value.data.string_value = NULL;
+        value.data.string_value = new string("");
     }
     else {
         switch (field_descriptor[0])
