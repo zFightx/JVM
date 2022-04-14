@@ -13,10 +13,15 @@
 class MethodAreaSection
 {
 public:
+
     /**                                    
-    * Representa as informações do MethodAreaSection
+    * É o arquivo
     */
     ClassFile * class_file;
+
+    /**                                    
+    * Tabela de fields estáticos
+    */
     map<string, Value> static_fields;
 
     /**                             

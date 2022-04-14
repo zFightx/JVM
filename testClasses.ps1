@@ -1,11 +1,11 @@
-﻿# ./testClasses.ps1 
+﻿
 
 function testClass($file, $noClear){
-    Write-Output "Testing class $file"	
+    Write-Output "Testando $file na JVM"	
     Pause
     ./main $file
     Pause
-    Write-Output "Testing class $file with java"
+    Write-Output "Testando $file com o java"
     Pause
     $javaCommandFile = $file.Replace(".class", "")
     java $javaCommandFile
@@ -18,7 +18,7 @@ function testClass($file, $noClear){
 
 if ($args[0] -eq 0 ) {
     Write-Output "Compilando..."
-    g++ -o main -std=c++11 Leitor.cpp ./src/*.cpp
+    g++ -o main -std=c++11 JVM.cpp ./src/*.cpp
     Write-Output "Pronto!"
 }
 
