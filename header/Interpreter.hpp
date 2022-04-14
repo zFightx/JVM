@@ -231,7 +231,7 @@ public:
     void java_goto_w();
     void java_jsr_w();
 
-    void populateMultiarray(vector<Value> *array, char valueType, vector<int> count);
+    void CreateMultiarray(vector<Value> *array, char valueType, vector<int> count);
 };
 
 #endif

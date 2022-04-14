@@ -7,27 +7,31 @@
 #include "../header/MethodAreaSection.hpp"
 #include "../header/ObjectRef.hpp"
 
-Interpreter::Interpreter(Runtime * runtime){
+Interpreter::Interpreter(Runtime *runtime)
+{
     this->ConstructTable();
 
     this->runtime = runtime;
     this->wide = false;
 }
 
-Interpreter::~Interpreter(){
-    
+Interpreter::~Interpreter()
+{
 }
 //! Essa função representa a função ExecuteInterpreter da JVM
-void Interpreter::ExecuteInterpreter(){
-    ClassLoaderSubsystem::Resolve(Runtime::main_class_name, this->runtime);    
+void Interpreter::ExecuteInterpreter()
+{
+    ClassLoaderSubsystem::Resolve(Runtime::main_class_name, this->runtime);
     Interpreter::ExecuteFrame();
 }
 //! Essa função representa a função ExecuteFrame da JVM
-void Interpreter::ExecuteFrame(){
-    cout << this->runtime->stack.size() << endl;
+void Interpreter::ExecuteFrame()
+{
+    // cout << this->runtime->stack.size() << endl;
     Opcodes::CreateOpcodes();
-    // Aqui devemos executar o code.    
-    while(this->runtime->stack.size() > 0){
+    // Aqui devemos executar o code.
+    while (this->runtime->stack.size() > 0)
+    {
         // cout << "RODANDO STACK " << endl;
         Frame *current_frame = this->runtime->GetCurrentFrame();
         Code_attribute current_code = current_frame->code;
@@ -50,7 +54,8 @@ void Interpreter::ExecuteFrame(){
     // ( dentro do proprio return, desempilhar ) Pensar em como faremos para o return cancelar o frame atual e cancelar essa função.
 }
 
-void Interpreter::ConstructTable(){
+void Interpreter::ConstructTable()
+{
     this->instruction_table[0x00] = &Interpreter::java_nop;
     this->instruction_table[0x01] = &Interpreter::java_aconst_null;
     this->instruction_table[0x02] = &Interpreter::java_iconst_m1;
@@ -151,8 +156,6 @@ void Interpreter::ConstructTable(){
     this->instruction_table[0x61] = &Interpreter::java_ladd;
     this->instruction_table[0x62] = &Interpreter::java_fadd;
     this->instruction_table[0x63] = &Interpreter::java_dadd;
-
-
 
     this->instruction_table[0x64] = &Interpreter::java_isub;
     this->instruction_table[0x65] = &Interpreter::java_lsub;
@@ -258,12 +261,14 @@ void Interpreter::ConstructTable(){
 }
 
 //! Essa função representa a função nop da JVM
-void Interpreter::java_nop(){
+void Interpreter::java_nop()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
     current_frame->pc += 1;
 }
 //! Essa função representa a função aconst_null da JVM
-void Interpreter::java_aconst_null(){    
+void Interpreter::java_aconst_null()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
@@ -274,11 +279,11 @@ void Interpreter::java_aconst_null(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_m1 da JVM
-void Interpreter::java_iconst_m1(){
+void Interpreter::java_iconst_m1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = -1;
 
@@ -288,11 +293,11 @@ void Interpreter::java_iconst_m1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_0 da JVM
-void Interpreter::java_iconst_0(){
+void Interpreter::java_iconst_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 0;
 
@@ -301,11 +306,11 @@ void Interpreter::java_iconst_0(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_1 da JVM
-void Interpreter::java_iconst_1(){
+void Interpreter::java_iconst_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 1;
 
@@ -314,11 +319,11 @@ void Interpreter::java_iconst_1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_2 da JVM
-void Interpreter::java_iconst_2(){
+void Interpreter::java_iconst_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 2;
 
@@ -327,11 +332,11 @@ void Interpreter::java_iconst_2(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_3 da JVM
-void Interpreter::java_iconst_3(){
+void Interpreter::java_iconst_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 3;
 
@@ -340,11 +345,11 @@ void Interpreter::java_iconst_3(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_4 da JVM
-void Interpreter::java_iconst_4(){
+void Interpreter::java_iconst_4()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 4;
 
@@ -353,11 +358,11 @@ void Interpreter::java_iconst_4(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iconst_5 da JVM
-void Interpreter::java_iconst_5(){
+void Interpreter::java_iconst_5()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
-    // value.printType = INT_VALUE;
     value.type = INT_VALUE;
     value.data.int_value = 5;
 
@@ -366,7 +371,8 @@ void Interpreter::java_iconst_5(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função lconst_0 da JVM
-void Interpreter::java_lconst_0(){
+void Interpreter::java_lconst_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value padding;
@@ -382,7 +388,8 @@ void Interpreter::java_lconst_0(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função lconst_1 da JVM
-void Interpreter::java_lconst_1(){
+void Interpreter::java_lconst_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value padding;
@@ -398,7 +405,8 @@ void Interpreter::java_lconst_1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função fconst_0 da JVM
-void Interpreter::java_fconst_0(){
+void Interpreter::java_fconst_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
@@ -410,7 +418,8 @@ void Interpreter::java_fconst_0(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função fconst_1 da JVM
-void Interpreter::java_fconst_1(){
+void Interpreter::java_fconst_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
@@ -422,7 +431,8 @@ void Interpreter::java_fconst_1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função fconst_2 da JVM
-void Interpreter::java_fconst_2(){
+void Interpreter::java_fconst_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
@@ -434,7 +444,8 @@ void Interpreter::java_fconst_2(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dconst_0 da JVM
-void Interpreter::java_dconst_0(){
+void Interpreter::java_dconst_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value padding;
@@ -450,7 +461,8 @@ void Interpreter::java_dconst_0(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dconst_1 da JVM
-void Interpreter::java_dconst_1(){
+void Interpreter::java_dconst_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value padding;
@@ -466,314 +478,345 @@ void Interpreter::java_dconst_1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função bipush da JVM
-void Interpreter::java_bipush(){
+void Interpreter::java_bipush()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    u1 byte = current_frame->code.code[current_frame->pc+1];
+
+    u1 byte = current_frame->code.code[current_frame->pc + 1];
 
     Value value;
-    // value.printType = BYTE_VALUE;
+
     value.type = INT_VALUE;
-    value.data.int_value = (int32_t) (int8_t) byte; // convertendo para inteiro e estendendo o sinal
+    value.data.int_value = (int32_t)(int8_t)byte;
 
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 2;
 }
 //! Essa função representa a função sipush da JVM
-void Interpreter::java_sipush(){
+void Interpreter::java_sipush()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t short_value = (byte1 << 8) | byte2;
     Value value;
-    // value.printType = SHORT_VALUE;
+
     value.type = INT_VALUE;
-    value.data.int_value = (int32_t) (int16_t) short_value; // convertendo para inteiro e estendendo o sinal
+    value.data.int_value = (int32_t)(int16_t)short_value;
 
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 3;
 }
 //! Essa função representa a função ldc da JVM
-void Interpreter::java_ldc(){
+void Interpreter::java_ldc()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    u1 index = current_frame->code.code[current_frame->pc+1];
-    
-    vector<CpInfo *>constant_pool = current_frame->constant_pool;
-    CpInfo *entry = constant_pool[index-1];
+
+    u1 index = current_frame->code.code[current_frame->pc + 1];
+
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+    CpInfo *entry = constant_pool[index - 1];
 
     Value value;
-    
-    if (entry->tag == CONSTANT_String) {
-        CpInfo *utf8_entry = constant_pool[entry->info.String.string_index-1];
-        
-        u1* bytes = utf8_entry->info.Utf8.bytes;
-        char utf8_string[utf8_entry->info.Utf8.length+1];
+
+    if (entry->tag == CONSTANT_String)
+    {
+        CpInfo *utf8_entry = constant_pool[entry->info.String.string_index - 1];
+
+        u1 *bytes = utf8_entry->info.Utf8.bytes;
+        char utf8_string[utf8_entry->info.Utf8.length + 1];
         int i;
-        for (i = 0; i < utf8_entry->info.Utf8.length; i++) {
+        for (i = 0; i < utf8_entry->info.Utf8.length; i++)
+        {
             utf8_string[i] = bytes[i];
         }
         utf8_string[i] = '\0';
-        
+
         value.type = STRING_VALUE;
         value.data.string_value = new string(utf8_string);
-    } else if (entry->tag == CONSTANT_Integer) {
-        // value.printType = INT_VALUE;
+    }
+    else if (entry->tag == CONSTANT_Integer)
+    {
+
         value.type = INT_VALUE;
-        value.data.int_value = (int32_t) entry->info.Integer.bytes;
-    } else if (entry->tag == CONSTANT_Float) {
+        value.data.int_value = (int32_t)entry->info.Integer.bytes;
+    }
+    else if (entry->tag == CONSTANT_Float)
+    {
         u4 float_bytes = entry->info.Float.bytes;
         int s = ((float_bytes >> 31) == 0) ? 1 : -1;
         int e = ((float_bytes >> 23) & 0xff);
         int m = (e == 0) ? (float_bytes & 0x7fffff) << 1 : (float_bytes & 0x7fffff) | 0x800000;
-        
-        float number = s*m*pow(2, e-150);
+
+        float number = s * m * pow(2, e - 150);
         value.type = FLOAT_VALUE;
         value.data.float_value = number;
-    } else {
-        // cerr << "ldc tentando acessar um elemento da CP invalido: " << entry->tag << endl;
+    }
+    else
+    {
+        cerr << "LDC tentando acessar um constant_pool invalido: " << entry->tag << endl;
         exit(1);
     }
-    
+
     current_frame->PushOperandStack(value);
     current_frame->pc += 2;
 }
 //! Essa função representa a função ldc_w da JVM
-void Interpreter::java_ldc_w(){
+void Interpreter::java_ldc_w()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     u2 index = (byte1 << 8) | byte2;
-    
+
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    CpInfo *entry = constant_pool[index-1];
-    
+    CpInfo *entry = constant_pool[index - 1];
+
     Value value;
-    
-    if (entry->tag == CONSTANT_String) {
-        CpInfo *utf8_entry = constant_pool[entry->info.String.string_index-1];
-        // assert(utf8Entry.tag == CONSTANT_Utf8);
-        
-        u1* bytes = utf8_entry->info.Utf8.bytes;
-        char utf8_string[utf8_entry->info.Utf8.length+1];
+
+    if (entry->tag == CONSTANT_String)
+    {
+        CpInfo *utf8_entry = constant_pool[entry->info.String.string_index - 1];
+
+        u1 *bytes = utf8_entry->info.Utf8.bytes;
+        char utf8_string[utf8_entry->info.Utf8.length + 1];
         int i;
-        for (i = 0; i < utf8_entry->info.Utf8.length; i++) {
+        for (i = 0; i < utf8_entry->info.Utf8.length; i++)
+        {
             utf8_string[i] = bytes[i];
         }
         utf8_string[i] = '\0';
-        
+
         value.type = STRING_VALUE;
         value.data.string_value = new string(utf8_string);
-    } else if (entry->tag == CONSTANT_Integer) {
-        // value.printType = INT_VALUE;
+    }
+    else if (entry->tag == CONSTANT_Integer)
+    {
+
         value.type = INT_VALUE;
         value.data.int_value = entry->info.Integer.bytes;
-    } else if (entry->tag == CONSTANT_Float) {
+    }
+    else if (entry->tag == CONSTANT_Float)
+    {
         u4 float_bytes = entry->info.Float.bytes;
         int s = ((float_bytes >> 31) == 0) ? 1 : -1;
         int e = ((float_bytes >> 23) & 0xff);
         int m = (e == 0) ? (float_bytes & 0x7fffff) << 1 : (float_bytes & 0x7fffff) | 0x800000;
-        
-        float number = s*m*pow(2, e-150);
+
+        float number = s * m * pow(2, e - 150);
         value.type = FLOAT_VALUE;
         value.data.float_value = number;
-    } else {
-        // cerr << "ldc_w tentando acessar um elemento da CP invalido: " << entry.tag << endl;
+    }
+    else
+    {
+        cerr << "LDC_W tentando acessar um constant_pool invalido: " << entry->tag << endl;
         exit(1);
     }
-    
+
     current_frame->PushOperandStack(value);
     current_frame->pc += 3;
 }
 //! Essa função representa a função ldc2_w da JVM
-void Interpreter::java_ldc2_w(){
+void Interpreter::java_ldc2_w()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
-    
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+
     u2 index = (byte1 << 8) | byte2;
-    
+
     vector<CpInfo *> class_file = current_frame->constant_pool;
-    CpInfo *entry = class_file[index-1];
-    
+    CpInfo *entry = class_file[index - 1];
+
     Value value;
-    
-    if (entry->tag == CONSTANT_Long) {
+
+    if (entry->tag == CONSTANT_Long)
+    {
         u4 high_bytes = entry->info.Long.high_bytes;
         u4 low_bytes = entry->info.Long.low_bytes;
-        
-        int64_t long_number = ((int64_t) high_bytes << 32) + low_bytes;
+
+        int64_t long_number = ((int64_t)high_bytes << 32) + low_bytes;
         value.type = LONG_VALUE;
         value.data.long_value = long_number;
-        
+
         Value padding;
         padding.type = PADDING_VALUE;
-        
+
         current_frame->PushOperandStack(padding);
-    } else if (entry->tag == CONSTANT_Double) {
+    }
+    else if (entry->tag == CONSTANT_Double)
+    {
         u4 high_bytes = entry->info.Double.high_bytes;
         u4 low_bytes = entry->info.Double.low_bytes;
-        
-        int64_t long_number = ((int64_t) high_bytes << 32) + low_bytes;
-        
+
+        int64_t long_number = ((int64_t)high_bytes << 32) + low_bytes;
+
         int32_t s = ((long_number >> 63) == 0) ? 1 : -1;
         int32_t e = (int32_t)((long_number >> 52) & 0x7ffL);
         int64_t m = (e == 0) ? (long_number & 0xfffffffffffffL) << 1 : (long_number & 0xfffffffffffffL) | 0x10000000000000L;
-        
-        double double_number = s*m*pow(2, e-1075);
+
+        double double_number = s * m * pow(2, e - 1075);
         value.type = DOUBLE_VALUE;
         value.data.double_value = double_number;
-        
+
         Value padding;
         padding.type = PADDING_VALUE;
-        
+
         current_frame->PushOperandStack(padding);
-    } else {
+    }
+    else
+    {
         cerr << "ldc2_w tentando acessar um elemento da CP invalido: " << entry->tag << endl;
         exit(1);
     }
-    
+
     current_frame->PushOperandStack(value);
     current_frame->pc += 3;
 }
 //! Essa função representa a função iload da JVM
-void Interpreter::java_iload(){
+void Interpreter::java_iload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
     // cout << "ILOAD BYTE1... " << (int) byte1 << endl;
-	int16_t index = (int16_t)byte1;
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-        u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	}
-	else {
-		current_frame->pc += 2;
-	}
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	Value value = current_frame->GetLocalVariable(index);
-	// assert(value.type == INT_VALUE);
+    Value value = current_frame->GetLocalVariable(index);
+
     // cout << "ILOAD... " << current_frame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
-	current_frame->PushOperandStack(value);
+    current_frame->PushOperandStack(value);
 }
 //! Essa função representa a função lload da JVM
-void Interpreter::java_lload(){
+void Interpreter::java_lload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    
-	int16_t index = (int16_t)byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	}
-	else {
-		current_frame->pc += 2;
-	}
+    int16_t index = (int16_t)byte1;
 
-	Value value = current_frame->GetLocalVariable(index);
-	
-    // assert(value.type == LONG_VALUE);
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	Value padding;
-	padding.type = PADDING_VALUE;
+    Value value = current_frame->GetLocalVariable(index);
 
-	current_frame->PushOperandStack(padding);
-	current_frame->PushOperandStack(value);
+    Value padding;
+    padding.type = PADDING_VALUE;
+
+    current_frame->PushOperandStack(padding);
+    current_frame->PushOperandStack(value);
 }
 //! Essa função representa a função fload da JVM
-void Interpreter::java_fload(){
+void Interpreter::java_fload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t)byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	}
-	else {
-		current_frame->pc += 2;
-	}
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	Value value = current_frame->GetLocalVariable(index);
-	// assert(value.type == FLOAT_VALUE);
+    Value value = current_frame->GetLocalVariable(index);
 
-	current_frame->PushOperandStack(value);
+    current_frame->PushOperandStack(value);
 }
 //! Essa função representa a função dload da JVM
-void Interpreter::java_dload(){
+void Interpreter::java_dload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t) byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	}
-	else {
-		current_frame->pc += 2;
-	}
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > (index + 1)));
+    Value value = current_frame->GetLocalVariable(index);
 
-	Value value = current_frame->GetLocalVariable(index);
-	// assert(value.type == DOUBLE_VALUE);
+    Value padding;
+    padding.type = PADDING_VALUE;
 
-	Value padding;
-	padding.type = PADDING_VALUE;
-
-	current_frame->PushOperandStack(padding);
-	current_frame->PushOperandStack(value);
+    current_frame->PushOperandStack(padding);
+    current_frame->PushOperandStack(value);
 }
 //! Essa função representa a função aload da JVM
-void Interpreter::java_aload(){
+void Interpreter::java_aload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t) byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	}
-	else {
-		current_frame->pc += 2;
-	}
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	Value value = current_frame->GetLocalVariable(index);
-	// assert(value.type == ValueType::REFERENCE);
-	current_frame->PushOperandStack(value);
+    Value value = current_frame->GetLocalVariable(index);
+
+    current_frame->PushOperandStack(value);
 }
 //! Essa função representa a função iload_0 da JVM
-void Interpreter::java_iload_0(){
+void Interpreter::java_iload_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     // cout << "ILOAD_0 size: " << current_frame->local_variables.size() << endl;
     Value value = current_frame->GetLocalVariable(0);
-    // assert(value.type == ValueType::INT);
 
     current_frame->PushOperandStack(value);
 
@@ -781,412 +824,372 @@ void Interpreter::java_iload_0(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iload_1 da JVM
-void Interpreter::java_iload_1(){
+void Interpreter::java_iload_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(1);
-    // assert(value.type == ValueType::INT);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função iload_2 da JVM
-void Interpreter::java_iload_2(){
+void Interpreter::java_iload_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(2);
-    // assert(value.type == ValueType::INT);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função iload_3 da JVM
-void Interpreter::java_iload_3(){
+void Interpreter::java_iload_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(3);
-    // assert(value.type == ValueType::INT);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lload_0 da JVM
-void Interpreter::java_lload_0(){
+void Interpreter::java_lload_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(1);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(0);
-    // assert(value.type == LONG_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lload_1 da JVM
-void Interpreter::java_lload_1(){
+void Interpreter::java_lload_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(2);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(1);
-    // assert(value.type == LONG_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lload_2 da JVM
-void Interpreter::java_lload_2(){
+void Interpreter::java_lload_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(3);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(2);
-    // assert(value.type == LONG_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lload_3 da JVM
-void Interpreter::java_lload_3(){
+void Interpreter::java_lload_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(4);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(3);
-    // assert(value.type == LONG_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fload_0 da JVM
-void Interpreter::java_fload_0(){
+void Interpreter::java_fload_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(0);
-    // assert(value.type == FLOAT_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fload_1 da JVM
-void Interpreter::java_fload_1(){
+void Interpreter::java_fload_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(1);
-    // assert(value.type == FLOAT_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fload_2 da JVM
-void Interpreter::java_fload_2(){
+void Interpreter::java_fload_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(2);
-    // assert(value.type == FLOAT_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fload_3 da JVM
-void Interpreter::java_fload_3(){
+void Interpreter::java_fload_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(3);
-    // assert(value.type == FLOAT_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dload_0 da JVM
-void Interpreter::java_dload_0(){
+void Interpreter::java_dload_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(1);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(0);
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dload_1 da JVM
-void Interpreter::java_dload_1(){
+void Interpreter::java_dload_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(2);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(1);
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dload_2 da JVM
-void Interpreter::java_dload_2(){
+void Interpreter::java_dload_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(3);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(2);
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dload_3 da JVM
-void Interpreter::java_dload_3(){
+void Interpreter::java_dload_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value;
 
     value = current_frame->GetLocalVariable(4);
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->PushOperandStack(value);
 
     value = current_frame->GetLocalVariable(3);
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função aload_0 da JVM
-void Interpreter::java_aload_0(){
+void Interpreter::java_aload_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(0);
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função aload_1 da JVM
-void Interpreter::java_aload_1(){
+void Interpreter::java_aload_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(1);
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função aload_2 da JVM
-void Interpreter::java_aload_2(){
+void Interpreter::java_aload_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(2);
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função aload_3 da JVM
-void Interpreter::java_aload_3(){
+void Interpreter::java_aload_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->GetLocalVariable(3);
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->PushOperandStack(value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função iaload da JVM
-void Interpreter::java_iaload(){
+void Interpreter::java_iaload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	vector<Value> *array;
+    vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
-
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
 
     current_frame->PushOperandStack(array->at(index.data.int_value));
     current_frame->pc += 1;
 }
 //! Essa função representa a função laload da JVM
-void Interpreter::java_laload(){
+void Interpreter::java_laload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	vector<Value> *array;
+    vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
     Value padding;
     padding.type = PADDING_VALUE;
-    
+
     current_frame->PushOperandStack(padding);
     current_frame->PushOperandStack(array->at(index.data.int_value));
     current_frame->pc += 1;
 }
 //! Essa função representa a função faload da JVM
-void Interpreter::java_faload(){
+void Interpreter::java_faload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
-
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
 
     current_frame->PushOperandStack(array->at(index.data.int_value));
     current_frame->pc += 1;
 }
 //! Essa função representa a função daload da JVM
-void Interpreter::java_daload(){
+void Interpreter::java_daload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
     Value padding;
     padding.type = PADDING_VALUE;
-    
+
     current_frame->PushOperandStack(padding);
     current_frame->PushOperandStack(array->at(index.data.int_value));
     current_frame->pc += 1;
 }
 //! Essa função representa a função aaload da JVM
-void Interpreter::java_aaload(){
+void Interpreter::java_aaload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
     // cout << "HERE" << endl;
     current_frame->PushOperandStack(array->at(index.data.int_value));
     current_frame->pc += 1;
 }
 //! Essa função representa a função baload da JVM
-void Interpreter::java_baload(){
+void Interpreter::java_baload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
     Value value = array->at(index.data.int_value);
-    // assert(value.type == BYTE_VALUE || value.type == BYTE_VALUE);
-    
-    if (value.type == BYTE_VALUE) {
-        value.data.int_value = (uint32_t) value.data.boolean_value;
-        // value.printType = BYTE_VALUE;
-    } else {
-        value.data.int_value = (int32_t) value.data.byte_value;
-        // value.printType = BYTE_VALUE;
+
+    if (value.type == BYTE_VALUE)
+    {
+        value.data.int_value = (uint32_t)value.data.boolean_value;
+    }
+    else
+    {
+        value.data.int_value = (int32_t)value.data.byte_value;
     }
     value.type = INT_VALUE;
 
@@ -1194,401 +1197,411 @@ void Interpreter::java_baload(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função caload da JVM
-void Interpreter::java_caload(){
+void Interpreter::java_caload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
     Value char_value = array->at(index.data.int_value);
-    char_value.data.int_value = (uint32_t) char_value.data.char_value;
-    // char_value.printType = CHAR_VALUE;
+    char_value.data.int_value = (uint32_t)char_value.data.char_value;
+
     char_value.type = INT_VALUE;
-    
+
     current_frame->PushOperandStack(char_value);
     current_frame->pc += 1;
 }
 //! Essa função representa a função saload da JVM
-void Interpreter::java_saload(){
+void Interpreter::java_saload()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-    
     Value short_value = array->at(index.data.int_value);
-    short_value.data.int_value = (int32_t) short_value.data.short_value;
-    // short_value.printType = SHORT_VALUE;
+    short_value.data.int_value = (int32_t)short_value.data.short_value;
+
     short_value.type = INT_VALUE;
-    
+
     current_frame->PushOperandStack(short_value);
     current_frame->pc += 1;
 }
 //! Essa função representa a função istore da JVM
-void Interpreter::java_istore(){
+void Interpreter::java_istore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == ValueType::INT);
+    Value value = current_frame->PopOperandStack();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1]; //índice do vetor de variáveis locais
-	int16_t index = (int16_t) byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	} else {
-		current_frame->pc += 2;
-	}
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	current_frame->ChangeLocalVariable(index, value);
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
+
+    current_frame->ChangeLocalVariable(index, value);
 
     // cout << "ISTORE..." << current_frame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função lstore da JVM
-void Interpreter::java_lstore(){
+void Interpreter::java_lstore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == LONG_VALUE);
-	current_frame->PopOperandStack(); //padding
+    Value value = current_frame->PopOperandStack();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t)byte1;
+    current_frame->PopOperandStack();
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	} else {
-		current_frame->pc += 2;
-	}
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > (index + 1)));
-	current_frame->ChangeLocalVariable(index, value);
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	Value padding;
-	padding.type = PADDING_VALUE;
-	current_frame->ChangeLocalVariable(index + 1, padding);
+    current_frame->ChangeLocalVariable(index, value);
+
+    Value padding;
+    padding.type = PADDING_VALUE;
+    current_frame->ChangeLocalVariable(index + 1, padding);
 
     // cout << "LSTORE..." << current_frame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função fstore da JVM
-void Interpreter::java_fstore(){
+void Interpreter::java_fstore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == ValueType::FLOAT);
+    Value value = current_frame->PopOperandStack();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t)byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	} else {
-		current_frame->pc += 2;
-	}
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	current_frame->ChangeLocalVariable(index, value);    
+    current_frame->ChangeLocalVariable(index, value);
 }
 //! Essa função representa a função dstore da JVM
-void Interpreter::java_dstore(){
+void Interpreter::java_dstore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == DOUBLE_VALUE);
-	current_frame->PopOperandStack(); //padding
+    Value value = current_frame->PopOperandStack();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t)byte1;
+    current_frame->PopOperandStack();
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	} else {
-		current_frame->pc += 2;
-	}
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > (index + 1)));
-	current_frame->ChangeLocalVariable(index, value);
-	Value padding;
-	padding.type = PADDING_VALUE;
-	current_frame->ChangeLocalVariable(index + 1, padding);
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
+
+    current_frame->ChangeLocalVariable(index, value);
+    Value padding;
+    padding.type = PADDING_VALUE;
+    current_frame->ChangeLocalVariable(index + 1, padding);
 
     // cout << "DSTORE..." << current_frame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função astore da JVM
-void Interpreter::java_astore(){
+void Interpreter::java_astore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == ValueType::REFERENCE);
+    Value value = current_frame->PopOperandStack();
 
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	int16_t index = (int16_t)byte1;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    int16_t index = (int16_t)byte1;
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-		current_frame->pc += 3;
-		wide = false;
-	} else {
-		current_frame->pc += 2;
-	}
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+        current_frame->pc += 3;
+        wide = false;
+    }
+    else
+    {
+        current_frame->pc += 2;
+    }
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	current_frame->ChangeLocalVariable(index, value);
+    current_frame->ChangeLocalVariable(index, value);
 
     // cout << "ASTORE..." << current_frame->local_variables.size() << " : " << index << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função istore_0 da JVM
-void Interpreter::java_istore_0(){
+void Interpreter::java_istore_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     current_frame->ChangeLocalVariable(0, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função istore_1 da JVM
-void Interpreter::java_istore_1(){
+void Interpreter::java_istore_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     current_frame->ChangeLocalVariable(1, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função istore_2 da JVM
-void Interpreter::java_istore_2(){
+void Interpreter::java_istore_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     current_frame->ChangeLocalVariable(2, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função istore_3 da JVM
-void Interpreter::java_istore_3(){
+void Interpreter::java_istore_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     current_frame->ChangeLocalVariable(3, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lstore_0 da JVM
-void Interpreter::java_lstore_0(){
+void Interpreter::java_lstore_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == LONG_VALUE);
+
     current_frame->ChangeLocalVariable(0, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(1, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lstore_1 da JVM
-void Interpreter::java_lstore_1(){
+void Interpreter::java_lstore_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == LONG_VALUE);
+
     current_frame->ChangeLocalVariable(1, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(2, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lstore_2 da JVM
-void Interpreter::java_lstore_2(){
+void Interpreter::java_lstore_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == LONG_VALUE);
+
     current_frame->ChangeLocalVariable(2, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(3, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lstore_3 da JVM
-void Interpreter::java_lstore_3(){
+void Interpreter::java_lstore_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == LONG_VALUE);
+
     current_frame->ChangeLocalVariable(3, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(4, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fstore_0 da JVM
-void Interpreter::java_fstore_0(){
+void Interpreter::java_fstore_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::FLOAT);
+
     current_frame->ChangeLocalVariable(0, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fstore_1 da JVM
-void Interpreter::java_fstore_1(){
+void Interpreter::java_fstore_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::FLOAT);
+
     current_frame->ChangeLocalVariable(1, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fstore_2 da JVM
-void Interpreter::java_fstore_2(){
+void Interpreter::java_fstore_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::FLOAT);
+
     current_frame->ChangeLocalVariable(2, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fstore_3 da JVM
-void Interpreter::java_fstore_3(){
+void Interpreter::java_fstore_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::FLOAT);
+
     current_frame->ChangeLocalVariable(4, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dstore_0 da JVM
-void Interpreter::java_dstore_0(){
+void Interpreter::java_dstore_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->ChangeLocalVariable(0, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(1, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dstore_1 da JVM
-void Interpreter::java_dstore_1(){
+void Interpreter::java_dstore_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->ChangeLocalVariable(1, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
-    current_frame->ChangeLocalVariable(2, value);    
+
+    current_frame->ChangeLocalVariable(2, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dstore_2 da JVM
-void Interpreter::java_dstore_2(){
+void Interpreter::java_dstore_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->ChangeLocalVariable(2, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(3, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dstore_3 da JVM
-void Interpreter::java_dstore_3(){
+void Interpreter::java_dstore_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == DOUBLE_VALUE);
+
     current_frame->ChangeLocalVariable(3, value);
 
     value = current_frame->PopOperandStack();
-    // assert(value.type == PADDING_VALUE);
+
     current_frame->ChangeLocalVariable(4, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função astore_0 da JVM
-void Interpreter::java_astore_0(){
+void Interpreter::java_astore_0()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->ChangeLocalVariable(0, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função astore_1 da JVM
-void Interpreter::java_astore_1(){
+void Interpreter::java_astore_1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::REFERENCE);
 
     current_frame->ChangeLocalVariable(1, value);
 
@@ -1597,297 +1610,214 @@ void Interpreter::java_astore_1(){
     // cout << "ASTORE_1..." << current_frame->local_variables.size() << " : " << 1 << " : " << value.data.int_value << endl;
 }
 //! Essa função representa a função astore_2 da JVM
-void Interpreter::java_astore_2(){
+void Interpreter::java_astore_2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->ChangeLocalVariable(2, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função astore_3 da JVM
-void Interpreter::java_astore_3(){
+void Interpreter::java_astore_3()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::REFERENCE);
+
     current_frame->ChangeLocalVariable(3, value);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função iastore da JVM
-void Interpreter::java_iastore(){
+void Interpreter::java_iastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value >= array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
-    // value.printType = INT_VALUE;
-    
-    // assert(value.type == array->arrayContentType());
     array->at(index.data.int_value) = value;
-    
+
     current_frame->pc += 1;
 }
 //! Essa função representa a função lastore da JVM
-void Interpreter::java_lastore(){
+void Interpreter::java_lastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == LONG_VALUE);
+
     Value padding = current_frame->PopOperandStack();
-    // assert(padding.type == PADDING_VALUE);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value >= array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
-    // assert(value.type == array->arrayContentType());
     array->at(index.data.int_value) = value;
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fastore da JVM
-void Interpreter::java_fastore(){
+void Interpreter::java_fastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::FLOAT);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value >= array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
-    // assert(value.type == array->arrayContentType());
     array->at(index.data.int_value) = value;
-	
+
     current_frame->pc += 1;
 }
 //! Essa função representa a função dastore da JVM
-void Interpreter::java_dastore(){
+void Interpreter::java_dastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == DOUBLE_VALUE);
+
     Value padding = current_frame->PopOperandStack();
-    // assert(padding.type == PADDING_VALUE);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object_value)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value >= array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
-    // assert(value.type == array->arrayContentType());
     array->at(index.data.int_value) = value;
-	
+
     current_frame->pc += 1;
 }
 //! Essa função representa a função aastore da JVM
-void Interpreter::java_aastore(){
+void Interpreter::java_aastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
-	Value value = current_frame->PopOperandStack(); // Valor armazenado no index do array
-	// assert(value.type == ValueType::REFERENCE);
-    Value index = current_frame->PopOperandStack(); // Index do arary
-    // assert(index.type == ValueType::INT);
-    Value array_ref = current_frame->PopOperandStack(); // Referência ao array
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object)->objectType() == ObjectType::ARRAY);
+    Value value = current_frame->PopOperandStack();
+
+    Value index = current_frame->PopOperandStack();
+
+    Value array_ref = current_frame->PopOperandStack();
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value >= array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
+    array->at(index.data.int_value) = value;
 
-	array->at(index.data.int_value) = value;
-    
     current_frame->pc += 1;
 }
 //! Essa função representa a função bastore da JVM
-void Interpreter::java_bastore(){
+void Interpreter::java_bastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
-    // assert(array->arrayContentType() == BYTE_VALUE || array->arrayContentType() == BYTE_VALUE);
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
-
-    for(unsigned i = 0; i < array->size(); i++){
-        if (array->at(i).type == BYTE_VALUE) {
+    for (unsigned i = 0; i < array->size(); i++)
+    {
+        if (array->at(i).type == BYTE_VALUE)
+        {
             value.data.boolean_value = (value.data.int_value != 0) ? true : false;
             value.type = BYTE_VALUE;
-            // value.printType = BYTE_VALUE;
-        } else {
-            value.data.byte_value = (uint8_t) value.data.int_value;
+        }
+        else
+        {
+            value.data.byte_value = (uint8_t)value.data.int_value;
             value.type = BYTE_VALUE;
-            // value.printType = BYTE_VALUE;
         }
     }
-    
+
     array->at(index.data.int_value) = value;
-	
+
     current_frame->pc += 1;
 }
 //! Essa função representa a função castore da JVM
-void Interpreter::java_castore(){
+void Interpreter::java_castore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
+    value.data.char_value = (uint8_t)value.data.int_value;
 
-    value.data.char_value = (uint8_t) value.data.int_value;
-    // value.printType = ValueType::CHAR;
     value.type = CHAR_VALUE;
     array->at(index.data.int_value) = value;
-	
+
     current_frame->pc += 1;
 }
 //! Essa função representa a função sastore da JVM
-void Interpreter::java_sastore(){
+void Interpreter::java_sastore()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	
+
     vector<Value> *array;
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == ValueType::INT);
+
     Value index = current_frame->PopOperandStack();
-    // assert(index.type == ValueType::INT);
+
     Value array_ref = current_frame->PopOperandStack();
-    // assert(array_ref.type == ValueType::REFERENCE);
-    // assert((array_ref.data.object)->objectType() == ObjectType::ARRAY);
 
     array = array_ref.data.array_value;
 
-    if (array == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    if (index.data.int_value > array->size() || index.data.int_value < 0) {
-        cerr << "ArrayIndexOutOfBoundsException" << endl;
-        exit(2);
-    }
+    value.data.short_value = (int16_t)value.data.int_value;
 
-    value.data.short_value = (int16_t) value.data.int_value;
-    // value.printType = ValueType::SHORT;
     value.type = SHORT_VALUE;
     array->at(index.data.int_value) = value;
-	
+
     current_frame->pc += 1;
 }
 //! Essa função representa a função pop da JVM
-void Interpreter::java_pop(){
+void Interpreter::java_pop()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
     Value value = current_frame->PopOperandStack();
-    // assert(value.type != LONG_VALUE);
-    // assert(value.type != DOUBLE_VALUE);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função pop2 da JVM
-void Interpreter::java_pop2(){
+void Interpreter::java_pop2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
     current_frame->PopOperandStack();
     current_frame->PopOperandStack();
@@ -1895,12 +1825,11 @@ void Interpreter::java_pop2(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dup da JVM
-void Interpreter::java_dup(){
+void Interpreter::java_dup()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value = current_frame->PopOperandStack();
-    // assert(value.type != LONG_VALUE);
-    // assert(value.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value);
     current_frame->PushOperandStack(value);
@@ -1908,15 +1837,13 @@ void Interpreter::java_dup(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dup_x1 da JVM
-void Interpreter::java_dup_x1(){
+void Interpreter::java_dup_x1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_1.type != LONG_VALUE);
-    // assert(value_1.type != DOUBLE_VALUE);
+
     Value value_2 = current_frame->PopOperandStack();
-    // assert(value_2.type != LONG_VALUE);
-    // assert(value_2.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value_1);
     current_frame->PushOperandStack(value_2);
@@ -1925,17 +1852,13 @@ void Interpreter::java_dup_x1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dup_x2 da JVM
-void Interpreter::java_dup_x2(){
+void Interpreter::java_dup_x2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
     Value value_2 = current_frame->PopOperandStack();
     Value value_3 = current_frame->PopOperandStack();
-
-    // assert(value_1.type != LONG_VALUE);
-    // assert(value_1.type != DOUBLE_VALUE);
-    // assert(value_3.type != LONG_VALUE);
-    // assert(value_3.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value_1);
     current_frame->PushOperandStack(value_3);
@@ -1945,13 +1868,12 @@ void Interpreter::java_dup_x2(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dup2 da JVM
-void Interpreter::java_dup2(){
+void Interpreter::java_dup2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
     Value value_2 = current_frame->PopOperandStack();
-    // assert(value_2.type != LONG_VALUE);
-    // assert(value_2.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value_2);
     current_frame->PushOperandStack(value_1);
@@ -1961,17 +1883,13 @@ void Interpreter::java_dup2(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dup2_x1 da JVM
-void Interpreter::java_dup2_x1(){
+void Interpreter::java_dup2_x1()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
     Value value_2 = current_frame->PopOperandStack();
     Value value_3 = current_frame->PopOperandStack();
-
-    // assert(value_2.type != LONG_VALUE);
-    // assert(value_2.type != DOUBLE_VALUE);
-    // assert(value_3.type != LONG_VALUE);
-    // assert(value_3.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value_2);
     current_frame->PushOperandStack(value_1);
@@ -1982,18 +1900,14 @@ void Interpreter::java_dup2_x1(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função dup2_x2 da JVM
-void Interpreter::java_dup2_x2(){
+void Interpreter::java_dup2_x2()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
     Value value_2 = current_frame->PopOperandStack();
     Value value_3 = current_frame->PopOperandStack();
     Value value_4 = current_frame->PopOperandStack();
-
-    // assert(value_2.type != LONG_VALUE);
-    // assert(value_2.type != DOUBLE_VALUE);
-    // assert(value_4.type != LONG_VALUE);
-    // assert(value_4.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value_2);
     current_frame->PushOperandStack(value_1);
@@ -2005,16 +1919,12 @@ void Interpreter::java_dup2_x2(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função swap da JVM
-void Interpreter::java_swap(){
+void Interpreter::java_swap()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
     Value value_2 = current_frame->PopOperandStack();
-
-    // assert(value_1.type != LONG_VALUE);
-    // assert(value_1.type != DOUBLE_VALUE);
-    // assert(value_2.type != LONG_VALUE);
-    // assert(value_2.type != DOUBLE_VALUE);
 
     current_frame->PushOperandStack(value_1);
     current_frame->PushOperandStack(value_2);
@@ -2022,458 +1932,359 @@ void Interpreter::java_swap(){
     current_frame->pc += 1;
 }
 //! Essa função representa a função iadd da JVM
-void Interpreter::java_iadd(){
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == ValueType::INT);
-	// assert(value_1.type == ValueType::INT);
-
-	value_1.data.int_value = value_1.data.int_value + (value_2.data.int_value);
-    // value_1.printType = ValueType::INT;
-
-    // cout << "Resultado: " << value_1.data.int_value << endl;
-    
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função ladd da JVM
-void Interpreter::java_ladd(){
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); //padding
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
-
-	value_1.data.long_value = value_1.data.long_value + (value_2.data.long_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função fadd da JVM
-void Interpreter::java_fadd(){
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == ValueType::FLOAT);
-	// assert(value_1.type == ValueType::FLOAT);
-
-	value_1.data.float_value = value_1.data.float_value + (value_2.data.float_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função dadd da JVM
-void Interpreter::java_dadd(){
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == DOUBLE_VALUE);
-	// assert(value_1.type == DOUBLE_VALUE);
-
-	value_1.data.double_value = value_1.data.double_value + (value_2.data.double_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-
-//! Essa função representa a função isub da JVM
-void Interpreter::java_isub(){
-   
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
-
-    // value_1.printType = INT_VALUE;
-    
-	value_1.data.int_value = value_1.data.int_value - (value_2.data.int_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-
-}
-//! Essa função representa a função lsub da JVM
-void Interpreter::java_lsub(){
-    
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
-
-	value_1.data.long_value = value_1.data.long_value - (value_2.data.long_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função fsub da JVM
-void Interpreter::java_fsub(){
-    
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == FLOAT_VALUE);
-	// assert(value_1.type == FLOAT_VALUE);
-
-	value_1.data.float_value = value_1.data.float_value - (value_2.data.float_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função dsub da JVM
-void Interpreter::java_dsub(){
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == DOUBLE_VALUE);
-	// assert(value_1.type == DOUBLE_VALUE);
-
-	value_1.data.double_value = value_1.data.double_value - (value_2.data.double_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função imul da JVM
-void Interpreter::java_imul(){
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
-
-    // value_1.printType = INT_VALUE;
-    
-	value_1.data.int_value = value_1.data.int_value * (value_2.data.int_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função lmul da JVM
-void Interpreter::java_lmul(){
-    
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
-
-	value_1.data.long_value = value_1.data.long_value * (value_2.data.long_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função fmul da JVM
-void Interpreter::java_fmul() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == FLOAT_VALUE);
-	// assert(value_1.type == FLOAT_VALUE);
-
-	value_1.data.float_value = value_1.data.float_value * (value_2.data.float_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função dmul da JVM
-void Interpreter::java_dmul() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == DOUBLE_VALUE);
-	// assert(value_1.type == DOUBLE_VALUE);
-
-	value_1.data.double_value = value_1.data.double_value * (value_2.data.double_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função idiv da JVM
-void Interpreter::java_idiv() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
-	if (value_2.data.int_value == 0) {
-		cerr << "ArithmeticException" << endl;
-		exit(2);
-	}
-
-    // value_1.printType = INT_VALUE;
-	value_1.data.int_value = value_1.data.int_value / (value_2.data.int_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função ldiv da JVM
-void Interpreter::java_ldiv() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
-	if (value_2.data.long_value == 0) {
-		cerr << "ArithmeticException" << endl;
-		exit(2);
-	}
-
-	value_1.data.long_value = value_1.data.long_value / (value_2.data.long_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função fdiv da JVM
-void Interpreter::java_fdiv() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == FLOAT_VALUE);
-	// assert(value_1.type == FLOAT_VALUE);
-	if (value_2.data.float_value == 0) {
-		cerr << "ArithmeticException" << endl;
-		exit(2);
-	}
-	value_1.data.float_value = value_1.data.float_value / (value_2.data.float_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função ddiv da JVM
-void Interpreter::java_ddiv() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-
-	// assert(value_2.type == DOUBLE_VALUE);
-	// assert(value_1.type == DOUBLE_VALUE);
-	if (value_2.data.double_value == 0) {
-		cerr << "ArithmeticException" << endl;
-		exit(2);
-	}
-	value_1.data.double_value = value_1.data.double_value / (value_2.data.double_value);
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
-}
-//! Essa função representa a função irem da JVM
-void Interpreter::java_irem() {
-    
+void Interpreter::java_iadd()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
 
-    // assert(value_2.type == INT_VALUE);
-    // assert(value_1.type == INT_VALUE);
-	if (value_2.data.int_value == 0) {
-		cerr << "ArithmeticException" << endl;
-        exit(2);
-	}
-	
-    // value_1.printType = INT_VALUE;
-	value_1.data.int_value = value_1.data.int_value - (value_1.data.int_value / value_2.data.int_value)*value_2.data.int_value;
+    value_1.data.int_value = value_1.data.int_value + (value_2.data.int_value);
+
+    // cout << "Resultado: " << value_1.data.int_value << endl;
+
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
-//! Essa função representa a função lrem da JVM
-void Interpreter::java_lrem() {
-    
+//! Essa função representa a função ladd da JVM
+void Interpreter::java_ladd()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
-    // Sobra um padding na pilha que ficará abaixo do resultado
 
-    // assert(value_2.type == LONG_VALUE);
-    // assert(value_1.type == LONG_VALUE);
-	if (value_2.data.long_value == 0) {
-		cerr << "ArithmeticException" << endl;
-        exit(2);
-	}
-	// value_1 negativo implica em resultado negativo
-	value_1.data.long_value = value_1.data.long_value - (value_1.data.long_value / value_2.data.long_value)*value_2.data.long_value;
+    value_1.data.long_value = value_1.data.long_value + (value_2.data.long_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função fadd da JVM
+void Interpreter::java_fadd()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.float_value = value_1.data.float_value + (value_2.data.float_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função dadd da JVM
+void Interpreter::java_dadd()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.double_value = value_1.data.double_value + (value_2.data.double_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+
+//! Essa função representa a função isub da JVM
+void Interpreter::java_isub()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.int_value = value_1.data.int_value - (value_2.data.int_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função lsub da JVM
+void Interpreter::java_lsub()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.long_value = value_1.data.long_value - (value_2.data.long_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função fsub da JVM
+void Interpreter::java_fsub()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.float_value = value_1.data.float_value - (value_2.data.float_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função dsub da JVM
+void Interpreter::java_dsub()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.double_value = value_1.data.double_value - (value_2.data.double_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função imul da JVM
+void Interpreter::java_imul()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.int_value = value_1.data.int_value * (value_2.data.int_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função lmul da JVM
+void Interpreter::java_lmul()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.long_value = value_1.data.long_value * (value_2.data.long_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função fmul da JVM
+void Interpreter::java_fmul()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.float_value = value_1.data.float_value * (value_2.data.float_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função dmul da JVM
+void Interpreter::java_dmul()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.double_value = value_1.data.double_value * (value_2.data.double_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função idiv da JVM
+void Interpreter::java_idiv()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.int_value = value_1.data.int_value / (value_2.data.int_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função ldiv da JVM
+void Interpreter::java_ldiv()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.long_value = value_1.data.long_value / (value_2.data.long_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função fdiv da JVM
+void Interpreter::java_fdiv()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.float_value = value_1.data.float_value / (value_2.data.float_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função ddiv da JVM
+void Interpreter::java_ddiv()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.double_value = value_1.data.double_value / (value_2.data.double_value);
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função irem da JVM
+void Interpreter::java_irem()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.int_value = value_1.data.int_value - (value_1.data.int_value / value_2.data.int_value) * value_2.data.int_value;
+    current_frame->PushOperandStack(value_1);
+
+    current_frame->pc += 1;
+}
+//! Essa função representa a função lrem da JVM
+void Interpreter::java_lrem()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+
+    value_1.data.long_value = value_1.data.long_value - (value_1.data.long_value / value_2.data.long_value) * value_2.data.long_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função frem da JVM
-void Interpreter::java_frem() {
-    
+void Interpreter::java_frem()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
 
-    // assert(value_2.type == FLOAT_VALUE);
-    // assert(value_1.type == FLOAT_VALUE);
-	if (value_2.data.float_value == 0) {
-		cerr << "ArithmeticException" << endl;
-        exit(2);
-	}
-	// value_1 negativo implica em resultado negativo
-	value_1.data.float_value = value_1.data.float_value - ((uint32_t)(value_1.data.float_value / value_2.data.float_value))*value_2.data.float_value;
+    value_1.data.float_value = value_1.data.float_value - ((uint32_t)(value_1.data.float_value / value_2.data.float_value)) * value_2.data.float_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função drem da JVM
-void Interpreter::java_drem() {
-    
+void Interpreter::java_drem()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
-    current_frame->PopOperandStack(); // PADDING
+    current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
-    // Sobra um padding na pilha que ficará abaixo do resultado
 
-    // assert(value_2.type == DOUBLE_VALUE);
-    // assert(value_1.type == DOUBLE_VALUE);
-	if (value_2.data.double_value == 0) {
-		cerr << "ArithmeticException" << endl;
-        exit(2);
-	}
-	// value_1 negativo implica em resultado negativo
-	value_1.data.double_value = value_1.data.double_value - ((uint64_t)(value_1.data.double_value / value_2.data.double_value))*value_2.data.double_value;
+    value_1.data.double_value = value_1.data.double_value - ((uint64_t)(value_1.data.double_value / value_2.data.double_value)) * value_2.data.double_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função ineg da JVM
-void Interpreter::java_ineg() {
-    
+void Interpreter::java_ineg()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_1.type == INT_VALUE);
 
-    // value_1.printType = INT_VALUE;
-	value_1.data.int_value = -value_1.data.int_value;
+    value_1.data.int_value = -value_1.data.int_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lneg da JVM
-void Interpreter::java_lneg() {
-    
+void Interpreter::java_lneg()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// Não precisa tirar o padding
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_1.type == LONG_VALUE);
 
-	value_1.data.long_value = -value_1.data.long_value;
+    value_1.data.long_value = -value_1.data.long_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função fneg da JVM
-void Interpreter::java_fneg() {
-    
+void Interpreter::java_fneg()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_1.type == FLOAT_VALUE);
 
-	value_1.data.float_value = -value_1.data.float_value;
+    value_1.data.float_value = -value_1.data.float_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função dneg da JVM
-void Interpreter::java_dneg() {
-    
+void Interpreter::java_dneg()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-
-	// Não precisa tirar o padding
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_1.type == DOUBLE_VALUE);
 
-	value_1.data.double_value = -value_1.data.double_value;
+    value_1.data.double_value = -value_1.data.double_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função ishl da JVM
-void Interpreter::java_ishl() {
-    
+void Interpreter::java_ishl()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_2.type == INT_VALUE);
-    // assert(value_1.type == INT_VALUE);
 
-	// value_2 armazena seus 5 primeiros bits
-	value_2.data.int_value = 0x1f & value_2.data.int_value;
-	value_1.data.int_value = value_1.data.int_value << value_2.data.int_value;
-    // value_1.printType = INT_VALUE;
+    value_2.data.int_value = 0x1f & value_2.data.int_value;
+    value_1.data.int_value = value_1.data.int_value << value_2.data.int_value;
+
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lshl da JVM
-void Interpreter::java_lshl() {
-    
+void Interpreter::java_lshl()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
-    // Sobra um padding na pilha que ficará abaixo do resultado
-
-    // assert(value_2.type == INT_VALUE);
-    // assert(value_1.type == LONG_VALUE);
 
     value_2.data.long_value = 0x3f & value_2.data.long_value;
     value_1.data.long_value = (value_1.data.long_value) << value_2.data.int_value;
@@ -2482,983 +2293,950 @@ void Interpreter::java_lshl() {
     current_frame->pc += 1;
 }
 //! Essa função representa a função ishr da JVM
-void Interpreter::java_ishr() {
-    
+void Interpreter::java_ishr()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
-    // assert(value_2.type == INT_VALUE);
-    // assert(value_1.type == INT_VALUE);
 
-	// value_2 armazena seus 5 primeiros bits
-	value_2.data.int_value = 0x1f & value_2.data.int_value;
-	value_1.data.int_value = value_1.data.int_value >> value_2.data.int_value;
-    // value_1.printType = INT_VALUE;
+    value_2.data.int_value = 0x1f & value_2.data.int_value;
+    value_1.data.int_value = value_1.data.int_value >> value_2.data.int_value;
+
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função lshr da JVM
-void Interpreter::java_lshr() {
-    
+void Interpreter::java_lshr()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
 
     Value value_2 = current_frame->PopOperandStack();
     Value value_1 = current_frame->PopOperandStack();
-    // Sobra um padding na pilha que ficará abaixo do resultado
 
-    // assert(value_2.type == INT_VALUE);
-    // assert(value_1.type == LONG_VALUE);
-
-	// value_2 armazena seus 6 primeiros bits
-	value_2.data.long_value = 0x3f & value_2.data.long_value;
-	value_1.data.long_value = value_1.data.long_value >> value_2.data.long_value;
+    value_2.data.long_value = 0x3f & value_2.data.long_value;
+    value_1.data.long_value = value_1.data.long_value >> value_2.data.long_value;
     current_frame->PushOperandStack(value_1);
 
     current_frame->pc += 1;
 }
 //! Essa função representa a função iushr da JVM
-void Interpreter::java_iushr() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_iushr()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
+    value_2.data.int_value = 0x1f & value_2.data.int_value;
+    value_1.data.int_value = value_1.data.int_value >> value_2.data.int_value;
+    if (value_1.data.int_value < 0)
+    {
+        value_1.data.int_value = value_1.data.int_value + (2 << ~(value_2.data.int_value));
+    }
 
-	value_2.data.int_value = 0x1f & value_2.data.int_value;
-	value_1.data.int_value = value_1.data.int_value >> value_2.data.int_value;
-	if (value_1.data.int_value < 0) {
-		value_1.data.int_value = value_1.data.int_value + (2<<~(value_2.data.int_value));
-	}
-    // value_1.printType = INT_VALUE;
-	current_frame->PushOperandStack(value_1);
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função lushr da JVM
-void Interpreter::java_lushr() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_lushr()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == LONG_VALUE);
+    value_2.data.int_value = 0x3f & value_2.data.int_value;
+    value_1.data.long_value = value_1.data.long_value >> value_2.data.int_value;
+    if (value_1.data.long_value < 0)
+    {
+        value_1.data.long_value = value_1.data.long_value + ((int64_t)2 << ~(value_2.data.int_value));
+    }
+    current_frame->PushOperandStack(value_1);
 
-	value_2.data.int_value = 0x3f & value_2.data.int_value;
-	value_1.data.long_value = value_1.data.long_value >> value_2.data.int_value;
-	if (value_1.data.long_value < 0) {
-		value_1.data.long_value = value_1.data.long_value + ((int64_t)2 << ~(value_2.data.int_value));
-	}
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função iand da JVM
-void Interpreter::java_iand() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_iand()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
+    value_1.data.int_value = value_1.data.int_value & value_2.data.int_value;
+    current_frame->PushOperandStack(value_1);
 
-    // value_1.printType = INT_VALUE;
-	value_1.data.int_value = value_1.data.int_value & value_2.data.int_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função land da JVM
-void Interpreter::java_land() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_land()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); // PADDING
-	Value value_1 = current_frame->PopOperandStack();
-	// Sobra um padding na pilha que ficará abaixo do resultado
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
+    value_1.data.long_value = value_1.data.long_value & value_2.data.long_value;
+    current_frame->PushOperandStack(value_1);
 
-	// value_2 armazena seus 6 primeiros bits
-	value_1.data.long_value = value_1.data.long_value & value_2.data.long_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função ior da JVM
-void Interpreter::java_ior() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_ior()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
+    value_1.data.int_value = value_1.data.int_value | value_2.data.int_value;
+    current_frame->PushOperandStack(value_1);
 
-    // value_1.printType = INT_VALUE;
-	value_1.data.int_value = value_1.data.int_value | value_2.data.int_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função lor da JVM
-void Interpreter::java_lor() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_lor()
+{
 
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); // PADDING
-	Value value_1 = current_frame->PopOperandStack();
-	// Sobra um padding na pilha que ficará abaixo do resultado
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	value_1.data.long_value = value_1.data.long_value | value_2.data.long_value;
-	current_frame->PushOperandStack(value_1);
+    value_1.data.long_value = value_1.data.long_value | value_2.data.long_value;
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função ixor da JVM
-void Interpreter::java_ixor() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_ixor()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == INT_VALUE);
-	// assert(value_1.type == INT_VALUE);
+    value_1.data.int_value = value_1.data.int_value ^ value_2.data.int_value;
+    current_frame->PushOperandStack(value_1);
 
-    // value_1.printType = INT_VALUE;
-	value_1.data.int_value = value_1.data.int_value ^ value_2.data.int_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função lxor da JVM
-void Interpreter::java_lxor() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_lxor()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); // PADDING
-	Value value_1 = current_frame->PopOperandStack();
-	// Sobra um padding na pilha que ficará abaixo do resultado
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
+    value_1.data.long_value = value_1.data.long_value ^ value_2.data.long_value;
+    current_frame->PushOperandStack(value_1);
 
-	value_1.data.long_value = value_1.data.long_value ^ value_2.data.long_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função iinc da JVM
-void Interpreter::java_iinc() {
-    
+void Interpreter::java_iinc()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     u2 index = 0;
-    if (wide) {
-        index = (current_frame->code.code[current_frame->pc+1] << 8) | current_frame->code.code[current_frame->pc+2];
-    } else {
-        index += current_frame->code.code[current_frame->pc+1];
+    if (wide)
+    {
+        index = (current_frame->code.code[current_frame->pc + 1] << 8) | current_frame->code.code[current_frame->pc + 2];
     }
-    
+    else
+    {
+        index += current_frame->code.code[current_frame->pc + 1];
+    }
+
     Value localVariable = current_frame->GetLocalVariable(index);
-    // assert(localVariable.type == INT_VALUE);
-    
+
     int32_t inc;
-    if (wide) {
-        uint16_t constant = (current_frame->code.code[current_frame->pc+3] << 8) | current_frame->code.code[current_frame->pc+4];
-        inc = (int32_t) (int16_t) constant;
-    } else {
-        inc = (int32_t) (int8_t) current_frame->code.code[current_frame->pc+2];
+    if (wide)
+    {
+        uint16_t constant = (current_frame->code.code[current_frame->pc + 3] << 8) | current_frame->code.code[current_frame->pc + 4];
+        inc = (int32_t)(int16_t)constant;
     }
-    
+    else
+    {
+        inc = (int32_t)(int8_t)current_frame->code.code[current_frame->pc + 2];
+    }
+
     localVariable.data.int_value += inc;
     current_frame->ChangeLocalVariable(index, localVariable);
-    
+
     current_frame->pc += wide ? 5 : 3;
     wide = false;
 }
 //! Essa função representa a função i2l da JVM
-void Interpreter::java_i2l() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_i2l()
+{
 
-	Value value_1 = current_frame->PopOperandStack();
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_1.type == INT_VALUE);
+    Value value_1 = current_frame->PopOperandStack();
 
-	Value padding;
-	padding.type = PADDING_VALUE;
+    Value padding;
+    padding.type = PADDING_VALUE;
 
-	current_frame->PushOperandStack(padding);
+    current_frame->PushOperandStack(padding);
 
-    value_1.data.long_value = (int64_t) value_1.data.int_value;
-	value_1.type = LONG_VALUE;
+    value_1.data.long_value = (int64_t)value_1.data.int_value;
+    value_1.type = LONG_VALUE;
 
-	current_frame->PushOperandStack(value_1);
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função i2f da JVM
-void Interpreter::java_i2f() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_i2f()
+{
 
-	Value value_1 = current_frame->PopOperandStack();
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_1.type == INT_VALUE);
+    Value value_1 = current_frame->PopOperandStack();
 
-	value_1.type = FLOAT_VALUE;
-	value_1.data.float_value = (float) value_1.data.int_value;
+    value_1.type = FLOAT_VALUE;
+    value_1.data.float_value = (float)value_1.data.int_value;
 
-	current_frame->PushOperandStack(value_1);
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função i2d da JVM
-void Interpreter::java_i2d() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_i2d()
+{
 
-	Value value_1 = current_frame->PopOperandStack();
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_1.type == INT_VALUE);
+    Value value_1 = current_frame->PopOperandStack();
 
-	Value padding;
-	padding.type = PADDING_VALUE;
-	current_frame->PushOperandStack(padding);
+    Value padding;
+    padding.type = PADDING_VALUE;
+    current_frame->PushOperandStack(padding);
 
-	value_1.type = DOUBLE_VALUE;
-	value_1.data.double_value = (double) value_1.data.int_value;
+    value_1.type = DOUBLE_VALUE;
+    value_1.data.double_value = (double)value_1.data.int_value;
 
-	current_frame->PushOperandStack(value_1);
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função l2i da JVM
-void Interpreter::java_l2i() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_l2i()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); //padding
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
 
-	// assert(value_1.type == LONG_VALUE);
+    value_1.data.int_value = (int32_t)value_1.data.long_value;
+    value_1.type = INT_VALUE;
 
-    value_1.data.int_value = (int32_t) value_1.data.long_value;
-    // value_1.printType = INT_VALUE;
-	value_1.type = INT_VALUE;
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função l2f da JVM
-void Interpreter::java_l2f() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_l2f()
+{
 
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); //padding
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_1.type == LONG_VALUE);
-	value_1.data.float_value = (float) value_1.data.long_value;
-	value_1.type = FLOAT_VALUE;
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
 
+    value_1.data.float_value = (float)value_1.data.long_value;
+    value_1.type = FLOAT_VALUE;
 
-	current_frame->PushOperandStack(value_1);
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função l2d da JVM
-void Interpreter::java_l2d() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_l2d()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+    Value value_1 = current_frame->PopOperandStack();
 
-	Value value_1 = current_frame->PopOperandStack();
-	//manter padding na pilha de operandos
+    value_1.type = DOUBLE_VALUE;
+    value_1.data.double_value = (double)value_1.data.long_value;
 
-	// assert(value_1.type == LONG_VALUE);
-    
-	value_1.type = DOUBLE_VALUE;
-	value_1.data.double_value = (double) value_1.data.long_value;    
-    
-	current_frame->PushOperandStack(value_1);
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função f2i da JVM
-void Interpreter::java_f2i() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_f2i()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_1.type == FLOAT_VALUE);
+    value_1.type = INT_VALUE;
+    value_1.data.int_value = (int32_t)value_1.data.float_value;
 
-    // value_1.printType = INT_VALUE;
-	value_1.type = INT_VALUE;
-	value_1.data.int_value = (int32_t) value_1.data.float_value;
-
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->PushOperandStack(value_1);
+    current_frame->pc += 1;
 }
 //! Essa função representa a função f2l da JVM
-void Interpreter::java_f2l() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_f2l()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_1.type == FLOAT_VALUE);
+    Value padding;
+    padding.type = PADDING_VALUE;
+    current_frame->PushOperandStack(padding);
 
-	Value padding;
-	padding.type = PADDING_VALUE;
-	current_frame->PushOperandStack(padding);
+    value_1.type = LONG_VALUE;
+    value_1.data.long_value = (uint64_t)value_1.data.float_value;
+    current_frame->PushOperandStack(value_1);
 
-	value_1.type = LONG_VALUE;
-	value_1.data.long_value = (uint64_t) value_1.data.float_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função f2d da JVM
-void Interpreter::java_f2d() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_f2d()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_1.type == FLOAT_VALUE);
+    Value padding;
+    padding.type = PADDING_VALUE;
+    current_frame->PushOperandStack(padding);
 
-	Value padding;
-	padding.type = PADDING_VALUE;
-	current_frame->PushOperandStack(padding);
+    value_1.type = DOUBLE_VALUE;
+    value_1.data.double_value = (double)value_1.data.float_value;
+    current_frame->PushOperandStack(value_1);
 
-	value_1.type = DOUBLE_VALUE;
-	value_1.data.double_value = (double) value_1.data.float_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função d2i da JVM
-void Interpreter::java_d2i() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_d2i()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); //padding
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
 
-	// assert(value_1.type == DOUBLE_VALUE);
+    value_1.type = INT_VALUE;
+    value_1.data.int_value = (int32_t)value_1.data.double_value;
+    current_frame->PushOperandStack(value_1);
 
-    // value_1.printType = INT_VALUE;
-	value_1.type = INT_VALUE;
-	value_1.data.int_value = (int32_t) value_1.data.double_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função d2l da JVM
-void Interpreter::java_d2l() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_d2l()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
-	//manter padding na pilha de operandos
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_1.type == DOUBLE_VALUE);
+    value_1.type = LONG_VALUE;
+    value_1.data.long_value = (int64_t)value_1.data.double_value;
+    current_frame->PushOperandStack(value_1);
 
-	value_1.type = LONG_VALUE;
-	value_1.data.long_value = (int64_t) value_1.data.double_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função d2f da JVM
-void Interpreter::java_d2f() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_d2f()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack(); //padding
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
 
-	// assert(value_1.type == DOUBLE_VALUE);
+    value_1.type = FLOAT_VALUE;
+    value_1.data.float_value = (float)value_1.data.double_value;
+    current_frame->PushOperandStack(value_1);
 
-	value_1.type = FLOAT_VALUE;
-	value_1.data.float_value = (float) value_1.data.double_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função i2b da JVM
-void Interpreter::java_i2b() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_i2b()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_1.type == INT_VALUE);
-    
-    // value_1.printType = BYTE_VALUE;
-    
-    value_1.data.int_value = (int32_t) (int8_t) value_1.data.int_value;
-	current_frame->PushOperandStack(value_1);
+    value_1.data.int_value = (int32_t)(int8_t)value_1.data.int_value;
+    current_frame->PushOperandStack(value_1);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função i2c da JVM
-void Interpreter::java_i2c() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_i2c()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+    Value value_1 = current_frame->PopOperandStack();
 
-	Value value_1 = current_frame->PopOperandStack();
+    value_1.data.char_value = (uint32_t)(uint8_t)value_1.data.int_value;
+    current_frame->PushOperandStack(value_1);
 
-	// assert(value_1.type == INT_VALUE);
-
-    // value_1.printType = CHAR_VALUE;
-    
-    value_1.data.char_value = (uint32_t) (uint8_t) value_1.data.int_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função i2s da JVM
-void Interpreter::java_i2s() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_i2s()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_1 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
 
-	// assert(value_1.type == INT_VALUE);
+    value_1.data.int_value = (int32_t)(int16_t)value_1.data.int_value;
+    current_frame->PushOperandStack(value_1);
 
-    // value_1.printType = SHORT_VALUE;
-    
-    value_1.data.int_value = (int32_t) (int16_t) value_1.data.int_value;
-	current_frame->PushOperandStack(value_1);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função lcmp da JVM
-void Interpreter::java_lcmp() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_lcmp()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value resultado;
-    // resultado.printType = INT_VALUE;
-	resultado.type = INT_VALUE;
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value resultado;
+    resultado.type = INT_VALUE;
 
-	// assert(value_2.type == LONG_VALUE);
-	// assert(value_1.type == LONG_VALUE);
+    if (value_1.data.long_value > value_2.data.long_value)
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.long_value == value_2.data.long_value)
+    {
+        resultado.data.int_value = 0;
+    }
+    else
+    {
+        resultado.data.int_value = -1;
+    }
 
-	if (value_1.data.long_value > value_2.data.long_value) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.long_value == value_2.data.long_value) {
-		resultado.data.int_value = 0;
-	} else {
-		resultado.data.int_value = -1;
-	}
+    current_frame->PushOperandStack(resultado);
 
-	current_frame->PushOperandStack(resultado);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função fcmpl da JVM
-void Interpreter::java_fcmpl() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_fcmpl()
+{
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-	Value resultado;
-    // resultado.printType = INT_VALUE;
-	resultado.type = INT_VALUE;
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_2.type == FLOAT_VALUE);
-	// assert(value_1.type == FLOAT_VALUE);
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+    Value resultado;
+    resultado.type = INT_VALUE;
 
-	if (isnan(value_1.data.float_value) || isnan(value_2.data.float_value)) {
-		resultado.data.int_value = -1;
-	} else if (value_1.data.float_value > value_2.data.float_value) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.float_value == value_2.data.float_value) {
-		resultado.data.int_value = 0;
-	} else {
-		resultado.data.int_value = -1;
-	}
+    if (isnan(value_1.data.float_value) || isnan(value_2.data.float_value))
+    {
+        resultado.data.int_value = -1;
+    }
+    else if (value_1.data.float_value > value_2.data.float_value)
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.float_value == value_2.data.float_value)
+    {
+        resultado.data.int_value = 0;
+    }
+    else
+    {
+        resultado.data.int_value = -1;
+    }
 
-	current_frame->PushOperandStack(resultado);
+    current_frame->PushOperandStack(resultado);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função fcmpg da JVM
-void Interpreter::java_fcmpg() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_fcmpg()
+{
 
-	Value value_2 = current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-	Value resultado;
-    // resultado.printType = INT_VALUE;
-	resultado.type = INT_VALUE;
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_2.type == FLOAT_VALUE);
-	// assert(value_1.type == FLOAT_VALUE);
+    Value value_2 = current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+    Value resultado;
+    resultado.type = INT_VALUE;
 
-	if (isnan(value_1.data.float_value) || isnan(value_2.data.float_value)) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.float_value > value_2.data.float_value) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.float_value == value_2.data.float_value) {
-		resultado.data.int_value = 0;
-	} else {
-		resultado.data.int_value = -1;
-	}
+    if (isnan(value_1.data.float_value) || isnan(value_2.data.float_value))
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.float_value > value_2.data.float_value)
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.float_value == value_2.data.float_value)
+    {
+        resultado.data.int_value = 0;
+    }
+    else
+    {
+        resultado.data.int_value = -1;
+    }
 
-	current_frame->PushOperandStack(resultado);
+    current_frame->PushOperandStack(resultado);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função dcmpl da JVM
-void Interpreter::java_dcmpl() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_dcmpl()
+{
 
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value resultado;
-    // resultado.printType = INT_VALUE;
-	resultado.type = INT_VALUE;
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	// assert(value_2.type == DOUBLE_VALUE);
-	// assert(value_1.type == DOUBLE_VALUE);
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value resultado;
+    resultado.type = INT_VALUE;
 
-	if (isnan(value_1.data.double_value) || isnan(value_2.data.double_value)) {
-		resultado.data.int_value = -1;
-	} else if (value_1.data.double_value > value_2.data.double_value) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.double_value == value_2.data.double_value) {
-		resultado.data.int_value = 0;
-	} else {
-		resultado.data.int_value = -1;
-	}
+    if (isnan(value_1.data.double_value) || isnan(value_2.data.double_value))
+    {
+        resultado.data.int_value = -1;
+    }
+    else if (value_1.data.double_value > value_2.data.double_value)
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.double_value == value_2.data.double_value)
+    {
+        resultado.data.int_value = 0;
+    }
+    else
+    {
+        resultado.data.int_value = -1;
+    }
 
-	current_frame->PushOperandStack(resultado);
+    current_frame->PushOperandStack(resultado);
 
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função dcmpg da JVM
-void Interpreter::java_dcmpg() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_dcmpg()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value_2 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value value_1 = current_frame->PopOperandStack();
-	current_frame->PopOperandStack();
-	Value resultado;
-    // resultado.printType = INT_VALUE;
-	resultado.type = INT_VALUE;
+    Value value_2 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value value_1 = current_frame->PopOperandStack();
+    current_frame->PopOperandStack();
+    Value resultado;
+    resultado.type = INT_VALUE;
 
-	// assert(value_2.type == DOUBLE_VALUE);
-	// assert(value_1.type == DOUBLE_VALUE);
+    if (isnan(value_1.data.double_value) || isnan(value_2.data.double_value))
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.double_value > value_2.data.double_value)
+    {
+        resultado.data.int_value = 1;
+    }
+    else if (value_1.data.double_value == value_2.data.double_value)
+    {
+        resultado.data.int_value = 0;
+    }
+    else
+    {
+        resultado.data.int_value = -1;
+    }
 
-	if (isnan(value_1.data.double_value) || isnan(value_2.data.double_value)) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.double_value > value_2.data.double_value) {
-		resultado.data.int_value = 1;
-	} else if (value_1.data.double_value == value_2.data.double_value) {
-		resultado.data.int_value = 0;
-	} else {
-		resultado.data.int_value = -1;
-	}
+    current_frame->PushOperandStack(resultado);
 
-	current_frame->PushOperandStack(resultado);
-
-	current_frame->pc += 1;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função ifeq da JVM
-void Interpreter::java_ifeq() {
-    
+void Interpreter::java_ifeq()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     Value value = current_frame->PopOperandStack();
-    // assert(value.type == INT_VALUE);
-    
-    if (value.data.int_value == 0) {
-        
-        u1 byte1 = current_frame->code.code[current_frame->pc+1];
-        u1 byte2 = current_frame->code.code[current_frame->pc+2];
-        int16_t branchOffset = (byte1 << 8) | byte2;
-        current_frame->pc += branchOffset;
-    } else {
+
+    if (value.data.int_value == 0)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
         current_frame->pc += 3;
     }
 }
 //! Essa função representa a função ifne da JVM
-void Interpreter::java_ifne() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == INT_VALUE);
-	
-	if (value.data.int_value != 0) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_ifne()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value = current_frame->PopOperandStack();
+
+    if (value.data.int_value != 0)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função iflt da JVM
-void Interpreter::java_iflt() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == INT_VALUE);
-	
-	if (value.data.int_value < 0) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_iflt()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value = current_frame->PopOperandStack();
+
+    if (value.data.int_value < 0)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função ifge da JVM
-void Interpreter::java_ifge() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == INT_VALUE);
-	
-	if (value.data.int_value >= 0) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_ifge()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value = current_frame->PopOperandStack();
+
+    if (value.data.int_value >= 0)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função ifgt da JVM
-void Interpreter::java_ifgt() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == INT_VALUE);
-	
-	if (value.data.int_value > 0) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_ifgt()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value = current_frame->PopOperandStack();
+
+    if (value.data.int_value > 0)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função ifle da JVM
-void Interpreter::java_ifle() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value = current_frame->PopOperandStack();
-	// assert(value.type == INT_VALUE);
-	
-	if (value.data.int_value <= 0) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_ifle()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value = current_frame->PopOperandStack();
+
+    if (value.data.int_value <= 0)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_icmpeq da JVM
-void Interpreter::java_if_icmpeq() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == INT_VALUE);
-	// assert(value2.type == INT_VALUE);
-	
-	if (value1.data.int_value == value2.data.int_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_if_icmpeq()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
+
+    if (value1.data.int_value == value2.data.int_value)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_icmpne da JVM
-void Interpreter::java_if_icmpne() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == INT_VALUE);
-	// assert(value2.type == INT_VALUE);
-	
-	if (value1.data.int_value != value2.data.int_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-	} else {
-		current_frame->pc += 3;
+void Interpreter::java_if_icmpne()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
+
+    if (value1.data.int_value != value2.data.int_value)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_icmplt da JVM
-void Interpreter::java_if_icmplt() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == INT_VALUE);
-	// assert(value2.type == INT_VALUE);
-	
-	if (value1.data.int_value < value2.data.int_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_if_icmplt()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
+
+    if (value1.data.int_value < value2.data.int_value)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_icmpge da JVM
-void Interpreter::java_if_icmpge() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == INT_VALUE);
-	// assert(value2.type == INT_VALUE);
+void Interpreter::java_if_icmpge()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
 
     // cout << "Comparando... " << value2.data.int_value << " : " << value1.data.int_value << endl;
-	
-	if (value1.data.int_value >= value2.data.int_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+    if (value1.data.int_value >= value2.data.int_value)
+    {
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_icmpgt da JVM
-void Interpreter::java_if_icmpgt() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == INT_VALUE);
-	// assert(value2.type == INT_VALUE);
-	
-	if (value1.data.int_value > value2.data.int_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_if_icmpgt()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
+
+    if (value1.data.int_value > value2.data.int_value)
+    {
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_icmple da JVM
-void Interpreter::java_if_icmple() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == INT_VALUE);
-	// assert(value2.type == INT_VALUE);
-	
-	if (value1.data.int_value <= value2.data.int_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+void Interpreter::java_if_icmple()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
+
+    if (value1.data.int_value <= value2.data.int_value)
+    {
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_acmpeq da JVM
-void Interpreter::java_if_acmpeq() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_if_acmpeq()
+{
 
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == ValueType::REFERENCE);
-	// assert(value2.type == ValueType::REFERENCE);
-	
-	if (value1.data.object_value == value2.data.object_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
+
+    if (value1.data.object_value == value2.data.object_value)
+    {
+
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função if_acmpne da JVM
-void Interpreter::java_if_acmpne() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_if_acmpne()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	Value value2 = current_frame->PopOperandStack();
-	Value value1 = current_frame->PopOperandStack();
-	// assert(value1.type == ValueType::REFERENCE);
-	// assert(value2.type == ValueType::REFERENCE);
+    Value value2 = current_frame->PopOperandStack();
+    Value value1 = current_frame->PopOperandStack();
 
-	if (value1.data.object_value != value2.data.object_value) {
-		
-		u1 byte1 = current_frame->code.code[current_frame->pc+1];
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		int16_t branchOffset = (byte1 << 8) | byte2;
-		current_frame->pc += branchOffset;
-    } else {
-		current_frame->pc += 3;
+    if (value1.data.object_value != value2.data.object_value)
+    {
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch_offset = (byte1 << 8) | byte2;
+        current_frame->pc += branch_offset;
+    }
+    else
+    {
+        current_frame->pc += 3;
     }
 }
 //! Essa função representa a função goto da JVM
-void Interpreter::java_goto() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	u1 byte2 = current_frame->code.code[current_frame->pc+2];
-	int16_t branchOffset = (byte1 << 8) | byte2;
-	current_frame->pc += branchOffset;
+void Interpreter::java_goto()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+    int16_t branch_offset = (byte1 << 8) | byte2;
+    current_frame->pc += branch_offset;
 }
 //! Essa função representa a função jsr da JVM
-void Interpreter::java_jsr() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
-	
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	u1 byte2 = current_frame->code.code[current_frame->pc+2];
-	int16_t branchOffset = (byte1 << 8) | byte2;
-	
-	Value value;
-	value.type = RETURN_VALUE;
-	value.data.return_address = current_frame->pc + 3; 
-	current_frame->PushOperandStack(value);
-	
-	current_frame->pc += branchOffset;
+void Interpreter::java_jsr()
+{
+
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+    int16_t branch_offset = (byte1 << 8) | byte2;
+
+    Value value;
+    value.type = RETURN_VALUE;
+    value.data.return_address = current_frame->pc + 3;
+    current_frame->PushOperandStack(value);
+
+    current_frame->pc += branch_offset;
 }
 
 // Pode ser modifica//! Essa função representa a função ret da JVMdo pelo wide
-void Interpreter::java_ret() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_ret()
+{
 
-	
-	u1 byte1 = current_frame->code.code[current_frame->pc+1]; // índice do vetor de variáveis locais
-	uint16_t index = (uint16_t) byte1;
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	if (wide) {
-		u1 byte2 = current_frame->code.code[current_frame->pc+2];
-		index = (byte1 << 8) | byte2;
-	}
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    uint16_t index = (uint16_t)byte1;
 
-	// assert(((int16_t)(current_frame->sizeLocalVariables()) > index));
-	Value value = current_frame->GetLocalVariable(index);
+    if (wide)
+    {
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        index = (byte1 << 8) | byte2;
+    }
 
-	// assert(value.type == ValueType::RETURN_ADDR);
-	current_frame->ChangeLocalVariable(index, value);
+    Value value = current_frame->GetLocalVariable(index);
 
-	current_frame->pc = value.data.return_address;
-	wide = false;
+    current_frame->ChangeLocalVariable(index, value);
+
+    current_frame->pc = value.data.return_address;
+    wide = false;
 }
 //! Essa função representa a função tableswitch da JVM
-void Interpreter::java_tableswitch() {
-    
+void Interpreter::java_tableswitch()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     u1 padding = 4 - (current_frame->pc + 1) % 4;
     padding = (padding == 4) ? 0 : padding;
-    
+
     u1 default_byte1 = current_frame->code.code[current_frame->pc + padding + 1];
     u1 default_byte2 = current_frame->code.code[current_frame->pc + padding + 2];
     u1 default_byte3 = current_frame->code.code[current_frame->pc + padding + 3];
     u1 default_byte4 = current_frame->code.code[current_frame->pc + padding + 4];
     int32_t default_bytes = (default_byte1 << 24) | (default_byte2 << 16) | (default_byte3 << 8) | default_byte4;
-    
+
     u1 lowbyte1 = current_frame->code.code[current_frame->pc + padding + 5];
     u1 lowbyte2 = current_frame->code.code[current_frame->pc + padding + 6];
     u1 lowbyte3 = current_frame->code.code[current_frame->pc + padding + 7];
     u1 lowbyte4 = current_frame->code.code[current_frame->pc + padding + 8];
     uint32_t lowbytes = (lowbyte1 << 24) | (lowbyte2 << 16) | (lowbyte3 << 8) | lowbyte4;
-    
+
     u1 highbyte1 = current_frame->code.code[current_frame->pc + padding + 9];
     u1 highbyte2 = current_frame->code.code[current_frame->pc + padding + 10];
     u1 highbyte3 = current_frame->code.code[current_frame->pc + padding + 11];
     u1 highbyte4 = current_frame->code.code[current_frame->pc + padding + 12];
     uint32_t highbytes = (highbyte1 << 24) | (highbyte2 << 16) | (highbyte3 << 8) | highbyte4;
-    
+
     Value key_value = current_frame->PopOperandStack();
-    // assert(key_value.type == INT_VALUE);
+
     int32_t key = key_value.data.int_value;
-    
+
     uint32_t i;
     uint32_t baseIndex = padding + 13;
     int32_t offsets = highbytes - lowbytes + 1;
     bool matched = false;
-    for (i = 0; i < offsets; i++) {
-        if (key == lowbytes) {
-            int32_t offset = (current_frame->code.code[current_frame->pc + baseIndex] << 24) | (current_frame->code.code[current_frame->pc + baseIndex+1] << 16) | (current_frame->code.code[current_frame->pc + baseIndex+2] << 8) | current_frame->code.code[current_frame->pc + baseIndex+3];
+    for (i = 0; i < offsets; i++)
+    {
+        if (key == lowbytes)
+        {
+            int32_t offset = (current_frame->code.code[current_frame->pc + baseIndex] << 24) | (current_frame->code.code[current_frame->pc + baseIndex + 1] << 16) | (current_frame->code.code[current_frame->pc + baseIndex + 2] << 8) | current_frame->code.code[current_frame->pc + baseIndex + 3];
             current_frame->pc += offset;
             matched = true;
             break;
@@ -3466,47 +3244,51 @@ void Interpreter::java_tableswitch() {
         lowbytes++;
         baseIndex += 4;
     }
-    
-    if (!matched) {
-        current_frame->pc += default_bytes; // salto default
+
+    if (!matched)
+    {
+        current_frame->pc += default_bytes;
     }
 }
 //! Essa função representa a função lookupswitch da JVM
-void Interpreter::java_lookupswitch() {
-    
+void Interpreter::java_lookupswitch()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    u1* code = current_frame->code.code;
+
+    u1 *code = current_frame->code.code;
     u1 padding = 4 - (current_frame->pc + 1) % 4;
     padding = (padding == 4) ? 0 : padding;
-    
+
     u1 defaultbyte1 = code[current_frame->pc + padding + 1];
     u1 defaultbyte2 = code[current_frame->pc + padding + 2];
     u1 defaultbyte3 = code[current_frame->pc + padding + 3];
     u1 defaultbyte4 = code[current_frame->pc + padding + 4];
-    int32_t defaultBytes = (defaultbyte1 << 24) | (defaultbyte2 << 16) | (defaultbyte3 << 8) | defaultbyte4;
-    
+    int32_t default_bytes = (defaultbyte1 << 24) | (defaultbyte2 << 16) | (defaultbyte3 << 8) | defaultbyte4;
+
     u1 npairs1 = code[current_frame->pc + padding + 5];
     u1 npairs2 = code[current_frame->pc + padding + 6];
     u1 npairs3 = code[current_frame->pc + padding + 7];
     u1 npairs4 = code[current_frame->pc + padding + 8];
     uint32_t npairs = (npairs1 << 24) | (npairs2 << 16) | (npairs3 << 8) | npairs4;
-    
+
     Value keyValue = current_frame->PopOperandStack();
-    // assert(keyValue.type == INT_VALUE);
+
     int32_t key = keyValue.data.int_value;
 
     // cout << "Lookupswitch KEY: " << key << endl;
-    
+
     uint32_t i;
     uint32_t baseIndex = padding + 9;
     bool matched = false;
-    for (i = 0; i < npairs; i++) {
-        int32_t match = (code[current_frame->pc + baseIndex] << 24) | (code[current_frame->pc + baseIndex+1] << 16) | (code[current_frame->pc + baseIndex+2] << 8) | code[current_frame->pc + baseIndex+3];
-        
-        if (key == match) {
-            int32_t offset = (code[current_frame->pc + baseIndex+4] << 24) | (code[current_frame->pc + baseIndex+5] << 16) | (code[current_frame->pc + baseIndex+6] << 8) | code[current_frame->pc + baseIndex+7];
-            
+    for (i = 0; i < npairs; i++)
+    {
+        int32_t match = (code[current_frame->pc + baseIndex] << 24) | (code[current_frame->pc + baseIndex + 1] << 16) | (code[current_frame->pc + baseIndex + 2] << 8) | code[current_frame->pc + baseIndex + 3];
+
+        if (key == match)
+        {
+            int32_t offset = (code[current_frame->pc + baseIndex + 4] << 24) | (code[current_frame->pc + baseIndex + 5] << 16) | (code[current_frame->pc + baseIndex + 6] << 8) | code[current_frame->pc + baseIndex + 7];
+
             // cout << "Lookupswitch offset: " << offset << endl;
             current_frame->pc += offset;
             matched = true;
@@ -3514,40 +3296,39 @@ void Interpreter::java_lookupswitch() {
         }
         baseIndex += 8;
     }
-    
-    if (!matched) {
-        // cout << "Lookupswitch matched: " << defaultBytes << endl;
-        current_frame->pc += defaultBytes; // salto default
+
+    if (!matched)
+    {
+        // cout << "Lookupswitch matched: " << default_bytes << endl;
+        current_frame->pc += default_bytes;
     }
 }
 //! Essa função representa a função ireturn da JVM
-void Interpreter::java_ireturn() {
-    
+void Interpreter::java_ireturn()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     Value returnValue = current_frame->PopOperandStack();
-    // assert(returnValue.type == INT_VALUE);
-    
+
     this->runtime->PopFrame();
-    
+
     Frame *newTopFrame = this->runtime->GetCurrentFrame();
 
     // cout << "Resultado: " << returnValue.data.int_value << endl;
 
-    
     newTopFrame->PushOperandStack(returnValue);
 }
 //! Essa função representa a função lreturn da JVM
-void Interpreter::java_lreturn() {
-    
+void Interpreter::java_lreturn()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     Value returnValue = current_frame->PopOperandStack();
-    // assert(returnValue.type == LONG_VALUE);
-    // assert(current_frame->PopOperandStack();().type == PADDING_VALUE); // o debaixo precisa ser padding
-    
+
     this->runtime->PopFrame();
-    
+
     Frame *newTopFrame = this->runtime->GetCurrentFrame();
     Value padding;
     padding.type = PADDING_VALUE;
@@ -3555,139 +3336,138 @@ void Interpreter::java_lreturn() {
     newTopFrame->PushOperandStack(returnValue);
 }
 //! Essa função representa a função freturn da JVM
-void Interpreter::java_freturn() {
-    
+void Interpreter::java_freturn()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     Value returnValue = current_frame->PopOperandStack();
-    // assert(returnValue.type == FLOAT_VALUE);
-    
+
     this->runtime->PopFrame();
-    
+
     Frame *newTopFrame = this->runtime->GetCurrentFrame();
     newTopFrame->PushOperandStack(returnValue);
 }
 //! Essa função representa a função dreturn da JVM
-void Interpreter::java_dreturn() {
-    
+void Interpreter::java_dreturn()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     Value returnValue = current_frame->PopOperandStack();
-    // assert(returnValue.type == DOUBLE_VALUE);
-    // assert(current_frame->PopOperandStack();().type == PADDING_VALUE); // o debaixo precisa ser padding
-    
+
     this->runtime->PopFrame();
-    
+
     Frame *newTopFrame = this->runtime->GetCurrentFrame();
-    
+
     Value padding;
     padding.type = PADDING_VALUE;
     newTopFrame->PushOperandStack(padding);
     newTopFrame->PushOperandStack(returnValue);
 }
 //! Essa função representa a função areturn da JVM
-void Interpreter::java_areturn() {
-    
+void Interpreter::java_areturn()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     Value returnValue = current_frame->PopOperandStack();
-    // assert(returnValue.type == ValueType::REFERENCE);
-    
+
     this->runtime->PopFrame();
-    
+
     Frame *newTopFrame = this->runtime->GetCurrentFrame();
     newTopFrame->PushOperandStack(returnValue);
 }
 //! Essa função representa a função return da JVM
-void Interpreter::java_return() {
-    
+void Interpreter::java_return()
+{
+
     this->runtime->PopFrame();
 }
 //! Essa função representa a função getstatic da JVM
-void Interpreter::java_getstatic() {
-    
+void Interpreter::java_getstatic()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
     vector<CpInfo *> constant_pool = (current_frame->constant_pool);
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t field_index = (byte1 << 8) | byte2;
-    CpInfo* field_cp = constant_pool[field_index-1];
-    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
+    CpInfo *field_cp = constant_pool[field_index - 1];
 
     CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
     string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo* name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
-    
+
     string field_name = ReadFile::readString(field_name_and_type.name_index, constant_pool);
-    // string field_name = fieldNameVector[0];
     string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
 
-    
     // caso especial
-    if (class_name == "java/lang/System" && field_descriptor == "Ljava/io/PrintStream;" ) {
+    if (class_name == "java/lang/System" && field_descriptor == "Ljava/io/PrintStream;")
+    {
         current_frame->pc += 3;
         return;
     }
     // fim do caso especial
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
     MethodAreaSection *area = method_area[class_name];
-    
-    while (area != NULL) {
-        if (area->static_fields.count(field_name) == 0) {
-            if (area->class_file->super_class == 0) {
+
+    while (area != NULL)
+    {
+        if (area->static_fields.count(field_name) == 0)
+        {
+            if (area->class_file->super_class == 0)
+            {
                 area = NULL;
-            } else {
-                string superClassName = ReadFile::readString(area->class_file->super_class, area->class_file->constant_pool);
-                if(method_area.count(superClassName) > 0)
-                    area = method_area[superClassName];
-                else{
-                    ClassLoaderSubsystem::Resolve(superClassName, this->runtime);
-                    area = method_area[superClassName];
+            }
+            else
+            {
+                string super_class_name = ReadFile::readString(area->class_file->super_class, area->class_file->constant_pool);
+                if (method_area.count(super_class_name) > 0)
+                    area = method_area[super_class_name];
+                else
+                {
+                    ClassLoaderSubsystem::Resolve(super_class_name, this->runtime);
+                    area = method_area[super_class_name];
                 }
             }
-        } else {
+        }
+        else
+        {
             break;
         }
     }
-    
-    if (area == NULL) {
-        cerr << "NoSuchFieldError" << endl;
-        exit(1);
+
+    if (this->runtime->GetCurrentFrame() != current_frame)
+        return;
+
+    Value staticValue = area->static_fields[field_name];
+    switch (staticValue.type)
+    {
+    case BOOLEAN_VALUE:
+        staticValue.type = INT_VALUE;
+        break;
+    case BYTE_VALUE:
+        staticValue.type = INT_VALUE;
+        break;
+    case SHORT_VALUE:
+        staticValue.type = INT_VALUE;
+        break;
+    case INT_VALUE:
+        staticValue.type = INT_VALUE;
+        break;
+    default:
+        break;
     }
 
-    // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
-    if (this->runtime->GetCurrentFrame() != current_frame) return;
-    
-    Value staticValue = area->static_fields[field_name];
-    switch (staticValue.type) {
-        case BOOLEAN_VALUE:
-            staticValue.type = INT_VALUE;
-            // staticValue.printType = BOOLEAN_VALUE;
-            break;
-        case BYTE_VALUE:
-            staticValue.type = INT_VALUE;
-            // staticValue.printType = BYTE_VALUE;
-            break;
-        case SHORT_VALUE:
-            staticValue.type = INT_VALUE;
-            // staticValue.printType = SHORT_VALUE;
-            break;
-        case INT_VALUE:
-            staticValue.type = INT_VALUE;
-            // staticValue.printType = INT_VALUE;
-            break;
-        default:
-            break;
-    }
-    
-    if (staticValue.type == DOUBLE_VALUE || staticValue.type == LONG_VALUE) {
+    if (staticValue.type == DOUBLE_VALUE || staticValue.type == LONG_VALUE)
+    {
         Value padding_value;
         padding_value.type = PADDING_VALUE;
         current_frame->PushOperandStack(padding_value);
@@ -3698,24 +3478,22 @@ void Interpreter::java_getstatic() {
     current_frame->pc += 3;
 }
 //! Essa função representa a função putstatic da JVM
-void Interpreter::java_putstatic() {
-    
+void Interpreter::java_putstatic()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *>constant_pool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
 
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t field_index = (byte1 << 8) | byte2;
-    CpInfo *field_cp = constant_pool[field_index-1];
-    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
+    CpInfo *field_cp = constant_pool[field_index - 1];
 
     CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
     string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
 
@@ -3725,53 +3503,59 @@ void Interpreter::java_putstatic() {
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
     MethodAreaSection *area = method_area[class_name];
 
-    while (area != NULL) {
-        if (area->static_fields.count(field_name) == 0) {
-            if (area->class_file->super_class == 0) {
+    while (area != NULL)
+    {
+        if (area->static_fields.count(field_name) == 0)
+        {
+            if (area->class_file->super_class == 0)
+            {
                 area = NULL;
-            } else {
-                string superClassName = ReadFile::readString(area->class_file->super_class, area->class_file->constant_pool);
-                if(method_area.count(superClassName) > 0)
-                    area = method_area[superClassName];
-                else{
-                    ClassLoaderSubsystem::Resolve(superClassName, this->runtime);
-                    area = method_area[superClassName];
+            }
+            else
+            {
+                string super_class_name = ReadFile::readString(area->class_file->super_class, area->class_file->constant_pool);
+                if (method_area.count(super_class_name) > 0)
+                    area = method_area[super_class_name];
+                else
+                {
+                    ClassLoaderSubsystem::Resolve(super_class_name, this->runtime);
+                    area = method_area[super_class_name];
                 }
             }
-        } else {
+        }
+        else
+        {
             break;
         }
     }
 
-    if (area == NULL) {
-        cerr << "NoSuchFieldError" << endl;
-        exit(1);
-    }
+    if (this->runtime->GetCurrentFrame() != current_frame)
+        return;
 
-    // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
-    if (this->runtime->GetCurrentFrame() != current_frame) return;
-    
     Value topValue = current_frame->PopOperandStack();
-    if (topValue.type == DOUBLE_VALUE || topValue.type == LONG_VALUE) {
-        current_frame->PopOperandStack(); // removendo padding
-    } else {
-        switch (field_descriptor[0]) {
-            case 'B':
-                topValue.type = BYTE_VALUE;
-                // topValue.printType = BYTE_VALUE;
-                break;
-            case 'C':
-                topValue.type = CHAR_VALUE;
-                topValue.type = CHAR_VALUE;
-                break;
-            case 'S':
-                topValue.type = SHORT_VALUE;
-                topValue.type = SHORT_VALUE;
-                break;
-            case 'Z':
-                topValue.type = BYTE_VALUE;
-                topValue.type = BYTE_VALUE;
-                break;
+    if (topValue.type == DOUBLE_VALUE || topValue.type == LONG_VALUE)
+    {
+        current_frame->PopOperandStack();
+    }
+    else
+    {
+        switch (field_descriptor[0])
+        {
+        case 'B':
+            topValue.type = BYTE_VALUE;
+            break;
+        case 'C':
+            topValue.type = CHAR_VALUE;
+            topValue.type = CHAR_VALUE;
+            break;
+        case 'S':
+            topValue.type = SHORT_VALUE;
+            topValue.type = SHORT_VALUE;
+            break;
+        case 'Z':
+            topValue.type = BYTE_VALUE;
+            topValue.type = BYTE_VALUE;
+            break;
         }
     }
 
@@ -3781,24 +3565,23 @@ void Interpreter::java_putstatic() {
     current_frame->pc += 3;
 }
 //! Essa função representa a função getfield da JVM
-void Interpreter::java_getfield() {
-    
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *>constant_pool = current_frame->constant_pool;
+void Interpreter::java_getfield()
+{
 
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t field_index = (byte1 << 8) | byte2;
-    CpInfo *field_cp = constant_pool[field_index-1];
-    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
+    CpInfo *field_cp = constant_pool[field_index - 1];
 
     CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
     string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
 
@@ -3806,39 +3589,30 @@ void Interpreter::java_getfield() {
     string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
 
     Value object_value = current_frame->PopOperandStack();
-    // assert(object_value.type == ValueType::REFERENCE);
-    ObjectRef *object = object_value.data.object_value;
-    // assert(object->objectType() == ObjectType::CLASS_INSTANCE);
-    // ClassInstance *classInstance = (ClassInstance *) object;
 
-    if (object->variables.count(field_name) == 0) {
-        cerr << "NoSuchFieldError" << endl;
-        exit(1);
-    }
+    ObjectRef *object = object_value.data.object_value;
 
     Value field_value = object->GetVariable(field_name);
-    switch (field_value.type) {
-        case BYTE_VALUE:
-            field_value.type = INT_VALUE;
-            // field_value.printType = BYTE_VALUE;
-            break;
-        case CHAR_VALUE:
-            field_value.type = INT_VALUE;
-            // field_value.printType = BYTE_VALUE;
-            break;
-        case SHORT_VALUE:
-            field_value.type = INT_VALUE;
-            // field_value.printType = SHORT_VALUE;
-            break;
-        case INT_VALUE:
-            field_value.type = INT_VALUE;
-            // field_value.printType = INT_VALUE;
-            break;
-        default:
-            break;
+    switch (field_value.type)
+    {
+    case BYTE_VALUE:
+        field_value.type = INT_VALUE;
+        break;
+    case CHAR_VALUE:
+        field_value.type = INT_VALUE;
+        break;
+    case SHORT_VALUE:
+        field_value.type = INT_VALUE;
+        break;
+    case INT_VALUE:
+        field_value.type = INT_VALUE;
+        break;
+    default:
+        break;
     }
-    
-    if (field_value.type == DOUBLE_VALUE || field_value.type == LONG_VALUE) {
+
+    if (field_value.type == DOUBLE_VALUE || field_value.type == LONG_VALUE)
+    {
         Value padding_value;
         padding_value.type = PADDING_VALUE;
         current_frame->PushOperandStack(padding_value);
@@ -3849,228 +3623,225 @@ void Interpreter::java_getfield() {
     current_frame->pc += 3;
 }
 //! Essa função representa a função putfield da JVM
-void Interpreter::java_putfield() {
+void Interpreter::java_putfield()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *>constant_pool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
 
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t field_index = (byte1 << 8) | byte2;
-    CpInfo *field_cp = constant_pool[field_index-1];
-    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
+    CpInfo *field_cp = constant_pool[field_index - 1];
 
     CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
     string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index - 1];
+
     CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
 
     string field_name = ReadFile::readString(field_name_and_type.name_index, constant_pool);
     string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
     // cout << "PUTFIELD 4" << endl;
     Value value_insert = current_frame->PopOperandStack();
-    if (value_insert.type == DOUBLE_VALUE || value_insert.type == LONG_VALUE) {
-        current_frame->PopOperandStack(); // removendo padding
-    } else {
-        switch (field_descriptor[0]) {
-            case 'B':
-                value_insert.type = BYTE_VALUE;
-                // value_insert.printType = BYTE_VALUE;
-                break;
-            case 'C':
-                value_insert.type = CHAR_VALUE;
-                // value_insert.printType = CHAR_VALUE;
-                break;
-            case 'S':
-                value_insert.type = SHORT_VALUE;
-                // value_insert.printType = SHORT_VALUE;
-                break;
-            case 'Z':
-                value_insert.type = BYTE_VALUE;
-                // value_insert.printType = BYTE_VALUE;
-                break;
+    if (value_insert.type == DOUBLE_VALUE || value_insert.type == LONG_VALUE)
+    {
+        current_frame->PopOperandStack();
+    }
+    else
+    {
+        switch (field_descriptor[0])
+        {
+        case 'B':
+            value_insert.type = BYTE_VALUE;
+            break;
+        case 'C':
+            value_insert.type = CHAR_VALUE;
+            break;
+        case 'S':
+            value_insert.type = SHORT_VALUE;
+            break;
+        case 'Z':
+            value_insert.type = BYTE_VALUE;
+            break;
         }
     }
 
     Value object_value = current_frame->PopOperandStack();
-    // assert(object_value.type == ValueType::REFERENCE);
+
     ObjectRef *object = object_value.data.object_value;
-    // assert(object->objectType() == ObjectType::CLASS_INSTANCE);
-    // ClassInstance *classInstance = (ClassInstance *) object;
 
     object->ChangeVariable(field_name, value_insert);
 
     current_frame->pc += 3;
 }
 //! Essa função representa a função invokevirtual da JVM
-void Interpreter::java_invokevirtual() {
-    
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    vector<Value> save_operand_stack = current_frame->operand_stack;
-    
-    vector<CpInfo *>constant_pool = current_frame->constant_pool;
+void Interpreter::java_invokevirtual()
+{
 
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    vector<Value> save_operand_stack = current_frame->operand_stack;
+
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constant_pool[methodIndex-1];
-    // assert(methodCP->tag == CONSTANT_Methodref); // precisa referenciar um método
+    CpInfo *methodCP = constant_pool[methodIndex - 1];
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
     string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo *name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[methodInfo.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
     string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
     string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
 
-    if (class_name.find("java/") != string::npos) {
-        // simulando println ou print
-        if (class_name == "java/io/PrintStream" && (method_name == "print" || method_name == "println")) {
-            if (method_descriptor != "()V") {
+    if (class_name.find("java/") != string::npos)
+    {
+        if (class_name == "java/io/PrintStream" && (method_name == "print" || method_name == "println"))
+        {
+            if (method_descriptor != "()V")
+            {
                 Value print_value = current_frame->PopOperandStack();
+                switch (print_value.type)
+                {
+                case DOUBLE_VALUE:
+                    current_frame->PopOperandStack();
+                    printf("%f", print_value.data.double_value);
+                    break;
+                case FLOAT_VALUE:
+                    printf("%f", print_value.data.float_value);
+                    break;
+                case LONG_VALUE:
+                    current_frame->PopOperandStack();
+                    printf("%lld", print_value.data.long_value);
+                    break;
+                case STRING_VALUE:
 
-                // if (print_value.type == INT_VALUE) {
-                //     switch (print_value.printType) {
-                //         case BOOLEAN_VALUE:
-                //             printf("%s", print_value.data.boolean_value == 0 ? "false" : "true");
-                //             break;
-                //         case BYTE_VALUE:
-                //             printf("%d", print_value.data.byte_value);
-                //             break;
-                //         case CHAR_VALUE:
-                //             printf("%c", print_value.data.char_value);
-                //             break;
-                //         case SHORT_VALUE:
-                //             printf("%d", print_value.data.short_value);
-                //             break;
-                //         default:
-                //             printf("%d", print_value.data.int_value);
-                //             break;
-                //     }
-                // } else {
-                    switch (print_value.type) {
-                        case DOUBLE_VALUE:
-                            current_frame->PopOperandStack(); // removendo padding
-                            printf("%f", print_value.data.double_value);
-                            break;
-                        case FLOAT_VALUE:
-                            printf("%f", print_value.data.float_value);
-                            break;
-                        case LONG_VALUE:
-                            current_frame->PopOperandStack(); // removendo padding
-                            printf("%lld", print_value.data.long_value);
-                            break;
-                        case STRING_VALUE:
-                            // assert(print_value.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
-                            printf("%s", print_value.data.string_value->c_str());
-                            break;
-                        case BOOLEAN_VALUE:
-                            printf("%s", print_value.data.boolean_value == 0 ? "false" : "true");
-                            break;
-                        case BYTE_VALUE:
-                            printf("%d", print_value.data.byte_value);
-                            break;
-                        case CHAR_VALUE:
-                            printf("%c", print_value.data.char_value);
-                            break;
-                        case SHORT_VALUE:
-                            printf("%d", print_value.data.short_value);
-                            break;
-                        case INT_VALUE:
-                            printf("%d", print_value.data.int_value);
-                            break;
-                        default:
-                            cerr << "Tentando printar tipo de dado invalido: " << (int) print_value.type << endl;
-                            exit(1);
-                            break;
-                    }
-                // }
+                    printf("%s", print_value.data.string_value->c_str());
+                    break;
+                case BOOLEAN_VALUE:
+                    printf("%s", print_value.data.boolean_value == 0 ? "false" : "true");
+                    break;
+                case BYTE_VALUE:
+                    printf("%d", print_value.data.byte_value);
+                    break;
+                case CHAR_VALUE:
+                    printf("%c", print_value.data.char_value);
+                    break;
+                case SHORT_VALUE:
+                    printf("%d", print_value.data.short_value);
+                    break;
+                case INT_VALUE:
+                    printf("%d", print_value.data.int_value);
+                    break;
+                default:
+                    cerr << "Tentando printar tipo de dado invalido: " << (int)print_value.type << endl;
+                    exit(1);
+                    break;
+                }
             }
 
-            if (method_name == "println") printf("\n");
-        } else if (class_name == "java/lang/String" && method_name == "equals") {
+            if (method_name == "println")
+                printf("\n");
+        }
+        else if (class_name == "java/lang/String" && method_name == "equals")
+        {
             Value str_value1 = current_frame->PopOperandStack();
             Value strValue2 = current_frame->PopOperandStack();
-            // assert(str_value1.type == ValueType::REFERENCE);
-            // assert(strValue2.type == ValueType::REFERENCE);
-            // assert(str_value1.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
-            // assert(strValue2.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
-            
+
             string *str1 = str_value1.data.string_value;
             string *str2 = strValue2.data.string_value;
-            
+
             Value result;
-            // result.printType = INT_VALUE;
             result.type = INT_VALUE;
-            if (str1->c_str() == str2->c_str()) {
+            if (str1->c_str() == str2->c_str())
+            {
                 result.data.int_value = 1;
-            } else {
+            }
+            else
+            {
                 result.data.int_value = 0;
             }
             current_frame->PushOperandStack(result);
-        } else if (class_name == "java/lang/String" && method_name == "length") {	
+        }
+        else if (class_name == "java/lang/String" && method_name == "length")
+        {
             Value strValue = current_frame->PopOperandStack();
-            // assert(strValue.type == ValueType::REFERENCE);		
-            // assert(strValue.data.object_value->objectType() == ObjectType::STRING_INSTANCE);		
-                    
-            string *str = strValue.data.string_value;		
-                    
+
+            string *str = strValue.data.string_value;
+
             Value result;
-            // result.printType = INT_VALUE;
-            result.type = INT_VALUE;		
-            result.data.int_value = str->size();		
+            result.type = INT_VALUE;
+            result.data.int_value = str->size();
             current_frame->PushOperandStack(result);
-        } else {
+        }
+        else
+        {
             cerr << "Tentando invocar metodo de instancia invalido: " << method_name << endl;
             exit(1);
         }
-    } else {
-        uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
-        uint16_t i = 1; // pulando o primeiro '('
-        while (method_descriptor[i] != ')') {
+    }
+    else
+    {
+        uint16_t nargs = 0;
+        uint16_t i = 1;
+        while (method_descriptor[i] != ')')
+        {
             char baseType = method_descriptor[i];
-            if (baseType == 'D' || baseType == 'J') {
+            if (baseType == 'D' || baseType == 'J')
+            {
                 nargs += 2;
-            } else if (baseType == 'L') {
+            }
+            else if (baseType == 'L')
+            {
                 nargs++;
-                while (method_descriptor[++i] != ';');
-            } else if (baseType == '[') {
+                while (method_descriptor[++i] != ';')
+                    ;
+            }
+            else if (baseType == '[')
+            {
                 nargs++;
-                while (method_descriptor[++i] == '[');
-                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
-            } else {
+                while (method_descriptor[++i] == '[')
+                    ;
+                if (method_descriptor[i] == 'L')
+                    while (method_descriptor[++i] != ';')
+                        ;
+            }
+            else
+            {
                 nargs++;
             }
             i++;
         }
 
         vector<Value> args;
-        for (int i = 0; i < nargs; i++) {
+        for (int i = 0; i < nargs; i++)
+        {
             Value value = current_frame->PopOperandStack();
-            if (value.type == PADDING_VALUE) {
-                args.insert(args.begin() + 1, value); // adicionando o padding após o valor double/long.
-            } else {
+            if (value.type == PADDING_VALUE)
+            {
+                args.insert(args.begin() + 1, value);
+            }
+            else
+            {
                 args.insert(args.begin(), value);
             }
         }
 
         Value object_value = current_frame->PopOperandStack();
-        // assert(object_value.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
+
         args.insert(args.begin(), object_value);
 
         // ObjectRef *object = object_value.data.object_value;
-        // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
-        // ClassInstance *instance = (ClassInstance *) object;
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[class_name];
@@ -4078,7 +3849,8 @@ void Interpreter::java_invokevirtual() {
         // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
         this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
-        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+        if (this->runtime->stack[this->runtime->stack.size() - 2] != current_frame)
+        {
             current_frame->operand_stack = save_operand_stack;
             delete this->runtime->GetCurrentFrame();
             this->runtime->PopFrame();
@@ -4089,84 +3861,100 @@ void Interpreter::java_invokevirtual() {
     current_frame->pc += 3;
 }
 //! Essa função representa a função invokespecial da JVM
-void Interpreter::java_invokespecial() {
-    
+void Interpreter::java_invokespecial()
+{
+
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     vector<Value> save_operand_stack = current_frame->operand_stack;
-    
+
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constant_pool[methodIndex-1];
-    // assert(methodCP->tag == CONSTANT_Methodref); // precisa referenciar um método
+    CpInfo *methodCP = constant_pool[methodIndex - 1];
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
     string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo * name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[methodInfo.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
     string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
     string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
-    
-    // casos especiais
-    if ((class_name == "java/lang/Object" || class_name == "java/lang/String") && method_name == "<init>") {
-        if (class_name == "java/lang/String") {
+
+    if ((class_name == "java/lang/Object" || class_name == "java/lang/String") && method_name == "<init>")
+    {
+        if (class_name == "java/lang/String")
+        {
             current_frame->PopOperandStack();
         }
-        
+
         current_frame->pc += 3;
         return;
     }
-    // fim dos casos especiais
-    
-    if (class_name.find("java/") != string::npos) {
+
+    if (class_name.find("java/") != string::npos)
+    {
         cerr << "Tentando invocar metodo especial invalido: " << method_name << endl;
         exit(1);
-    } else {
-        uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
-        uint16_t i = 1; // pulando o primeiro '('
-        while (method_descriptor[i] != ')') {
+    }
+    else
+    {
+        uint16_t nargs = 0;
+        uint16_t i = 1;
+        while (method_descriptor[i] != ')')
+        {
             char baseType = method_descriptor[i];
-            if (baseType == 'D' || baseType == 'J') {
+            if (baseType == 'D' || baseType == 'J')
+            {
                 nargs += 2;
-            } else if (baseType == 'L') {
+            }
+            else if (baseType == 'L')
+            {
                 nargs++;
-                while (method_descriptor[++i] != ';');
-            } else if (baseType == '[') {
+                while (method_descriptor[++i] != ';')
+                    ;
+            }
+            else if (baseType == '[')
+            {
                 nargs++;
-                while (method_descriptor[++i] == '[');
-                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
-            } else {
+                while (method_descriptor[++i] == '[')
+                    ;
+                if (method_descriptor[i] == 'L')
+                    while (method_descriptor[++i] != ';')
+                        ;
+            }
+            else
+            {
                 nargs++;
             }
             i++;
         }
 
         vector<Value> args;
-        for (int i = 0; i < nargs; i++) {
+        for (int i = 0; i < nargs; i++)
+        {
             Value value = current_frame->PopOperandStack();
-            if (value.type == PADDING_VALUE) {
-                args.insert(args.begin() + 1, value); // adicionando o padding após o valor double/long.
-            } else {
+            if (value.type == PADDING_VALUE)
+            {
+                args.insert(args.begin() + 1, value);
+            }
+            else
+            {
                 args.insert(args.begin(), value);
             }
         }
 
         Value object_value = current_frame->PopOperandStack();
-        // assert(object_value.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
+
         args.insert(args.begin(), object_value);
 
         // ObjectRef *object = object_value.data.object_value;
-        // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
-        // ClassInstance *instance = (ClassInstance *) object;
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[class_name];
@@ -4174,7 +3962,8 @@ void Interpreter::java_invokespecial() {
         // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
         this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
-        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+        if (this->runtime->stack[this->runtime->stack.size() - 2] != current_frame)
+        {
             current_frame->operand_stack = save_operand_stack;
             delete this->runtime->GetCurrentFrame();
             this->runtime->PopFrame();
@@ -4187,68 +3976,86 @@ void Interpreter::java_invokespecial() {
     current_frame->pc += 3;
 }
 //! Essa função representa a função invokestatic da JVM
-void Interpreter::java_invokestatic() {
-    
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    vector<Value> save_operand_stack = current_frame->operand_stack;
-    
-    vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    
+void Interpreter::java_invokestatic()
+{
 
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    vector<Value> save_operand_stack = current_frame->operand_stack;
+
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constant_pool[methodIndex-1];
-    // assert(methodCP->tag == CONSTANT_Methodref); // precisa referenciar um método
+    CpInfo *methodCP = constant_pool[methodIndex - 1];
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
     string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo * name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[methodInfo.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
     string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
     string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
 
-    if (class_name == "java/lang/Object" && method_name == "registerNatives") {
+    if (class_name == "java/lang/Object" && method_name == "registerNatives")
+    {
         current_frame->pc += 3;
         return;
     }
-    
-    if (class_name.find("java/") != string::npos) {
+
+    if (class_name.find("java/") != string::npos)
+    {
         cerr << "Tentando invocar metodo estatico invalido: " << method_name << endl;
         exit(1);
-    } else {
-        uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
-        uint16_t i = 1; // pulando o primeiro '('
-        while (method_descriptor[i] != ')') {
+    }
+    else
+    {
+        uint16_t nargs = 0;
+        uint16_t i = 1;
+        while (method_descriptor[i] != ')')
+        {
             char baseType = method_descriptor[i];
-            if (baseType == 'D' || baseType == 'J') {
+            if (baseType == 'D' || baseType == 'J')
+            {
                 nargs += 2;
-            } else if (baseType == 'L') {
+            }
+            else if (baseType == 'L')
+            {
                 nargs++;
-                while (method_descriptor[++i] != ';');
-            } else if (baseType == '[') {
+                while (method_descriptor[++i] != ';')
+                    ;
+            }
+            else if (baseType == '[')
+            {
                 nargs++;
-                while (method_descriptor[++i] == '[');
-                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
-            } else {
+                while (method_descriptor[++i] == '[')
+                    ;
+                if (method_descriptor[i] == 'L')
+                    while (method_descriptor[++i] != ';')
+                        ;
+            }
+            else
+            {
                 nargs++;
             }
             i++;
         }
 
         vector<Value> args;
-        for (int i = 0; i < nargs; i++) {
+        for (int i = 0; i < nargs; i++)
+        {
             Value value = current_frame->PopOperandStack();
-            if (value.type == PADDING_VALUE) {
-                args.insert(args.begin() + 1, value); // adicionando o padding após o valor double/long.
-            } else {
+            if (value.type == PADDING_VALUE)
+            {
+                args.insert(args.begin() + 1, value);
+            }
+            else
+            {
                 args.insert(args.begin(), value);
             }
         }
@@ -4265,8 +4072,9 @@ void Interpreter::java_invokestatic() {
         // AttributeInfo attr_code;
         // MethodInfo *method = area->class_file->getMethodByName(method_name);
         // method->getAttributeByName("Code", area->class_file->constant_pool, attr_code);
-        
-        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+
+        if (this->runtime->stack[this->runtime->stack.size() - 2] != current_frame)
+        {
             current_frame->operand_stack = save_operand_stack;
             delete this->runtime->GetCurrentFrame();
             this->runtime->PopFrame();
@@ -4280,74 +4088,89 @@ void Interpreter::java_invokestatic() {
     current_frame->pc += 3;
 }
 //! Essa função representa a função invokeinterface da JVM
-void Interpreter::java_invokeinterface() {
-    
-    Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    vector<Value> save_operand_stack = current_frame->operand_stack;
-    
-    vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    
+void Interpreter::java_invokeinterface()
+{
 
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+    Frame *current_frame = this->runtime->GetCurrentFrame();
+
+    vector<Value> save_operand_stack = current_frame->operand_stack;
+
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constant_pool[methodIndex-1];
-    // assert(methodCP->tag == CONSTANT_Methodref || methodCP->tag == CONSTANT_InterfaceMethodref); // precisa referenciar um método
+    CpInfo *methodCP = constant_pool[methodIndex - 1];
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
     string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo * name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
-    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[methodInfo.name_and_type_index - 1];
 
     CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
     string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
     string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
 
-    if (class_name.find("java/") != string::npos) {
+    if (class_name.find("java/") != string::npos)
+    {
         cerr << "Tentando invocar metodo de interface invalido: " << method_name << endl;
         exit(1);
-    } else {
-        uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
-        uint16_t i = 1; // pulando o primeiro '('
-        while (method_descriptor[i] != ')') {
+    }
+    else
+    {
+        uint16_t nargs = 0;
+        uint16_t i = 1;
+        while (method_descriptor[i] != ')')
+        {
             char baseType = method_descriptor[i];
-            if (baseType == 'D' || baseType == 'J') {
+            if (baseType == 'D' || baseType == 'J')
+            {
                 nargs += 2;
-            } else if (baseType == 'L') {
+            }
+            else if (baseType == 'L')
+            {
                 nargs++;
-                while (method_descriptor[++i] != ';');
-            } else if (baseType == '[') {
+                while (method_descriptor[++i] != ';')
+                    ;
+            }
+            else if (baseType == '[')
+            {
                 nargs++;
-                while (method_descriptor[++i] == '[');
-                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
-            } else {
+                while (method_descriptor[++i] == '[')
+                    ;
+                if (method_descriptor[i] == 'L')
+                    while (method_descriptor[++i] != ';')
+                        ;
+            }
+            else
+            {
                 nargs++;
             }
             i++;
         }
 
         vector<Value> args;
-        for (int i = 0; i < nargs; i++) {
+        for (int i = 0; i < nargs; i++)
+        {
             Value value = current_frame->PopOperandStack();
-            if (value.type == PADDING_VALUE) {
-                args.insert(args.begin() + 1, value); // adicionando o padding após o valor double/long.
-            } else {
+            if (value.type == PADDING_VALUE)
+            {
+                args.insert(args.begin() + 1, value);
+            }
+            else
+            {
                 args.insert(args.begin(), value);
             }
         }
 
         Value object_value = current_frame->PopOperandStack();
-        // assert(object_value.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
+
         args.insert(args.begin(), object_value);
 
         // ObjectRef *object = object_value.data.object_value;
-        // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
-        // ClassInstance *instance = (ClassInstance *) object;
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[class_name];
@@ -4355,458 +4178,464 @@ void Interpreter::java_invokeinterface() {
         // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
         this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
-        if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
+        if (this->runtime->stack[this->runtime->stack.size() - 2] != current_frame)
+        {
             current_frame->operand_stack = save_operand_stack;
             delete this->runtime->GetCurrentFrame();
             this->runtime->PopFrame();
             return;
         }
-
-        // this->runtime->PushFrame(newFrame);
     }
 
     current_frame->pc += 5;
 }
 //! Essa função representa a função new da JVM
-void Interpreter::java_new() {
-           
-    Frame *current_frame = this->runtime->GetCurrentFrame();     
+void Interpreter::java_new()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
     uint16_t classIndex = (byte1 << 8) | byte2;
-    CpInfo * classCP = constant_pool[classIndex-1];
-    // assert(classCP.tag == CONSTANT_Class);
-    
-    CONSTANT_Class_info classInfo = classCP->info.Class; // Formata nome da classe
-    string class_name = ReadFile::readString(classInfo.name_index, constant_pool);
+    CpInfo *class_cp = constant_pool[classIndex - 1];
 
-    Value value_ref;    
-    if (class_name == "java/lang/String" || class_name == "java/lang/StringBuffer") {
+    CONSTANT_Class_info class_info = class_cp->info.Class;
+    string class_name = ReadFile::readString(class_info.name_index, constant_pool);
+
+    Value value_ref;
+    if (class_name == "java/lang/String" || class_name == "java/lang/StringBuffer")
+    {
         string *object = new string("");
         value_ref.data.string_value = object;
         value_ref.type = STRING_VALUE;
-    } else {
+    }
+    else
+    {
         ClassLoaderSubsystem::Resolve(class_name, this->runtime);
         ObjectRef *objectref;
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
         MethodAreaSection *area = method_area[class_name];
-       
+
         objectref = new ObjectRef(area->class_file);
         value_ref.data.object_value = objectref;
         value_ref.type = OBJECT_VALUE;
     }
-    
-    // Armazena referência na pilha
+
     current_frame->PushOperandStack(value_ref);
-    
+
     current_frame->pc += 3;
 }
 //! Essa função representa a função newarray da JVM
-void Interpreter::java_newarray() {
-           
+void Interpreter::java_newarray()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    Value count = current_frame->PopOperandStack(); // Número de elementos no array
-    // assert(count.type == INT_VALUE);
-    
-    if (count.data.int_value < 0) {
-        cerr << "NegativeArraySizeException" << endl;
-        exit(1);
-    }
-    
-    vector<Value> *array = new vector<Value>; // array que será criado
-    Value value; // elemento que irá popular o array
-    // value.printType = -1;   // adicionado
-    value.data.long_value = 0; // inicializando Value com 0s
-    
-    Value padding; // padding poderá ser usado
-    // padding.printType = PADDING_VALUE; // adicionado
+
+    Value count = current_frame->PopOperandStack();
+
+    vector<Value> *array = new vector<Value>;
+    Value value;
+    value.data.long_value = 0;
+
+    Value padding;
     padding.type = PADDING_VALUE;
-    
-    switch (current_frame->code.code[current_frame->pc+1]) { // argumento representa tipo do array
-        case 4:
-            
-            value.type = BYTE_VALUE;
-            // value.printType = BYTE_VALUE;
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 5:
-            value.type = CHAR_VALUE;
-            // value.printType = CHAR_VALUE;
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 6:
-            value.type = FLOAT_VALUE;
-            // value.printType = FLOAT_VALUE;  // adicionado 
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 7:
-            value.type = DOUBLE_VALUE;
-            // value.printType = DOUBLE_VALUE; // adicionado
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 8:
-            value.type = BYTE_VALUE;
-            // value.printType = BYTE_VALUE;
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 9:
-            value.type = SHORT_VALUE;
-            // value.printType = SHORT_VALUE;
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 10:
-            value.type = INT_VALUE;
-            // value.printType = INT_VALUE;
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
-        case 11:
-            value.type = LONG_VALUE;
-            for (int i = 0; i < count.data.int_value; i++) {
-                array->push_back(value);
-            }
-            break;
+
+    switch (current_frame->code.code[current_frame->pc + 1])
+    {
+    case 4:
+
+        value.type = BYTE_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 5:
+        value.type = CHAR_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 6:
+        value.type = FLOAT_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 7:
+        value.type = DOUBLE_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 8:
+        value.type = BYTE_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 9:
+        value.type = SHORT_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 10:
+        value.type = INT_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
+    case 11:
+        value.type = LONG_VALUE;
+        for (int i = 0; i < count.data.int_value; i++)
+        {
+            array->push_back(value);
+        }
+        break;
     }
-    
-    Value array_ref; // Referencia pro array na pilha de operandos
+
+    Value array_ref;
     array_ref.type = ARRAY_VALUE;
-    // array_ref.printType = ARRAY_VALUE;  // adicionado
     array_ref.data.array_value = array;
-    
+
     current_frame->PushOperandStack(array_ref);
     current_frame->pc += 2;
 }
 //! Essa função representa a função anewarray da JVM
-void Interpreter::java_anewarray() {
-           
+void Interpreter::java_anewarray()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    Value count = current_frame->PopOperandStack(); // Número de elementos no array
-    // assert(count.type == INT_VALUE);
-    if (count.data.int_value < 0) {
-        cerr << "NegativeArraySizeException" << endl;
-        exit(1);
-    }
-    
+
+    Value count = current_frame->PopOperandStack();
+
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
-    uint16_t classIndex = (byte1 << 8) | byte2; // Índice na pool de constantes
-    CpInfo * classCP = constant_pool[classIndex-1];
-    // assert(classCP.tag == CONSTANT_Class);
-    
-    CONSTANT_Class_info classInfo = classCP->info.Class; // Formata nome da classe
-    string class_name = ReadFile::readString(classInfo.name_index, constant_pool);
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
 
-    if (class_name != "java/lang/String") {
+    uint16_t classIndex = (byte1 << 8) | byte2;
+    CpInfo *class_cp = constant_pool[classIndex - 1];
+
+    CONSTANT_Class_info class_info = class_cp->info.Class;
+    string class_name = ReadFile::readString(class_info.name_index, constant_pool);
+
+    if (class_name != "java/lang/String")
+    {
         int i = 0;
-        while (class_name[i] == '[') i++;
-        if (class_name[i] == 'L') {
+        while (class_name[i] == '[')
+            i++;
+        if (class_name[i] == 'L')
+        {
             // map<string, MethodAreaSection *> method_area = this->runtime->method_area;
             ClassLoaderSubsystem::Resolve(class_name, this->runtime);
-            // methodArea.loadClassNamed(class_name.substr(i+1, class_name.size()-i-2)); // carrega a classe de referência (se ainda não foi).
         }
     }
 
-    // criando objeto da classe instanciada
     Value array_ref;
     array_ref.type = ARRAY_VALUE;
     array_ref.data.array_value = new vector<Value>();
-    
-    // populando array com NULL
-    Value nullValue;
-    nullValue.type = OBJECT_VALUE;
-    nullValue.data.object_value = NULL;
-    for (int i = 0; i < count.data.int_value; i++) {
-        array_ref.data.array_value->push_back(nullValue);
+
+    Value null_value;
+    null_value.type = OBJECT_VALUE;
+    null_value.data.object_value = NULL;
+    for (int i = 0; i < count.data.int_value; i++)
+    {
+        array_ref.data.array_value->push_back(null_value);
     }
 
     current_frame->PushOperandStack(array_ref);
-    
+
     current_frame->pc += 3;
 }
 //! Essa função representa a função arraylength da JVM
-void Interpreter::java_arraylength() {
-           
+void Interpreter::java_arraylength()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    Value array_ref = current_frame->PopOperandStack();  
-    // assert(array_ref.type == ValueType::REFERENCE);
-    if (array_ref.data.object_value == NULL) {
-        cerr << "NullPointerException" << endl;
-        exit(1);
-    }
-    
+
+    Value array_ref = current_frame->PopOperandStack();
+
     Value length;
     length.type = INT_VALUE;
     length.data.int_value = array_ref.data.array_value->size();
-    
+
     current_frame->PushOperandStack(length);
-    current_frame->pc += 1 ;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função athrow da JVM
-void Interpreter::java_athrow() {
+void Interpreter::java_athrow()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
     current_frame->pc += 1;
 }
 //! Essa função representa a função checkcast da JVM
-void Interpreter::java_checkcast() {
-    
+void Interpreter::java_checkcast()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
-    
-    u2 cpIndex = (byte1 << 8) | byte2;
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+
+    u2 cp_index = (byte1 << 8) | byte2;
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    // CpInfo * cpElement = constant_pool[cpIndex-1];
-    // assert(cpElement.tag == CONSTANT_Class);
-    string class_name = ReadFile::readString(cpIndex, constant_pool);
-    
-    Value objectrefValue = current_frame->PopOperandStack();
-    // assert(objectrefValue.type == OBJECT_VALUE);
-    
-    Value resultValue;
-    resultValue.type = INT_VALUE;
+
+    string class_name = ReadFile::readString(cp_index, constant_pool);
+
+    Value objectref_value = current_frame->PopOperandStack();
+
+    Value result_value;
+    result_value.type = INT_VALUE;
 
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
 
-    if (objectrefValue.data.object_value == NULL && objectrefValue.data.string_value == NULL) {
-        cerr << "ClassCastException" << endl;
-        exit(1);
-    } else {        
-        if (objectrefValue.type == OBJECT_VALUE && objectrefValue.data.object_value != NULL) {
-            // ClassInstance *classInstance = (ClassInstance *) obj;
-            // ClassRuntime *classRuntime = classInstance->getClassRuntime();
-            ObjectRef *object = objectrefValue.data.object_value;
-            ClassFile *classFile = object->class_file;
-            
-            bool found = false;
-            while (!found) {
-                string currClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
-                
-                if (currClassName == class_name) {
-                    found = true;
-                } else {
-                    if (classFile->super_class == 0) {
-                        break;
-                    } else {
-                        string superClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
-                        MethodAreaSection *super_area;
-                        if(method_area.count(superClassName) != 0){
-                            super_area = method_area[superClassName];
-                        }else{
-                            ClassLoaderSubsystem::Resolve(superClassName, this->runtime);
-                            super_area = method_area[superClassName];
-                        }
+    if (objectref_value.type == OBJECT_VALUE && objectref_value.data.object_value != NULL)
+    {
+        ObjectRef *object = objectref_value.data.object_value;
+        ClassFile *class_file = object->class_file;
 
-                        classFile = super_area->class_file;                         
-                        // classRuntime = methodArea.loadClassNamed(superClassName);
+        bool found = false;
+        while (!found)
+        {
+            string c_class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool);
+
+            if (c_class_name == class_name)
+            {
+                found = true;
+            }
+            else
+            {
+                if (class_file->super_class == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    string super_class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool);
+                    MethodAreaSection *super_area;
+                    if (method_area.count(super_class_name) != 0)
+                    {
+                        super_area = method_area[super_class_name];
                     }
+                    else
+                    {
+                        ClassLoaderSubsystem::Resolve(super_class_name, this->runtime);
+                        super_area = method_area[super_class_name];
+                    }
+
+                    class_file = super_area->class_file;
                 }
             }
-            
-            resultValue.data.int_value = found ? 1 : 0;
-        } else if (objectrefValue.type == STRING_VALUE && objectrefValue.data.string_value != NULL) {
-            resultValue.data.int_value = (class_name == "java/lang/String" || class_name == "java/lang/Object") ? 1 : 0;
-        } else {
-            if (class_name == "java/lang/Object") {
-                resultValue.data.int_value = 1;
-            } else {
-                resultValue.data.int_value = 0;
-            }
+        }
+
+        result_value.data.int_value = found ? 1 : 0;
+    }
+    else if (objectref_value.type == STRING_VALUE && objectref_value.data.string_value != NULL)
+    {
+        result_value.data.int_value = (class_name == "java/lang/String" || class_name == "java/lang/Object") ? 1 : 0;
+    }
+    else
+    {
+        if (class_name == "java/lang/Object")
+        {
+            result_value.data.int_value = 1;
+        }
+        else
+        {
+            result_value.data.int_value = 0;
         }
     }
-    
-    current_frame->PushOperandStack(resultValue);
-    
+
+    current_frame->PushOperandStack(result_value);
+
     current_frame->pc += 3;
 }
 //! Essa função representa a função instanceof da JVM
-void Interpreter::java_instanceof() {
-    
+void Interpreter::java_instanceof()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
-    
-    u2 cpIndex = (byte1 << 8) | byte2;
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+
+    u2 cp_index = (byte1 << 8) | byte2;
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    // CpInfo * cpElement = constant_pool[cpIndex-1];
-    // assert(cpElement.tag == CONSTANT_Class);
-    string class_name = ReadFile::readString(cpIndex, constant_pool);
-    
-    Value objectrefValue = current_frame->PopOperandStack();
-    // assert(objectrefValue.type == ValueType::REFERENCE);
-    
-    Value resultValue;
-    resultValue.type = INT_VALUE;
 
-    if (objectrefValue.data.object_value == NULL && objectrefValue.data.string_value == NULL) {
-        resultValue.data.int_value = 0;
-    } else {
-        ObjectRef *obj = objectrefValue.data.object_value;
-        
-        if (objectrefValue.type == OBJECT_VALUE && objectrefValue.data.object_value != NULL) {
-            // ClassInstance *classInstance = (ClassInstance *) obj;
-            // ClassRuntime *classRuntime = classInstance->getClassRuntime();
-            ClassFile *classFile = obj->class_file;
-            
+    string class_name = ReadFile::readString(cp_index, constant_pool);
+
+    Value objectref_value = current_frame->PopOperandStack();
+
+    Value result_value;
+    result_value.type = INT_VALUE;
+
+    if (objectref_value.data.object_value == NULL && objectref_value.data.string_value == NULL)
+    {
+        result_value.data.int_value = 0;
+    }
+    else
+    {
+        ObjectRef *obj = objectref_value.data.object_value;
+
+        if (objectref_value.type == OBJECT_VALUE && objectref_value.data.object_value != NULL)
+        {
+            ClassFile *class_file = obj->class_file;
+
             bool found = false;
-            while (!found) {
-                string currClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
-                
-                if (currClassName == class_name) {
-                    found = true;
-                } else {
-                    if (classFile->super_class == 0) {
-                        break;
-                    } else {
-                        string superClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
-                        ClassLoaderSubsystem::Resolve(superClassName, this->runtime);
+            while (!found)
+            {
+                string c_class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool);
 
-                        MethodAreaSection * area = method_area[superClassName];
-                        classFile = area->class_file;
-                        // classRuntime = methodArea.loadClassNamed(superClassName);
+                if (c_class_name == class_name)
+                {
+                    found = true;
+                }
+                else
+                {
+                    if (class_file->super_class == 0)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        string super_class_name = ReadFile::readString(class_file->this_class, class_file->constant_pool);
+                        ClassLoaderSubsystem::Resolve(super_class_name, this->runtime);
+
+                        MethodAreaSection *area = method_area[super_class_name];
+                        class_file = area->class_file;
                     }
                 }
             }
-            
-            resultValue.data.int_value = found ? 1 : 0;
-        } else if (objectrefValue.type == STRING_VALUE && objectrefValue.data.string_value != NULL) {
-            resultValue.data.int_value = (class_name == "java/lang/String" || class_name == "java/lang/Object") ? 1 : 0;
-        } else {
-            if (class_name == "java/lang/Object") {
-                resultValue.data.int_value = 1;
-            } else {
-                resultValue.data.int_value = 0;
+
+            result_value.data.int_value = found ? 1 : 0;
+        }
+        else if (objectref_value.type == STRING_VALUE && objectref_value.data.string_value != NULL)
+        {
+            result_value.data.int_value = (class_name == "java/lang/String" || class_name == "java/lang/Object") ? 1 : 0;
+        }
+        else
+        {
+            if (class_name == "java/lang/Object")
+            {
+                result_value.data.int_value = 1;
+            }
+            else
+            {
+                result_value.data.int_value = 0;
             }
         }
     }
-    
-    current_frame->PushOperandStack(resultValue);
-    
+
+    current_frame->PushOperandStack(result_value);
+
     current_frame->pc += 3;
 }
 //! Essa função representa a função monitorenter da JVM
-void Interpreter::java_monitorenter() {
-    
+void Interpreter::java_monitorenter()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
     current_frame->pc += 1;
 }
 //! Essa função representa a função monitorexit da JVM
-void Interpreter::java_monitorexit() {
-    
+void Interpreter::java_monitorexit()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
     current_frame->pc += 1;
 }
 //! Essa função representa a função wide da JVM
-void Interpreter::java_wide() {
-	       
+void Interpreter::java_wide()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-	wide = true;
-	current_frame->pc += 1;
+    wide = true;
+    current_frame->pc += 1;
 }
 //! Essa função representa a função multianewarray da JVM
-void Interpreter::java_multianewarray() {
-           
+void Interpreter::java_multianewarray()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
+
     vector<CpInfo *> constant_pool = current_frame->constant_pool;
-    
-    u1 byte1 = current_frame->code.code[current_frame->pc+1];
-    u1 byte2 = current_frame->code.code[current_frame->pc+2];
-    u1 dimensions = current_frame->code.code[current_frame->pc+3];
-    // assert(dimensions >= 1);
+
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+    u1 dimensions = current_frame->code.code[current_frame->pc + 3];
 
     uint16_t classIndex = (byte1 << 8) | byte2;
-    CpInfo *classCP = constant_pool[classIndex-1];
-    // assert(classCP.tag == CONSTANT_Class);
-    
-    CONSTANT_Class_info classInfo = classCP->info.Class;
-    string class_name = ReadFile::readString(classInfo.name_index, constant_pool);
-    
-    // obter o tipo dentro de class_name:
-    char valueType;
+    CpInfo *class_cp = constant_pool[classIndex - 1];
+
+    CONSTANT_Class_info class_info = class_cp->info.Class;
+    string class_name = ReadFile::readString(class_info.name_index, constant_pool);
+
+    char type_value;
     int i = 0;
-    while (class_name[i] == '[') i++;
-    
-    string multiArrayType = class_name.substr(i+1, class_name.size()-i-2); // em caso de ser uma referência (e.g. [[[Ljava/lang/String;)
-    
-    switch (class_name[i]) {
-        case 'L':
-            if (multiArrayType != "java/lang/String") {
-                ClassLoaderSubsystem::Resolve(class_name, this->runtime);
-                // map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-                // method_area.loadClassNamed(multiArrayType); // verifica se existe classe com esse nome
-                valueType = OBJECT_VALUE;
-            }else{
-                valueType = STRING_VALUE;
-            }
-            break;
-        case 'B':
-            valueType = BYTE_VALUE;
-            break;
-        case 'C':
-            valueType = CHAR_VALUE;
-            break;
-        case 'D':
-            valueType = DOUBLE_VALUE;
-            break;
-        case 'F':
-            valueType = FLOAT_VALUE;
-            break;
-        case 'I':
-            valueType = INT_VALUE;
-            break;
-        case 'J':
-            valueType = LONG_VALUE;
-            break;
-        case 'S':
-            valueType = SHORT_VALUE;
-            break;
-        case 'Z':
-            valueType = BYTE_VALUE;
-            break;
-        default:
-            cerr << "Descritor invalido em multianewarray" << endl;
-            exit(1);
+    while (class_name[i] == '[')
+        i++;
+
+    string multi_array_type = class_name.substr(i + 1, class_name.size() - i - 2);
+
+    switch (class_name[i])
+    {
+    case 'L':
+        if (multi_array_type != "java/lang/String")
+        {
+            ClassLoaderSubsystem::Resolve(class_name, this->runtime);
+            // map<string, MethodAreaSection *> method_area = this->runtime->method_area;
+            type_value = OBJECT_VALUE;
+        }
+        else
+        {
+            type_value = STRING_VALUE;
+        }
+        break;
+    case 'B':
+        type_value = BYTE_VALUE;
+        break;
+    case 'C':
+        type_value = CHAR_VALUE;
+        break;
+    case 'D':
+        type_value = DOUBLE_VALUE;
+        break;
+    case 'F':
+        type_value = FLOAT_VALUE;
+        break;
+    case 'I':
+        type_value = INT_VALUE;
+        break;
+    case 'J':
+        type_value = LONG_VALUE;
+        break;
+    case 'S':
+        type_value = SHORT_VALUE;
+        break;
+    case 'Z':
+        type_value = BYTE_VALUE;
+        break;
+    default:
+        cerr << "Descritor invalido em multianewarray" << endl;
+        exit(1);
     }
-    
-    // stack<int> count;
+
     vector<int> count;
     vector<Value> *array = new vector<Value>();
 
-    for (int i = 0; i < dimensions; i++) {
-        Value dimLength = current_frame->PopOperandStack();
-        // assert(dimLength.type == INT_VALUE);        
-        count.push_back(dimLength.data.int_value);
+    for (int i = 0; i < dimensions; i++)
+    {
+        Value dim_length = current_frame->PopOperandStack();
+
+        count.push_back(dim_length.data.int_value);
 
         // vector<Value> *subarray = new vector<Value>();
-        // for (int j = 0; j < dimLength.data.int_value; j++) {
+        // for (int j = 0; j < dim_length.data.int_value; j++) {
         //     Value arrayvalue;
-        //     arrayvalue.type = valueType;
+        //     arrayvalue.type = type_value;
         //     arrayvalue.data.long_value = 0;
 
         //     subarray->push_back(arrayvalue);
@@ -4817,121 +4646,121 @@ void Interpreter::java_multianewarray() {
         // subarray_ref.data.array_value = subarray;
         // array->push_back(subarray_ref);
     }
-    
-    this->populateMultiarray(array, valueType, count);
-    
-    Value arrayValue;
-    arrayValue.type = ARRAY_VALUE;
-    arrayValue.data.array_value = array;
-    
+
+    this->CreateMultiarray(array, type_value, count);
+
+    Value array_value;
+    array_value.type = ARRAY_VALUE;
+    array_value.data.array_value = array;
+
     // cout << "Matrix Dim: " << array->size() << endl;
     // for(unsigned i = 0; i < array->size(); i ++){
     //     cout << "Size: " << array->at(i).data.array_value->size() << endl;
     // }
-    current_frame->PushOperandStack(arrayValue);
-    
+    current_frame->PushOperandStack(array_value);
+
     current_frame->pc += 4;
 }
 
-void Interpreter::populateMultiarray(vector<Value> *array, char valueType, vector<int> count) {
-    int currCount = count[count.size()-1];
+void Interpreter::CreateMultiarray(vector<Value> *array, char type_value, vector<int> count)
+{
+    int c_count = count[count.size() - 1];
     count.pop_back();
-    
-    // char arrayType = (count.size() > 1) ? ARRAY_VALUE : valueType;
+
     // [[I
     // 0 iconst_5
     // 1 iconst_5
     // 2 multianewarray #2 <[[I> dim 2
-    if (count.size() == 0) {
-        for (int i = 0; i < currCount; i++) {
-            Value subarrayValue;
-            subarrayValue.type = valueType;
-            // subarrayValue.printType = valueType;
-            subarrayValue.data.long_value = 0;
-            array->push_back(subarrayValue);
+    if (count.size() == 0)
+    {
+        for (int i = 0; i < c_count; i++)
+        {
+            Value subarray_value;
+            subarray_value.type = type_value;
+            subarray_value.data.long_value = 0;
+            array->push_back(subarray_value);
         }
-    } else {
-        for (int i = 0; i < currCount; i++) {
+    }
+    else
+    {
+        for (int i = 0; i < c_count; i++)
+        {
             vector<Value> *subarray = new vector<Value>();
-            this->populateMultiarray(subarray, valueType, count);
-            
-            Value subarrayValue;
-            subarrayValue.type = ARRAY_VALUE;
-            subarrayValue.data.array_value = subarray;
-            array->push_back(subarrayValue);
+            this->CreateMultiarray(subarray, type_value, count);
+
+            Value subarray_value;
+            subarray_value.type = ARRAY_VALUE;
+            subarray_value.data.array_value = subarray;
+            array->push_back(subarray_value);
         }
     }
 }
 
 //! Essa função representa a função ifnull da JVM
-void Interpreter::java_ifnull() {
-    
+void Interpreter::java_ifnull()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    Value referenceValue = current_frame->PopOperandStack();
-    // assert(referenceValue.type == ValueType::REFERENCE);
-    
-    if (referenceValue.data.object_value == NULL) {
-        
-        u1 byte1 = current_frame->code.code[current_frame->pc+1];
-        u1 byte2 = current_frame->code.code[current_frame->pc+2];
-        int16_t branch =  (byte1 << 8) | byte2;
+    Value reference_value = current_frame->PopOperandStack();
+
+    if (reference_value.data.object_value == NULL)
+    {
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch = (byte1 << 8) | byte2;
         current_frame->pc += branch;
-    } else {
+    }
+    else
+    {
         current_frame->pc += 3;
     }
 }
 //! Essa função representa a função ifnonnull da JVM
-void Interpreter::java_ifnonnull() {
-    
+void Interpreter::java_ifnonnull()
+{
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    
-    Value referenceValue = current_frame->PopOperandStack();
-    // assert(referenceValue.type == ValueType::REFERENCE);
-    
-    if (referenceValue.data.object_value != NULL) {
-        
-        u1 byte1 = current_frame->code.code[current_frame->pc+1];
-        u1 byte2 = current_frame->code.code[current_frame->pc+2];
-        int16_t branch =  (byte1 << 8) | byte2;
+
+    Value reference_value = current_frame->PopOperandStack();
+
+    if (reference_value.data.object_value != NULL)
+    {
+        u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+        u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+        int16_t branch = (byte1 << 8) | byte2;
         current_frame->pc += branch;
-    } else {
+    }
+    else
+    {
         current_frame->pc += 3;
     }
 }
 //! Essa função representa a função goto_w da JVM
-void Interpreter::java_goto_w() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_goto_w()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	u1 byte2 = current_frame->code.code[current_frame->pc+2];
-	u1 byte3 = current_frame->code.code[current_frame->pc+3];
-	u1 byte4 = current_frame->code.code[current_frame->pc+4];
-	int32_t branchOffset = (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+    u1 byte3 = current_frame->code.code[current_frame->pc + 3];
+    u1 byte4 = current_frame->code.code[current_frame->pc + 4];
+    int32_t branch_offset = (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
 
-	current_frame->pc += branchOffset;
-	// assert(current_frame->pc < (int32_t)current_frame->sizeCode());
+    current_frame->pc += branch_offset;
 }
 //! Essa função representa a função jsr_w da JVM
-void Interpreter::java_jsr_w() {
-	
-	Frame *current_frame = this->runtime->GetCurrentFrame();
+void Interpreter::java_jsr_w()
+{
+    Frame *current_frame = this->runtime->GetCurrentFrame();
 
-	
-	u1 byte1 = current_frame->code.code[current_frame->pc+1];
-	u1 byte2 = current_frame->code.code[current_frame->pc+2];
-	u1 byte3 = current_frame->code.code[current_frame->pc+3];
-	u1 byte4 = current_frame->code.code[current_frame->pc+4];
-	int32_t branchOffset = (byte1 << 24) | (byte2 << 16) | (byte3 << 8)| byte4;
+    u1 byte1 = current_frame->code.code[current_frame->pc + 1];
+    u1 byte2 = current_frame->code.code[current_frame->pc + 2];
+    u1 byte3 = current_frame->code.code[current_frame->pc + 3];
+    u1 byte4 = current_frame->code.code[current_frame->pc + 4];
+    int32_t branch_offset = (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte4;
 
-	Value returnAddr;
-	returnAddr.type = RETURN_VALUE;
-	returnAddr.data.return_address = current_frame->pc + 5;
-	current_frame->PushOperandStack(returnAddr);
+    Value return_addr;
+    return_addr.type = RETURN_VALUE;
+    return_addr.data.return_address = current_frame->pc + 5;
+    current_frame->PushOperandStack(return_addr);
 
-	current_frame->pc += branchOffset;
-
-	// assert(current_frame->pc < (int32_t)current_frame->sizeCode());
+    current_frame->pc += branch_offset;
 }

@@ -12,11 +12,25 @@
 ClassFile::ClassFile(string file)
 {
     ifstream file_stream(file, ios::in | ios::binary);
+    if (!file_stream.is_open()){
+        cerr << "Arquivo nao encontrado!";
+        exit(1);
+    }
     file_stream.seekg(0, ios::beg);
 
     this->magic = ReadFile::u4Read(file_stream);
     this->minor_version = ReadFile::u2Read(file_stream);
     this->major_version = ReadFile::u2Read(file_stream);
+
+    if (this->magic != 0xCAFEBABE){
+        cerr << "Arquivo nao eh um .class!";
+        exit(1);
+    }
+
+    if (this->major_version < 45 || this->major_version > 52 || this->minor_version != 0){
+        cerr << "Versao do .class nao suportada!";
+        exit(1);
+    }
 
     this->CreateConstantPool(file_stream);
 
@@ -30,6 +44,8 @@ ClassFile::ClassFile(string file)
 
     this->attributes_count = ReadFile::u2Read(file_stream);
     this->attributes = this->CreateAttributeInfo(file_stream, this->attributes_count);
+    
+    
 
     file_stream.close();
 }
