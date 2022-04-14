@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
         interpreter->ExecuteInterpreter();
 
         // cout << "aqui" << endl;
-        delete runtime;
+        delete interpreter;
+        delete args;
     }
     else{
         ClassFile *class_file = new ClassFile(file);

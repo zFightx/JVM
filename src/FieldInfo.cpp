@@ -1,5 +1,6 @@
 ﻿#include "../header/FieldInfo.hpp"
 #include "../header/TypeValue.hpp"
+#include "../header/MemoryManager.hpp"
 
 FieldInfo::FieldInfo(u2 access_flags, u2 name_index, u2 descriptor_index, u2 attributes_count)
 {
@@ -18,8 +19,9 @@ Value FieldInfo::FieldInit(string field_descriptor){
     Value value;
 
     if (field_descriptor == "Ljava/lang/String;"){
-        value.type = 10;
+        value.type = STRING_VALUE;
         value.data.string_value = new string("");
+        MemoryManager::variables_allocated.push_back(value);
     }
     else {
         switch (field_descriptor[0])

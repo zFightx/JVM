@@ -5,7 +5,6 @@
 
 #include "Dados.hpp"
 #include "Runtime.hpp"
-#include "Runtime.hpp"
 
 using namespace std;
 
@@ -18,8 +17,6 @@ public:
     map<u1, PointerFunction> instruction_table;
     Runtime *runtime;
     bool wide;
-    
-    Frame * invoker_frame;
 
     Interpreter(Runtime *);
     ~Interpreter();

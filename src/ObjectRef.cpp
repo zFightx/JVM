@@ -23,6 +23,9 @@ ObjectRef::ObjectRef(ClassFile *class_file){
     }
 }
 
+ObjectRef::~ObjectRef(){
+}
+
 void ObjectRef::AddVariable(string name, Value value){
     this->variables[name] = value;
 }

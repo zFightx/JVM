@@ -13,6 +13,16 @@ Runtime::Runtime(string class_name, vector<Value> args)
 
 Runtime::~Runtime()
 {
+    for( unsigned i = 0; i < this->stack.size(); i++){
+        delete this->stack[i];
+    }
+    
+    map<string, MethodAreaSection*>::iterator it;
+
+    for (it = this->method_area.begin(); it != this->method_area.end(); it++){
+        delete it->second;
+    }
+
 }
 
 void Runtime::PushFrame(Frame* frame)
@@ -22,6 +32,8 @@ void Runtime::PushFrame(Frame* frame)
 
 void Runtime::PopFrame()
 {
+    Frame * to_delete = this->GetCurrentFrame();
+    delete to_delete;
     this->stack.pop_back();
 }
 
