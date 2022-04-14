@@ -3607,40 +3607,40 @@ void Interpreter::java_return() {
 void Interpreter::java_getstatic() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *> constantPool = (current_frame->constant_pool);
+    vector<CpInfo *> constant_pool = (current_frame->constant_pool);
     
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
-    uint16_t fieldIndex = (byte1 << 8) | byte2;
-    CpInfo* fieldCP = constantPool[fieldIndex-1];
-    // assert(fieldCP.tag == CONSTANT_Fieldref); // precisa ser um fieldRef
+    uint16_t field_index = (byte1 << 8) | byte2;
+    CpInfo* field_cp = constant_pool[field_index-1];
+    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
 
-    CONSTANT_Fieldref_info fieldRef = fieldCP->info.Fieldref;
+    CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
-    string className = ReadFile::readString(fieldRef.class_index, constantPool);
+    string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo* nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo* name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
     
-    string fieldName = ReadFile::readString(fieldNameAndType.name_index, constantPool);
-    // string fieldName = fieldNameVector[0];
-    string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
+    string field_name = ReadFile::readString(field_name_and_type.name_index, constant_pool);
+    // string field_name = fieldNameVector[0];
+    string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
 
     
     // caso especial
-    if (className == "java/lang/System" && fieldDescriptor == "Ljava/io/PrintStream;" ) {
+    if (class_name == "java/lang/System" && field_descriptor == "Ljava/io/PrintStream;" ) {
         current_frame->pc += 3;
         return;
     }
     // fim do caso especial
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-    MethodAreaSection *area = method_area[className];
+    MethodAreaSection *area = method_area[class_name];
     
     while (area != NULL) {
-        if (area->static_fields.count(fieldName) == 0) {
+        if (area->static_fields.count(field_name) == 0) {
             if (area->class_file->super_class == 0) {
                 area = NULL;
             } else {
@@ -3665,7 +3665,7 @@ void Interpreter::java_getstatic() {
     // se a stack frame mudou, é porque teve <clinit> adicionado, então terminar a execução da instrução para eles serem executados.
     if (this->runtime->GetCurrentFrame() != current_frame) return;
     
-    Value staticValue = area->static_fields[fieldName];
+    Value staticValue = area->static_fields[field_name];
     switch (staticValue.type) {
         case BOOLEAN_VALUE:
             staticValue.type = INT_VALUE;
@@ -3688,9 +3688,9 @@ void Interpreter::java_getstatic() {
     }
     
     if (staticValue.type == DOUBLE_VALUE || staticValue.type == LONG_VALUE) {
-        Value paddingValue;
-        paddingValue.type = PADDING_VALUE;
-        current_frame->PushOperandStack(paddingValue);
+        Value padding_value;
+        padding_value.type = PADDING_VALUE;
+        current_frame->PushOperandStack(padding_value);
     }
 
     current_frame->PushOperandStack(staticValue);
@@ -3701,32 +3701,32 @@ void Interpreter::java_getstatic() {
 void Interpreter::java_putstatic() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *>constantPool = current_frame->constant_pool;
+    vector<CpInfo *>constant_pool = current_frame->constant_pool;
 
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
-    uint16_t fieldIndex = (byte1 << 8) | byte2;
-    CpInfo *fieldCP = constantPool[fieldIndex-1];
-    // assert(fieldCP.tag == CONSTANT_Fieldref); // precisa ser um fieldRef
+    uint16_t field_index = (byte1 << 8) | byte2;
+    CpInfo *field_cp = constant_pool[field_index-1];
+    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
 
-    CONSTANT_Fieldref_info fieldRef = fieldCP->info.Fieldref;
+    CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
-    string className = ReadFile::readString(fieldRef.class_index, constantPool);
+    string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo *nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string fieldName = ReadFile::readString(fieldNameAndType.name_index, constantPool);
-    string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
+    string field_name = ReadFile::readString(field_name_and_type.name_index, constant_pool);
+    string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
 
     map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-    MethodAreaSection *area = method_area[className];
+    MethodAreaSection *area = method_area[class_name];
 
     while (area != NULL) {
-        if (area->static_fields.count(fieldName) == 0) {
+        if (area->static_fields.count(field_name) == 0) {
             if (area->class_file->super_class == 0) {
                 area = NULL;
             } else {
@@ -3755,7 +3755,7 @@ void Interpreter::java_putstatic() {
     if (topValue.type == DOUBLE_VALUE || topValue.type == LONG_VALUE) {
         current_frame->PopOperandStack(); // removendo padding
     } else {
-        switch (fieldDescriptor[0]) {
+        switch (field_descriptor[0]) {
             case 'B':
                 topValue.type = BYTE_VALUE;
                 // topValue.printType = BYTE_VALUE;
@@ -3775,8 +3775,8 @@ void Interpreter::java_putstatic() {
         }
     }
 
-    // cout << "PUTSTATIC: " << fieldName << " : " << (int) topValue.type << endl;
-    area->static_fields[fieldName] = topValue;
+    // cout << "PUTSTATIC: " << field_name << " : " << (int) topValue.type << endl;
+    area->static_fields[field_name] = topValue;
 
     current_frame->pc += 3;
 }
@@ -3784,124 +3784,124 @@ void Interpreter::java_putstatic() {
 void Interpreter::java_getfield() {
     
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *>constantPool = current_frame->constant_pool;
+    vector<CpInfo *>constant_pool = current_frame->constant_pool;
 
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
-    uint16_t fieldIndex = (byte1 << 8) | byte2;
-    CpInfo *fieldCP = constantPool[fieldIndex-1];
-    // assert(fieldCP.tag == CONSTANT_Fieldref); // precisa ser um fieldRef
+    uint16_t field_index = (byte1 << 8) | byte2;
+    CpInfo *field_cp = constant_pool[field_index-1];
+    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
 
-    CONSTANT_Fieldref_info fieldRef = fieldCP->info.Fieldref;
+    CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
-    string className = ReadFile::readString(fieldRef.class_index, constantPool);
+    string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo *nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string fieldName = ReadFile::readString(fieldNameAndType.name_index, constantPool);
-    string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
+    string field_name = ReadFile::readString(field_name_and_type.name_index, constant_pool);
+    string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
 
-    Value objectValue = current_frame->PopOperandStack();
-    // assert(objectValue.type == ValueType::REFERENCE);
-    ObjectRef *object = objectValue.data.object_value;
+    Value object_value = current_frame->PopOperandStack();
+    // assert(object_value.type == ValueType::REFERENCE);
+    ObjectRef *object = object_value.data.object_value;
     // assert(object->objectType() == ObjectType::CLASS_INSTANCE);
     // ClassInstance *classInstance = (ClassInstance *) object;
 
-    if (object->variables.count(fieldName) == 0) {
+    if (object->variables.count(field_name) == 0) {
         cerr << "NoSuchFieldError" << endl;
         exit(1);
     }
 
-    Value fieldValue = object->GetVariable(fieldName);
-    switch (fieldValue.type) {
+    Value field_value = object->GetVariable(field_name);
+    switch (field_value.type) {
         case BYTE_VALUE:
-            fieldValue.type = INT_VALUE;
-            // fieldValue.printType = BYTE_VALUE;
+            field_value.type = INT_VALUE;
+            // field_value.printType = BYTE_VALUE;
             break;
         case CHAR_VALUE:
-            fieldValue.type = INT_VALUE;
-            // fieldValue.printType = BYTE_VALUE;
+            field_value.type = INT_VALUE;
+            // field_value.printType = BYTE_VALUE;
             break;
         case SHORT_VALUE:
-            fieldValue.type = INT_VALUE;
-            // fieldValue.printType = SHORT_VALUE;
+            field_value.type = INT_VALUE;
+            // field_value.printType = SHORT_VALUE;
             break;
         case INT_VALUE:
-            fieldValue.type = INT_VALUE;
-            // fieldValue.printType = INT_VALUE;
+            field_value.type = INT_VALUE;
+            // field_value.printType = INT_VALUE;
             break;
         default:
             break;
     }
     
-    if (fieldValue.type == DOUBLE_VALUE || fieldValue.type == LONG_VALUE) {
-        Value paddingValue;
-        paddingValue.type = PADDING_VALUE;
-        current_frame->PushOperandStack(paddingValue);
+    if (field_value.type == DOUBLE_VALUE || field_value.type == LONG_VALUE) {
+        Value padding_value;
+        padding_value.type = PADDING_VALUE;
+        current_frame->PushOperandStack(padding_value);
     }
 
-    current_frame->PushOperandStack(fieldValue);
+    current_frame->PushOperandStack(field_value);
 
     current_frame->pc += 3;
 }
 //! Essa função representa a função putfield da JVM
 void Interpreter::java_putfield() {
     Frame *current_frame = this->runtime->GetCurrentFrame();
-    vector<CpInfo *>constantPool = current_frame->constant_pool;
+    vector<CpInfo *>constant_pool = current_frame->constant_pool;
 
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
-    uint16_t fieldIndex = (byte1 << 8) | byte2;
-    CpInfo *fieldCP = constantPool[fieldIndex-1];
-    // assert(fieldCP.tag == CONSTANT_Fieldref); // precisa ser um fieldRef
+    uint16_t field_index = (byte1 << 8) | byte2;
+    CpInfo *field_cp = constant_pool[field_index-1];
+    // assert(field_cp.tag == CONSTANT_Fieldref); // precisa ser um field_ref
 
-    CONSTANT_Fieldref_info fieldRef = fieldCP->info.Fieldref;
+    CONSTANT_Fieldref_info field_ref = field_cp->info.Fieldref;
 
-    string className = ReadFile::readString(fieldRef.class_index, constantPool);
+    string class_name = ReadFile::readString(field_ref.class_index, constant_pool);
 
-    CpInfo *nameAndTypeCP = constantPool[fieldRef.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
-    CONSTANT_NameAndType_info fieldNameAndType = nameAndTypeCP->info.NameAndType;
+    CpInfo *name_and_type_cp = constant_pool[field_ref.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CONSTANT_NameAndType_info field_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string fieldName = ReadFile::readString(fieldNameAndType.name_index, constantPool);
-    string fieldDescriptor = ReadFile::readString(fieldNameAndType.descriptor_index, constantPool);
+    string field_name = ReadFile::readString(field_name_and_type.name_index, constant_pool);
+    string field_descriptor = ReadFile::readString(field_name_and_type.descriptor_index, constant_pool);
     // cout << "PUTFIELD 4" << endl;
-    Value valueToBeInserted = current_frame->PopOperandStack();
-    if (valueToBeInserted.type == DOUBLE_VALUE || valueToBeInserted.type == LONG_VALUE) {
+    Value value_insert = current_frame->PopOperandStack();
+    if (value_insert.type == DOUBLE_VALUE || value_insert.type == LONG_VALUE) {
         current_frame->PopOperandStack(); // removendo padding
     } else {
-        switch (fieldDescriptor[0]) {
+        switch (field_descriptor[0]) {
             case 'B':
-                valueToBeInserted.type = BYTE_VALUE;
-                // valueToBeInserted.printType = BYTE_VALUE;
+                value_insert.type = BYTE_VALUE;
+                // value_insert.printType = BYTE_VALUE;
                 break;
             case 'C':
-                valueToBeInserted.type = CHAR_VALUE;
-                // valueToBeInserted.printType = CHAR_VALUE;
+                value_insert.type = CHAR_VALUE;
+                // value_insert.printType = CHAR_VALUE;
                 break;
             case 'S':
-                valueToBeInserted.type = SHORT_VALUE;
-                // valueToBeInserted.printType = SHORT_VALUE;
+                value_insert.type = SHORT_VALUE;
+                // value_insert.printType = SHORT_VALUE;
                 break;
             case 'Z':
-                valueToBeInserted.type = BYTE_VALUE;
-                // valueToBeInserted.printType = BYTE_VALUE;
+                value_insert.type = BYTE_VALUE;
+                // value_insert.printType = BYTE_VALUE;
                 break;
         }
     }
 
-    Value objectValue = current_frame->PopOperandStack();
-    // assert(objectValue.type == ValueType::REFERENCE);
-    ObjectRef *object = objectValue.data.object_value;
+    Value object_value = current_frame->PopOperandStack();
+    // assert(object_value.type == ValueType::REFERENCE);
+    ObjectRef *object = object_value.data.object_value;
     // assert(object->objectType() == ObjectType::CLASS_INSTANCE);
     // ClassInstance *classInstance = (ClassInstance *) object;
 
-    object->ChangeVariable(fieldName, valueToBeInserted);
+    object->ChangeVariable(field_name, value_insert);
 
     current_frame->pc += 3;
 }
@@ -3912,31 +3912,31 @@ void Interpreter::java_invokevirtual() {
     
     vector<Value> save_operand_stack = current_frame->operand_stack;
     
-    vector<CpInfo *>constantPool = current_frame->constant_pool;
+    vector<CpInfo *>constant_pool = current_frame->constant_pool;
 
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constantPool[methodIndex-1];
+    CpInfo *methodCP = constant_pool[methodIndex-1];
     // assert(methodCP->tag == CONSTANT_Methodref); // precisa referenciar um método
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
-    string className = ReadFile::readString(methodInfo.class_index, constantPool);
+    string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo *nameAndTypeCP = constantPool[methodInfo.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo *name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info methodNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string methodName = ReadFile::readString(methodNameAndType.name_index, constantPool);
-    string methodDescriptor = ReadFile::readString(methodNameAndType.descriptor_index, constantPool);
+    string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
+    string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
 
-    if (className.find("java/") != string::npos) {
+    if (class_name.find("java/") != string::npos) {
         // simulando println ou print
-        if (className == "java/io/PrintStream" && (methodName == "print" || methodName == "println")) {
-            if (methodDescriptor != "()V") {
+        if (class_name == "java/io/PrintStream" && (method_name == "print" || method_name == "println")) {
+            if (method_descriptor != "()V") {
                 Value print_value = current_frame->PopOperandStack();
 
                 // if (print_value.type == INT_VALUE) {
@@ -3997,16 +3997,16 @@ void Interpreter::java_invokevirtual() {
                 // }
             }
 
-            if (methodName == "println") printf("\n");
-        } else if (className == "java/lang/String" && methodName == "equals") {
-            Value strValue1 = current_frame->PopOperandStack();
+            if (method_name == "println") printf("\n");
+        } else if (class_name == "java/lang/String" && method_name == "equals") {
+            Value str_value1 = current_frame->PopOperandStack();
             Value strValue2 = current_frame->PopOperandStack();
-            // assert(strValue1.type == ValueType::REFERENCE);
+            // assert(str_value1.type == ValueType::REFERENCE);
             // assert(strValue2.type == ValueType::REFERENCE);
-            // assert(strValue1.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
+            // assert(str_value1.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
             // assert(strValue2.data.object_value->objectType() == ObjectType::STRING_INSTANCE);
             
-            string *str1 = strValue1.data.string_value;
+            string *str1 = str_value1.data.string_value;
             string *str2 = strValue2.data.string_value;
             
             Value result;
@@ -4018,7 +4018,7 @@ void Interpreter::java_invokevirtual() {
                 result.data.int_value = 0;
             }
             current_frame->PushOperandStack(result);
-        } else if (className == "java/lang/String" && methodName == "length") {	
+        } else if (class_name == "java/lang/String" && method_name == "length") {	
             Value strValue = current_frame->PopOperandStack();
             // assert(strValue.type == ValueType::REFERENCE);		
             // assert(strValue.data.object_value->objectType() == ObjectType::STRING_INSTANCE);		
@@ -4031,23 +4031,23 @@ void Interpreter::java_invokevirtual() {
             result.data.int_value = str->size();		
             current_frame->PushOperandStack(result);
         } else {
-            cerr << "Tentando invocar metodo de instancia invalido: " << methodName << endl;
+            cerr << "Tentando invocar metodo de instancia invalido: " << method_name << endl;
             exit(1);
         }
     } else {
         uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
         uint16_t i = 1; // pulando o primeiro '('
-        while (methodDescriptor[i] != ')') {
-            char baseType = methodDescriptor[i];
+        while (method_descriptor[i] != ')') {
+            char baseType = method_descriptor[i];
             if (baseType == 'D' || baseType == 'J') {
                 nargs += 2;
             } else if (baseType == 'L') {
                 nargs++;
-                while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] != ';');
             } else if (baseType == '[') {
                 nargs++;
-                while (methodDescriptor[++i] == '[');
-                if (methodDescriptor[i] == 'L') while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] == '[');
+                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
             } else {
                 nargs++;
             }
@@ -4064,19 +4064,19 @@ void Interpreter::java_invokevirtual() {
             }
         }
 
-        Value objectValue = current_frame->PopOperandStack();
-        // assert(objectValue.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
-        args.insert(args.begin(), objectValue);
+        Value object_value = current_frame->PopOperandStack();
+        // assert(object_value.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
+        args.insert(args.begin(), object_value);
 
-        // ObjectRef *object = objectValue.data.object_value;
+        // ObjectRef *object = object_value.data.object_value;
         // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
         // ClassInstance *instance = (ClassInstance *) object;
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-        MethodAreaSection *area = method_area[className];
+        MethodAreaSection *area = method_area[class_name];
 
-        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
-        this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
+        // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
+        this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
         if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
             current_frame->operand_stack = save_operand_stack;
@@ -4095,30 +4095,30 @@ void Interpreter::java_invokespecial() {
     
     vector<Value> save_operand_stack = current_frame->operand_stack;
     
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
     
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constantPool[methodIndex-1];
+    CpInfo *methodCP = constant_pool[methodIndex-1];
     // assert(methodCP->tag == CONSTANT_Methodref); // precisa referenciar um método
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
-    string className = ReadFile::readString(methodInfo.class_index, constantPool);
+    string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo * nameAndTypeCP = constantPool[methodInfo.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo * name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info methodNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string methodName = ReadFile::readString(methodNameAndType.name_index, constantPool);
-    string methodDescriptor = ReadFile::readString(methodNameAndType.descriptor_index, constantPool);
+    string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
+    string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
     
     // casos especiais
-    if ((className == "java/lang/Object" || className == "java/lang/String") && methodName == "<init>") {
-        if (className == "java/lang/String") {
+    if ((class_name == "java/lang/Object" || class_name == "java/lang/String") && method_name == "<init>") {
+        if (class_name == "java/lang/String") {
             current_frame->PopOperandStack();
         }
         
@@ -4127,23 +4127,23 @@ void Interpreter::java_invokespecial() {
     }
     // fim dos casos especiais
     
-    if (className.find("java/") != string::npos) {
-        cerr << "Tentando invocar metodo especial invalido: " << methodName << endl;
+    if (class_name.find("java/") != string::npos) {
+        cerr << "Tentando invocar metodo especial invalido: " << method_name << endl;
         exit(1);
     } else {
         uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
         uint16_t i = 1; // pulando o primeiro '('
-        while (methodDescriptor[i] != ')') {
-            char baseType = methodDescriptor[i];
+        while (method_descriptor[i] != ')') {
+            char baseType = method_descriptor[i];
             if (baseType == 'D' || baseType == 'J') {
                 nargs += 2;
             } else if (baseType == 'L') {
                 nargs++;
-                while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] != ';');
             } else if (baseType == '[') {
                 nargs++;
-                while (methodDescriptor[++i] == '[');
-                if (methodDescriptor[i] == 'L') while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] == '[');
+                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
             } else {
                 nargs++;
             }
@@ -4160,19 +4160,19 @@ void Interpreter::java_invokespecial() {
             }
         }
 
-        Value objectValue = current_frame->PopOperandStack();
-        // assert(objectValue.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
-        args.insert(args.begin(), objectValue);
+        Value object_value = current_frame->PopOperandStack();
+        // assert(object_value.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
+        args.insert(args.begin(), object_value);
 
-        // ObjectRef *object = objectValue.data.object_value;
+        // ObjectRef *object = object_value.data.object_value;
         // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
         // ClassInstance *instance = (ClassInstance *) object;
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-        MethodAreaSection *area = method_area[className];
+        MethodAreaSection *area = method_area[class_name];
 
-        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
-        this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
+        // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
+        this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
         if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
             current_frame->operand_stack = save_operand_stack;
@@ -4193,50 +4193,50 @@ void Interpreter::java_invokestatic() {
     
     vector<Value> save_operand_stack = current_frame->operand_stack;
     
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
     
 
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constantPool[methodIndex-1];
+    CpInfo *methodCP = constant_pool[methodIndex-1];
     // assert(methodCP->tag == CONSTANT_Methodref); // precisa referenciar um método
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
-    string className = ReadFile::readString(methodInfo.class_index, constantPool);
+    string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo * nameAndTypeCP = constantPool[methodInfo.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo * name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info methodNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string methodName = ReadFile::readString(methodNameAndType.name_index, constantPool);
-    string methodDescriptor = ReadFile::readString(methodNameAndType.descriptor_index, constantPool);
+    string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
+    string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
 
-    if (className == "java/lang/Object" && methodName == "registerNatives") {
+    if (class_name == "java/lang/Object" && method_name == "registerNatives") {
         current_frame->pc += 3;
         return;
     }
     
-    if (className.find("java/") != string::npos) {
-        cerr << "Tentando invocar metodo estatico invalido: " << methodName << endl;
+    if (class_name.find("java/") != string::npos) {
+        cerr << "Tentando invocar metodo estatico invalido: " << method_name << endl;
         exit(1);
     } else {
         uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
         uint16_t i = 1; // pulando o primeiro '('
-        while (methodDescriptor[i] != ')') {
-            char baseType = methodDescriptor[i];
+        while (method_descriptor[i] != ')') {
+            char baseType = method_descriptor[i];
             if (baseType == 'D' || baseType == 'J') {
                 nargs += 2;
             } else if (baseType == 'L') {
                 nargs++;
-                while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] != ';');
             } else if (baseType == '[') {
                 nargs++;
-                while (methodDescriptor[++i] == '[');
-                if (methodDescriptor[i] == 'L') while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] == '[');
+                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
             } else {
                 nargs++;
             }
@@ -4253,17 +4253,17 @@ void Interpreter::java_invokestatic() {
             }
         }
 
-        ClassLoaderSubsystem::Resolve(className, this->runtime);
+        ClassLoaderSubsystem::Resolve(class_name, this->runtime);
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-        MethodAreaSection *area = method_area[className];
+        MethodAreaSection *area = method_area[class_name];
 
-        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
-        this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
+        // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
+        this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
         // cout << "STATIC AQUI " << endl;
         // AttributeInfo attr_code;
-        // MethodInfo *method = area->class_file->getMethodByName(methodName);
+        // MethodInfo *method = area->class_file->getMethodByName(method_name);
         // method->getAttributeByName("Code", area->class_file->constant_pool, attr_code);
         
         if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
@@ -4286,45 +4286,45 @@ void Interpreter::java_invokeinterface() {
     
     vector<Value> save_operand_stack = current_frame->operand_stack;
     
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
     
 
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
     uint16_t methodIndex = (byte1 << 8) | byte2;
-    CpInfo *methodCP = constantPool[methodIndex-1];
+    CpInfo *methodCP = constant_pool[methodIndex-1];
     // assert(methodCP->tag == CONSTANT_Methodref || methodCP->tag == CONSTANT_InterfaceMethodref); // precisa referenciar um método
 
     CONSTANT_Methodref_info methodInfo = methodCP->info.Methodref;
 
-    string className = ReadFile::readString(methodInfo.class_index, constantPool);
+    string class_name = ReadFile::readString(methodInfo.class_index, constant_pool);
 
-    CpInfo * nameAndTypeCP = constantPool[methodInfo.name_and_type_index-1];
-    // assert(nameAndTypeCP->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
+    CpInfo * name_and_type_cp = constant_pool[methodInfo.name_and_type_index-1];
+    // assert(name_and_type_cp->tag == CONSTANT_NameAndType); // precisa ser um nameAndType
 
-    CONSTANT_NameAndType_info methodNameAndType = nameAndTypeCP->info.NameAndType;
+    CONSTANT_NameAndType_info method_name_and_type = name_and_type_cp->info.NameAndType;
 
-    string methodName = ReadFile::readString(methodNameAndType.name_index, constantPool);
-    string methodDescriptor = ReadFile::readString(methodNameAndType.descriptor_index, constantPool);
+    string method_name = ReadFile::readString(method_name_and_type.name_index, constant_pool);
+    string method_descriptor = ReadFile::readString(method_name_and_type.descriptor_index, constant_pool);
 
-    if (className.find("java/") != string::npos) {
-        cerr << "Tentando invocar metodo de interface invalido: " << methodName << endl;
+    if (class_name.find("java/") != string::npos) {
+        cerr << "Tentando invocar metodo de interface invalido: " << method_name << endl;
         exit(1);
     } else {
         uint16_t nargs = 0; // numero de argumentos contidos na pilha de operandos
         uint16_t i = 1; // pulando o primeiro '('
-        while (methodDescriptor[i] != ')') {
-            char baseType = methodDescriptor[i];
+        while (method_descriptor[i] != ')') {
+            char baseType = method_descriptor[i];
             if (baseType == 'D' || baseType == 'J') {
                 nargs += 2;
             } else if (baseType == 'L') {
                 nargs++;
-                while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] != ';');
             } else if (baseType == '[') {
                 nargs++;
-                while (methodDescriptor[++i] == '[');
-                if (methodDescriptor[i] == 'L') while (methodDescriptor[++i] != ';');
+                while (method_descriptor[++i] == '[');
+                if (method_descriptor[i] == 'L') while (method_descriptor[++i] != ';');
             } else {
                 nargs++;
             }
@@ -4341,19 +4341,19 @@ void Interpreter::java_invokeinterface() {
             }
         }
 
-        Value objectValue = current_frame->PopOperandStack();
-        // assert(objectValue.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
-        args.insert(args.begin(), objectValue);
+        Value object_value = current_frame->PopOperandStack();
+        // assert(object_value.type == ValueType::REFERENCE); // necessita ser uma referência para objeto
+        args.insert(args.begin(), object_value);
 
-        // ObjectRef *object = objectValue.data.object_value;
+        // ObjectRef *object = object_value.data.object_value;
         // assert(object->objectType() == ObjectType::CLASS_INSTANCE); // objeto precisa ser uma instância
         // ClassInstance *instance = (ClassInstance *) object;
 
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-        MethodAreaSection *area = method_area[className];
+        MethodAreaSection *area = method_area[class_name];
 
-        // cout << "Invokando Method: " << methodName << " : " << methodDescriptor << endl;
-        this->runtime->InitializeFrame(methodName, methodDescriptor, area->class_file, args);
+        // cout << "Invokando Method: " << method_name << " : " << method_descriptor << endl;
+        this->runtime->InitializeFrame(method_name, method_descriptor, area->class_file, args);
 
         if (this->runtime->stack[this->runtime->stack.size()-2] != current_frame) {
             current_frame->operand_stack = save_operand_stack;
@@ -4371,28 +4371,28 @@ void Interpreter::java_invokeinterface() {
 void Interpreter::java_new() {
            
     Frame *current_frame = this->runtime->GetCurrentFrame();     
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
     
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
     uint16_t classIndex = (byte1 << 8) | byte2;
-    CpInfo * classCP = constantPool[classIndex-1];
+    CpInfo * classCP = constant_pool[classIndex-1];
     // assert(classCP.tag == CONSTANT_Class);
     
     CONSTANT_Class_info classInfo = classCP->info.Class; // Formata nome da classe
-    string className = ReadFile::readString(classInfo.name_index, constantPool);
+    string class_name = ReadFile::readString(classInfo.name_index, constant_pool);
 
     Value value_ref;    
-    if (className == "java/lang/String" || className == "java/lang/StringBuffer") {
+    if (class_name == "java/lang/String" || class_name == "java/lang/StringBuffer") {
         string *object = new string("");
         value_ref.data.string_value = object;
         value_ref.type = STRING_VALUE;
     } else {
-        ClassLoaderSubsystem::Resolve(className, this->runtime);
+        ClassLoaderSubsystem::Resolve(class_name, this->runtime);
         ObjectRef *objectref;
         map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-        MethodAreaSection *area = method_area[className];
+        MethodAreaSection *area = method_area[class_name];
        
         objectref = new ObjectRef(area->class_file);
         value_ref.data.object_value = objectref;
@@ -4505,25 +4505,25 @@ void Interpreter::java_anewarray() {
         exit(1);
     }
     
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
     
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
 
     uint16_t classIndex = (byte1 << 8) | byte2; // Índice na pool de constantes
-    CpInfo * classCP = constantPool[classIndex-1];
+    CpInfo * classCP = constant_pool[classIndex-1];
     // assert(classCP.tag == CONSTANT_Class);
     
     CONSTANT_Class_info classInfo = classCP->info.Class; // Formata nome da classe
-    string className = ReadFile::readString(classInfo.name_index, constantPool);
+    string class_name = ReadFile::readString(classInfo.name_index, constant_pool);
 
-    if (className != "java/lang/String") {
+    if (class_name != "java/lang/String") {
         int i = 0;
-        while (className[i] == '[') i++;
-        if (className[i] == 'L') {
+        while (class_name[i] == '[') i++;
+        if (class_name[i] == 'L') {
             // map<string, MethodAreaSection *> method_area = this->runtime->method_area;
-            ClassLoaderSubsystem::Resolve(className, this->runtime);
-            // methodArea.loadClassNamed(className.substr(i+1, className.size()-i-2)); // carrega a classe de referência (se ainda não foi).
+            ClassLoaderSubsystem::Resolve(class_name, this->runtime);
+            // methodArea.loadClassNamed(class_name.substr(i+1, class_name.size()-i-2)); // carrega a classe de referência (se ainda não foi).
         }
     }
 
@@ -4577,10 +4577,10 @@ void Interpreter::java_checkcast() {
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
     
     u2 cpIndex = (byte1 << 8) | byte2;
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
-    // CpInfo * cpElement = constantPool[cpIndex-1];
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+    // CpInfo * cpElement = constant_pool[cpIndex-1];
     // assert(cpElement.tag == CONSTANT_Class);
-    string className = ReadFile::readString(cpIndex, constantPool);
+    string class_name = ReadFile::readString(cpIndex, constant_pool);
     
     Value objectrefValue = current_frame->PopOperandStack();
     // assert(objectrefValue.type == OBJECT_VALUE);
@@ -4604,7 +4604,7 @@ void Interpreter::java_checkcast() {
             while (!found) {
                 string currClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
                 
-                if (currClassName == className) {
+                if (currClassName == class_name) {
                     found = true;
                 } else {
                     if (classFile->super_class == 0) {
@@ -4627,9 +4627,9 @@ void Interpreter::java_checkcast() {
             
             resultValue.data.int_value = found ? 1 : 0;
         } else if (objectrefValue.type == STRING_VALUE && objectrefValue.data.string_value != NULL) {
-            resultValue.data.int_value = (className == "java/lang/String" || className == "java/lang/Object") ? 1 : 0;
+            resultValue.data.int_value = (class_name == "java/lang/String" || class_name == "java/lang/Object") ? 1 : 0;
         } else {
-            if (className == "java/lang/Object") {
+            if (class_name == "java/lang/Object") {
                 resultValue.data.int_value = 1;
             } else {
                 resultValue.data.int_value = 0;
@@ -4652,10 +4652,10 @@ void Interpreter::java_instanceof() {
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
     
     u2 cpIndex = (byte1 << 8) | byte2;
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
-    // CpInfo * cpElement = constantPool[cpIndex-1];
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
+    // CpInfo * cpElement = constant_pool[cpIndex-1];
     // assert(cpElement.tag == CONSTANT_Class);
-    string className = ReadFile::readString(cpIndex, constantPool);
+    string class_name = ReadFile::readString(cpIndex, constant_pool);
     
     Value objectrefValue = current_frame->PopOperandStack();
     // assert(objectrefValue.type == ValueType::REFERENCE);
@@ -4677,7 +4677,7 @@ void Interpreter::java_instanceof() {
             while (!found) {
                 string currClassName = ReadFile::readString(classFile->this_class, classFile->constant_pool);
                 
-                if (currClassName == className) {
+                if (currClassName == class_name) {
                     found = true;
                 } else {
                     if (classFile->super_class == 0) {
@@ -4695,9 +4695,9 @@ void Interpreter::java_instanceof() {
             
             resultValue.data.int_value = found ? 1 : 0;
         } else if (objectrefValue.type == STRING_VALUE && objectrefValue.data.string_value != NULL) {
-            resultValue.data.int_value = (className == "java/lang/String" || className == "java/lang/Object") ? 1 : 0;
+            resultValue.data.int_value = (class_name == "java/lang/String" || class_name == "java/lang/Object") ? 1 : 0;
         } else {
-            if (className == "java/lang/Object") {
+            if (class_name == "java/lang/Object") {
                 resultValue.data.int_value = 1;
             } else {
                 resultValue.data.int_value = 0;
@@ -4733,7 +4733,7 @@ void Interpreter::java_multianewarray() {
            
     Frame *current_frame = this->runtime->GetCurrentFrame();
     
-    vector<CpInfo *> constantPool = current_frame->constant_pool;
+    vector<CpInfo *> constant_pool = current_frame->constant_pool;
     
     u1 byte1 = current_frame->code.code[current_frame->pc+1];
     u1 byte2 = current_frame->code.code[current_frame->pc+2];
@@ -4741,23 +4741,23 @@ void Interpreter::java_multianewarray() {
     // assert(dimensions >= 1);
 
     uint16_t classIndex = (byte1 << 8) | byte2;
-    CpInfo *classCP = constantPool[classIndex-1];
+    CpInfo *classCP = constant_pool[classIndex-1];
     // assert(classCP.tag == CONSTANT_Class);
     
     CONSTANT_Class_info classInfo = classCP->info.Class;
-    string className = ReadFile::readString(classInfo.name_index, constantPool);
+    string class_name = ReadFile::readString(classInfo.name_index, constant_pool);
     
-    // obter o tipo dentro de className:
+    // obter o tipo dentro de class_name:
     char valueType;
     int i = 0;
-    while (className[i] == '[') i++;
+    while (class_name[i] == '[') i++;
     
-    string multiArrayType = className.substr(i+1, className.size()-i-2); // em caso de ser uma referência (e.g. [[[Ljava/lang/String;)
+    string multiArrayType = class_name.substr(i+1, class_name.size()-i-2); // em caso de ser uma referência (e.g. [[[Ljava/lang/String;)
     
-    switch (className[i]) {
+    switch (class_name[i]) {
         case 'L':
             if (multiArrayType != "java/lang/String") {
-                ClassLoaderSubsystem::Resolve(className, this->runtime);
+                ClassLoaderSubsystem::Resolve(class_name, this->runtime);
                 // map<string, MethodAreaSection *> method_area = this->runtime->method_area;
                 // method_area.loadClassNamed(multiArrayType); // verifica se existe classe com esse nome
                 valueType = OBJECT_VALUE;
