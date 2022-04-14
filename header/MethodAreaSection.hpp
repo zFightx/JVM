@@ -29,6 +29,7 @@ public:
      * @param cf O ponteiro para o class file
      */
     MethodAreaSection(ClassFile *cf);
+    ~MethodAreaSection();
 };
 
 #endif

@@ -6,4 +6,10 @@ using namespace std;
 MethodAreaSection::MethodAreaSection(ClassFile *cf)
 {
     this->class_file = cf;
+
+}
+
+MethodAreaSection::~MethodAreaSection(){
+    delete this->class_file;
+
 }

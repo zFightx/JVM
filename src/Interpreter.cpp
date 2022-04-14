@@ -6,6 +6,7 @@
 #include "../header/ReadFile.hpp"
 #include "../header/MethodAreaSection.hpp"
 #include "../header/ObjectRef.hpp"
+#include "../header/MemoryManager.hpp"
 
 Interpreter::Interpreter(Runtime *runtime)
 {
@@ -17,7 +18,18 @@ Interpreter::Interpreter(Runtime *runtime)
 
 Interpreter::~Interpreter()
 {
+    delete this->runtime;
+
+    for( unsigned i = 0; i < MemoryManager::variables_allocated.size(); i++){
+        if(MemoryManager::variables_allocated[i].type == OBJECT_VALUE && MemoryManager::variables_allocated[i].data.object_value != NULL)
+            delete MemoryManager::variables_allocated[i].data.object_value;
+        else if(MemoryManager::variables_allocated[i].type == STRING_VALUE && MemoryManager::variables_allocated[i].data.string_value != NULL){
+            delete MemoryManager::variables_allocated[i].data.string_value;
+        }else if(MemoryManager::variables_allocated[i].type == ARRAY_VALUE && MemoryManager::variables_allocated[i].data.array_value != NULL)
+            delete MemoryManager::variables_allocated[i].data.array_value;
+    }
 }
+
 //! Essa função representa a função ExecuteInterpreter da JVM
 void Interpreter::ExecuteInterpreter()
 {
@@ -537,6 +549,8 @@ void Interpreter::java_ldc()
 
         value.type = STRING_VALUE;
         value.data.string_value = new string(utf8_string);
+        MemoryManager::variables_allocated.push_back(value); 
+
     }
     else if (entry->tag == CONSTANT_Integer)
     {
@@ -594,6 +608,7 @@ void Interpreter::java_ldc_w()
 
         value.type = STRING_VALUE;
         value.data.string_value = new string(utf8_string);
+        MemoryManager::variables_allocated.push_back(value);
     }
     else if (entry->tag == CONSTANT_Integer)
     {
@@ -3722,7 +3737,7 @@ void Interpreter::java_invokevirtual()
                     break;
                 case LONG_VALUE:
                     current_frame->PopOperandStack();
-                    printf("%lld", print_value.data.long_value);
+                    printf("%ld", print_value.data.long_value);
                     break;
                 case STRING_VALUE:
 
@@ -4076,7 +4091,7 @@ void Interpreter::java_invokestatic()
         if (this->runtime->stack[this->runtime->stack.size() - 2] != current_frame)
         {
             current_frame->operand_stack = save_operand_stack;
-            delete this->runtime->GetCurrentFrame();
+            // delete this->runtime->GetCurrentFrame();
             this->runtime->PopFrame();
             return;
         }
@@ -4210,6 +4225,7 @@ void Interpreter::java_new()
         string *object = new string("");
         value_ref.data.string_value = object;
         value_ref.type = STRING_VALUE;
+        MemoryManager::variables_allocated.push_back(value_ref);
     }
     else
     {
@@ -4221,6 +4237,7 @@ void Interpreter::java_new()
         objectref = new ObjectRef(area->class_file);
         value_ref.data.object_value = objectref;
         value_ref.type = OBJECT_VALUE;
+        MemoryManager::variables_allocated.push_back(value_ref);
     }
 
     current_frame->PushOperandStack(value_ref);
@@ -4237,6 +4254,8 @@ void Interpreter::java_newarray()
     vector<Value> *array = new vector<Value>;
     Value value;
     value.data.long_value = 0;
+
+    MemoryManager::variables_allocated.push_back(value);
 
     Value padding;
     padding.type = PADDING_VALUE;
@@ -4342,6 +4361,7 @@ void Interpreter::java_anewarray()
     Value array_ref;
     array_ref.type = ARRAY_VALUE;
     array_ref.data.array_value = new vector<Value>();
+    MemoryManager::variables_allocated.push_back(array_ref);
 
     Value null_value;
     null_value.type = OBJECT_VALUE;
@@ -4652,6 +4672,8 @@ void Interpreter::java_multianewarray()
     Value array_value;
     array_value.type = ARRAY_VALUE;
     array_value.data.array_value = array;
+    MemoryManager::variables_allocated.push_back(array_value);
+
 
     // cout << "Matrix Dim: " << array->size() << endl;
     // for(unsigned i = 0; i < array->size(); i ++){
@@ -4691,6 +4713,7 @@ void Interpreter::CreateMultiarray(vector<Value> *array, char type_value, vector
             Value subarray_value;
             subarray_value.type = ARRAY_VALUE;
             subarray_value.data.array_value = subarray;
+            MemoryManager::variables_allocated.push_back(subarray_value);
             array->push_back(subarray_value);
         }
     }

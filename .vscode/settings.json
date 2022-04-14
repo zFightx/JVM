@@ -17,7 +17,11 @@
     "type_traits": "cpp",
     "utility": "cpp",
     "variant": "cpp",
-    "cmath": "cpp"
+    "cmath": "cpp",
+    "unordered_map": "cpp",
+    "initializer_list": "cpp",
+    "optional": "cpp",
+    "istream": "cpp"
   },
   "C_Cpp.errorSquiggles": "Enabled"
 }
