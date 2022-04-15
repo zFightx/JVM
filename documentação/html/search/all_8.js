@@ -1,5 +1,22 @@
 var searchData=
 [
-  ['local_5fvariables_0',['local_variables',['../classFrame.html#af424f6b23c78261e481722fc73890c99',1,'Frame']]],
-  ['long_1',['Long',['../unionCpInfo_1_1info.html#ab5c606a7e8b5fe61f1507a1a0543b2d9',1,'CpInfo::info']]]
+  ['info_0',['Info',['../union_attribute_info_1_1_info.html',1,'AttributeInfo']]],
+  ['info_1',['info',['../union_cp_info_1_1info.html',1,'CpInfo::info'],['../class_attribute_info.html#aeabf215e6dd076bcd0c443f02f08629c',1,'AttributeInfo::info()'],['../class_cp_info.html#ae97af5bce216f7038c2c0fe1306708db',1,'CpInfo::info()']]],
+  ['initialize_2',['Initialize',['../class_class_loader_subsystem.html#a55e76d930d92223331851d76eb4b916f',1,'ClassLoaderSubsystem']]],
+  ['initializeframe_3',['InitializeFrame',['../class_runtime.html#a7ffbad34ee583021ea5ad2434971c701',1,'Runtime']]],
+  ['inner_5fclass_5faccess_5fflags_4',['inner_class_access_flags',['../class_classes.html#ad90d20687902aa92ca1c6fa8f03b0302',1,'Classes']]],
+  ['inner_5fclass_5finfo_5findex_5',['inner_class_info_index',['../class_classes.html#a81deba58ea3d27176396999857216eba',1,'Classes']]],
+  ['inner_5fname_5findex_6',['inner_name_index',['../class_classes.html#ae675c3ce50aa5f7714c632aef5b004b9',1,'Classes']]],
+  ['innerclasses_7',['InnerClasses',['../union_attribute_info_1_1_info.html#adecf9d3f4ea21333b06fdf95cce307fe',1,'AttributeInfo::Info']]],
+  ['innerclasses_5fattribute_8',['InnerClasses_attribute',['../struct_inner_classes__attribute.html',1,'']]],
+  ['instruction_5ftable_9',['instruction_table',['../class_interpreter.html#aaf135a2c334ca1d2adc561d56d08faa1',1,'Interpreter']]],
+  ['int_5fvalue_10',['int_value',['../struct_value.html#a8eec0145e9201eaf373f00ae3887a805',1,'Value']]],
+  ['int_5fvalue_11',['INT_VALUE',['../_type_value_8hpp.html#a7ca8e6c18e15224bf5d47d4a84f5d011',1,'TypeValue.hpp']]],
+  ['integer_12',['Integer',['../union_cp_info_1_1info.html#a82d844281516511893c1fdf5e118a3f6',1,'CpInfo::info']]],
+  ['interfacemethodref_13',['InterfaceMethodref',['../union_cp_info_1_1info.html#aae0dd22a063271badc3be32f977ac394',1,'CpInfo::info']]],
+  ['interfaces_14',['interfaces',['../class_class_file.html#a0572c0fb9fb36cf671ee75ec2617bd5e',1,'ClassFile']]],
+  ['interfaces_5fcount_15',['interfaces_count',['../class_class_file.html#a337fcb7da33d1b64631441115c7de305',1,'ClassFile']]],
+  ['interpret_16',['Interpret',['../class_interpreter.html#a90a679909a1891925775c08e1f2bcd34',1,'Interpreter']]],
+  ['interpreter_17',['Interpreter',['../class_interpreter.html',1,'Interpreter'],['../class_interpreter.html#a958d73c7a730a4bd2e28abfe169df452',1,'Interpreter::Interpreter()']]],
+  ['interpreter_2ehpp_18',['Interpreter.hpp',['../_interpreter_8hpp.html',1,'']]]
 ];

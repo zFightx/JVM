@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['attributeinfo_0',['AttributeInfo',['../classAttributeInfo.html',1,'']]]
+  ['attributeinfo_0',['AttributeInfo',['../class_attribute_info.html',1,'']]]
 ];

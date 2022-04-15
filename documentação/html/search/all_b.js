@@ -1,8 +1,26 @@
 var searchData=
 [
-  ['objectref_0',['ObjectRef',['../classObjectRef.html',1,'ObjectRef'],['../classObjectRef.html#a52b7610565c2b42874d7d9042e83648e',1,'ObjectRef::ObjectRef()']]],
-  ['opcodes_1',['Opcodes',['../classOpcodes.html',1,'']]],
-  ['opcodes_2',['opcodes',['../classOpcodes.html#a2a1e18b909655507ceee610407e45225',1,'Opcodes']]],
-  ['operand_5fstack_3',['operand_stack',['../classFrame.html#a26c62c0b56eb579aeecbf1fe0c338527',1,'Frame']]],
-  ['outer_5fclass_5finfo_5findex_4',['outer_class_info_index',['../classClasses.html#a7437bc55eb998ea0d4eec7b8ebda32c5',1,'Classes']]]
+  ['magic_0',['magic',['../class_class_file.html#a09085e9db513dae2f46da6e0a26c1b59',1,'ClassFile']]],
+  ['main_5fclass_5fname_1',['main_class_name',['../class_runtime.html#a404810ead859bbf896ea86eff6f1a3ba',1,'Runtime']]],
+  ['major_5fversion_2',['major_version',['../class_class_file.html#abede9cb937e65072517d0ee6e26e2757',1,'ClassFile']]],
+  ['max_5flocals_3',['max_locals',['../struct_code__attribute.html#ad710ec86a1d37c6daa999383f8f2fd35',1,'Code_attribute']]],
+  ['max_5fstack_4',['max_stack',['../struct_code__attribute.html#a300885ff1326f01f7c86e7b4425f0d35',1,'Code_attribute']]],
+  ['memorymanager_5',['MemoryManager',['../class_memory_manager.html',1,'']]],
+  ['memorymanager_2ehpp_6',['MemoryManager.hpp',['../_memory_manager_8hpp.html',1,'']]],
+  ['menuattributes_7',['MenuAttributes',['../class_class_file.html#a32cddbb9d8b52022e9d63ce04f996ae5',1,'ClassFile']]],
+  ['menuclassfile_8',['MenuClassFile',['../class_class_file.html#a76c9694f6341c4e9d7e6876b68777568',1,'ClassFile']]],
+  ['menuconstantpool_9',['MenuConstantPool',['../class_class_file.html#a7dca3a528f5b02feb62c36fdc278fe40',1,'ClassFile']]],
+  ['menufields_10',['MenuFields',['../class_class_file.html#a6b84d5c9fce2822be59b9aeb05804635',1,'ClassFile']]],
+  ['menuinterfaces_11',['MenuInterfaces',['../class_class_file.html#a96a51f2dfc7b751b932ade8483b049ec',1,'ClassFile']]],
+  ['menumethodinfo_12',['MenuMethodInfo',['../class_class_file.html#a60d19ba1d0d1a4d9113ee6cff3cc9e85',1,'ClassFile']]],
+  ['method_13',['METHOD',['../_dados_8hpp.html#a7acfc6e2f2442cbb9d8657e96d73bbec',1,'Dados.hpp']]],
+  ['method_5farea_14',['method_area',['../class_runtime.html#a7b5bf55839cd623026819d649505d124',1,'Runtime']]],
+  ['methodareasection_15',['MethodAreaSection',['../class_method_area_section.html',1,'MethodAreaSection'],['../class_method_area_section.html#a51752634d08164370bcbaaf6fffb6b8a',1,'MethodAreaSection::MethodAreaSection()']]],
+  ['methodareasection_2ehpp_16',['MethodAreaSection.hpp',['../_method_area_section_8hpp.html',1,'']]],
+  ['methodinfo_17',['MethodInfo',['../class_method_info.html',1,'MethodInfo'],['../class_method_info.html#a9b0c4bb2d2ff04d922c0a1523bfb444a',1,'MethodInfo::MethodInfo()']]],
+  ['methodinfo_2ehpp_18',['MethodInfo.hpp',['../_method_info_8hpp.html',1,'']]],
+  ['methodref_19',['Methodref',['../union_cp_info_1_1info.html#a3895efa55148942d1c7092904d513683',1,'CpInfo::info']]],
+  ['methods_20',['methods',['../class_class_file.html#a11415dd329b80a9d5b87fcefb001b163',1,'ClassFile']]],
+  ['methods_5fcount_21',['methods_count',['../class_class_file.html#aacfb45d4af64216324b1ae5269c870d5',1,'ClassFile']]],
+  ['minor_5fversion_22',['minor_version',['../class_class_file.html#af0db7b0ea01cb9cea2cee177ca81df09',1,'ClassFile']]]
 ];

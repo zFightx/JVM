@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['readbytestring_0',['readByteString',['../classReadFile.html#aa60b7f2f739ccedd90a33bc5abfa99e6',1,'ReadFile']]],
-  ['readstring_1',['readString',['../classReadFile.html#a062f0509d084c4c41ec85be92ca5e9be',1,'ReadFile::readString(int index, vector&lt; CpInfo * &gt; constantPool)'],['../classReadFile.html#ab9aa8c4bb4e292d5f4ad0452f54e153b',1,'ReadFile::readString(int index, vector&lt; CpInfo * &gt; constantPool, bool vectorRet)'],['../classClassFile.html#afb41f0b47631b0ade0a2fd0dff18b2a6',1,'ClassFile::readString()']]],
-  ['readstringpair_2',['readStringPair',['../classReadFile.html#abe0531b089d51f79db37ce4bb2b67fbc',1,'ReadFile']]],
-  ['resolve_3',['Resolve',['../classClassLoaderSubsystem.html#ae1483e9e45ed1d52a864fda2672a2624',1,'ClassLoaderSubsystem']]],
-  ['runtime_4',['Runtime',['../classRuntime.html#a6c76baf27b6be176e9f1451e5ff3f59e',1,'Runtime']]]
+  ['popframe_0',['PopFrame',['../class_runtime.html#a965605c6bbc2fb6bf67d4041c47a47ea',1,'Runtime']]],
+  ['popoperandstack_1',['PopOperandStack',['../class_frame.html#ac28eda2e7ae8ec28da1a707366bb6174',1,'Frame']]],
+  ['prepare_2',['Prepare',['../class_class_loader_subsystem.html#a801d57c2646bf46c583c0b395bd913e0',1,'ClassLoaderSubsystem']]],
+  ['printaccessflags_3',['PrintAccessFlags',['../class_class_file.html#abdae2c6c567e88b40813790a42fcb50c',1,'ClassFile']]],
+  ['printattributes_4',['PrintAttributes',['../class_class_file.html#adc5d6060a0c610f29a0ebfc4f3a8f6fa',1,'ClassFile']]],
+  ['printopcodes_5',['PrintOpcodes',['../class_opcodes.html#a17a2c35159a5305cede1908fef7a0060',1,'Opcodes']]],
+  ['pushframe_6',['PushFrame',['../class_runtime.html#af9dd1825870320270d3009f8535db0cb',1,'Runtime']]],
+  ['pushoperandstack_7',['PushOperandStack',['../class_frame.html#a4cbe4210daea4458a1ca87b929ab2c8d',1,'Frame']]]
 ];

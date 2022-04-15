@@ -1,0 +1,13 @@
+<map id="FieldInfo" name="FieldInfo">
+<area shape="rect" id="node1" title=" " alt="" coords="319,5,389,32"/>
+<area shape="rect" id="node2" href="$class_attribute_info.html" title=" " alt="" coords="22,57,113,84"/>
+<area shape="rect" id="node5" href="$struct_code__attribute.html" title=" " alt="" coords="301,169,407,196"/>
+<area shape="rect" id="node3" href="$union_attribute_info_1_1_info.html" title=" " alt="" coords="572,220,691,247"/>
+<area shape="rect" id="node4" href="$struct_constant_value__attribute.html" title=" " alt="" coords="273,119,435,145"/>
+<area shape="rect" id="node6" href="$class_exception_handler.html" title=" " alt="" coords="5,169,129,196"/>
+<area shape="rect" id="node7" href="$struct_exceptions__attribute.html" title=" " alt="" coords="283,220,425,247"/>
+<area shape="rect" id="node8" href="$struct_inner_classes__attribute.html" title=" " alt="" coords="279,271,429,297"/>
+<area shape="rect" id="node9" href="$class_classes.html" title=" " alt="" coords="33,271,102,297"/>
+<area shape="rect" id="node10" href="$struct_synthetic__attribute.html" title=" " alt="" coords="289,321,419,348"/>
+<area shape="rect" id="node11" href="$struct_source_file__attribute.html" title=" " alt="" coords="285,372,423,399"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="ObjectRef" name="ObjectRef">
+<area shape="rect" id="node1" title=" " alt="" coords="592,7,671,33"/>
+<area shape="rect" id="node2" href="$class_class_file.html" title=" " alt="" coords="316,7,392,33"/>
+<area shape="rect" id="node3" href="$class_attribute_info.html" title=" " alt="" coords="22,59,113,85"/>
+<area shape="rect" id="node6" href="$struct_code__attribute.html" title=" " alt="" coords="301,120,407,147"/>
+<area shape="rect" id="node4" href="$union_attribute_info_1_1_info.html" title=" " alt="" coords="572,221,691,248"/>
+<area shape="rect" id="node5" href="$struct_constant_value__attribute.html" title=" " alt="" coords="273,221,435,248"/>
+<area shape="rect" id="node7" href="$class_exception_handler.html" title=" " alt="" coords="5,139,129,165"/>
+<area shape="rect" id="node8" href="$struct_exceptions__attribute.html" title=" " alt="" coords="283,272,425,299"/>
+<area shape="rect" id="node9" href="$struct_inner_classes__attribute.html" title=" " alt="" coords="279,323,429,349"/>
+<area shape="rect" id="node10" href="$class_classes.html" title=" " alt="" coords="33,323,102,349"/>
+<area shape="rect" id="node11" href="$struct_synthetic__attribute.html" title=" " alt="" coords="289,373,419,400"/>
+<area shape="rect" id="node12" href="$struct_source_file__attribute.html" title=" " alt="" coords="285,171,423,197"/>
+</map>

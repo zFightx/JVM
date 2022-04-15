@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['magic_0',['magic',['../classClassFile.html#a09085e9db513dae2f46da6e0a26c1b59',1,'ClassFile']]],
-  ['main_5fclass_5fname_1',['main_class_name',['../classRuntime.html#a404810ead859bbf896ea86eff6f1a3ba',1,'Runtime']]],
-  ['major_5fversion_2',['major_version',['../classClassFile.html#abede9cb937e65072517d0ee6e26e2757',1,'ClassFile']]],
-  ['method_5farea_3',['method_area',['../classRuntime.html#a7b5bf55839cd623026819d649505d124',1,'Runtime']]],
-  ['methodref_4',['Methodref',['../unionCpInfo_1_1info.html#a3895efa55148942d1c7092904d513683',1,'CpInfo::info']]],
-  ['methods_5',['methods',['../classClassFile.html#a11415dd329b80a9d5b87fcefb001b163',1,'ClassFile']]],
-  ['methods_5fcount_6',['methods_count',['../classClassFile.html#aacfb45d4af64216324b1ae5269c870d5',1,'ClassFile']]],
-  ['minor_5fversion_7',['minor_version',['../classClassFile.html#af0db7b0ea01cb9cea2cee177ca81df09',1,'ClassFile']]]
+  ['length_0',['length',['../struct_c_o_n_s_t_a_n_t___utf8__info.html#a712975144ad624052a94f4a2ebdb954e',1,'CONSTANT_Utf8_info']]],
+  ['local_5fvariables_1',['local_variables',['../class_frame.html#af424f6b23c78261e481722fc73890c99',1,'Frame']]],
+  ['long_2',['Long',['../union_cp_info_1_1info.html#ab5c606a7e8b5fe61f1507a1a0543b2d9',1,'CpInfo::info']]],
+  ['long_5fvalue_3',['long_value',['../struct_value.html#a881c735d855a9a8c24ba87a3e5c002d3',1,'Value']]],
+  ['low_5fbytes_4',['low_bytes',['../struct_c_o_n_s_t_a_n_t___long__info.html#aafb2c41b1cf577fab97718cf51e0c00f',1,'CONSTANT_Long_info::low_bytes()'],['../struct_c_o_n_s_t_a_n_t___double__info.html#acb94347bd17a80b4a11d6ee35ae1eee3',1,'CONSTANT_Double_info::low_bytes()']]]
 ];
