@@ -43,10 +43,22 @@ public:
     /**                             
      * @brief Adiciona a variável
      * @param string Nome da variável
-     * @param Value 
+     * @param Value Valor da variável
      */
     void AddVariable(string, Value);
+
+    /**                             
+     * @brief Muda a variável
+     * @param string Nome da variável
+     * @param Value Novo valor da variável
+     */
     void ChangeVariable(string, Value);
+
+    /**                             
+     * @brief Pega uma variável
+     * @param string Nome da variável
+     * @return O valor da variável
+     */
     Value GetVariable(string);
 };
 

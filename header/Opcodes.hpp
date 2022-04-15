@@ -9,12 +9,29 @@
 
 using namespace std;
 
+/**                                    -------/CONFERIR TUDO/-------
+ * Representa as informações do Opcodes
+ */
 class Opcodes
 {
 public:
+
+    /**
+    * Tabela de opcodes
+    */
     static map<int, pair<string, int>> opcodes;
 
+    /**                             
+     * @brief Construtor padrão
+     */
     static void CreateOpcodes();
+
+    /**                             
+     * @brief Sobrecarga do construtor com inicialização. 
+     * @param code código 
+     * @param size Tamanho do código
+     * @param constantPool Pool de constantes
+     */
     static void PrintOpcodes(u1 *code, int size, vector<CpInfo *> constantPool);
 };
 
