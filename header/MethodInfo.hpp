@@ -10,7 +10,7 @@
 
 using namespace std;
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                    
  * Representa as informações do MethodInfo
  */
 class MethodInfo

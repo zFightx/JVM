@@ -8,7 +8,7 @@
 #include "CpInfo.hpp"
 #include "TypeValue.hpp"
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                               
  * Representa as informações do Frame
  */
 class Frame

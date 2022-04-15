@@ -3,7 +3,7 @@
 
 #include "Dados.hpp"
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                  
  * Representa as informações do ExceptionHandler
  */
 class ExceptionHandler

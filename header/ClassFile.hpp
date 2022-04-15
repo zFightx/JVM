@@ -208,7 +208,7 @@ public:
     void PrintAccessFlags(u2 access_flags, int flagType);
 
     /**
-     * @brief Ler a string        -----/CONFERIR/----- 
+     * @brief Ler a string       
      * @param index É um inteiro de onde está a string
      * @return Retorna a string que estava no index passado
      */

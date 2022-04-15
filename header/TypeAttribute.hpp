@@ -10,16 +10,25 @@
 
 using namespace std;
 
+
 class AttributeInfo;
 
-// utilizado em FieldInfo
+/**                                   
+ * utilizado em FieldInfo
+ */
 struct ConstantValue_attribute
 {
-    u2 constantvalue_index; // indice de uma estrutura CONSTANT(long, float, double, integer ou string)
+    
+    /**                                   
+    * indice de uma estrutura CONSTANT(long, float, double, integer ou string)
+    */
+    u2 constantvalue_index;  
 };
 
-// utilizado em MethodInfo
-// metodo nativo ou abstrato nao possui esse atributo
+/**                                   
+ * utilizado em MethodInfo
+ * metodo nativo ou abstrato nao possui esse atributo
+ */
 struct Code_attribute
 {
     u2 max_stack;
@@ -34,8 +43,16 @@ struct Code_attribute
 
 struct Exceptions_attribute
 {
-    u2 number_of_exceptions;   // numero de entradas na exception_index_table
-    u2 *exception_index_table; // indice pra constant pool de CONSTANT_Class_info
+
+    /**                                   
+    * numero de entradas na exception_index_table
+    */
+    u2 number_of_exceptions;   
+
+    /**                                   
+    * indice pra constant pool de CONSTANT_Class_info
+    */
+    u2 *exception_index_table; 
 };
 
 struct InnerClasses_attribute

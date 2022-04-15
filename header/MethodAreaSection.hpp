@@ -7,7 +7,7 @@
 #include "ClassFile.hpp"
 #include "TypeValue.hpp"
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                   
  * Representa as informações do MethodAreaSection
  */
 class MethodAreaSection

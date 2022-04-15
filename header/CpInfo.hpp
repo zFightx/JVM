@@ -4,7 +4,7 @@
 #include "Dados.hpp"
 #include "TypeConstant.hpp"
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                   
  * Representa as informações do CPInfo 
  */
 class CpInfo

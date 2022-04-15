@@ -12,7 +12,7 @@ using namespace std;
 class ClassFile;
 struct Value;
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                   
  * Representa as informações do ObjectRef
  */
 class ObjectRef

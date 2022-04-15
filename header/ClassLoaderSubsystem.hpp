@@ -48,7 +48,7 @@ public:
      */
     static void Initialize(ClassFile *class_file, Runtime *runtime);
 
-    /**                             -----/CONFERIR/-----
+    /**                             
      * @brief Inicializa a Classe. 
      * @param index
      * @param constant_pool

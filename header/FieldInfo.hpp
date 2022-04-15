@@ -10,7 +10,7 @@ using namespace std;
 
 struct Value;
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                    
  * Representa as informações do FieldInfo
  */
 class FieldInfo

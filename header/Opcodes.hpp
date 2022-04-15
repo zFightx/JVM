@@ -9,7 +9,7 @@
 
 using namespace std;
 
-/**                                    -------/CONFERIR TUDO/-------
+/**                                   
  * Representa as informações do Opcodes
  */
 class Opcodes
