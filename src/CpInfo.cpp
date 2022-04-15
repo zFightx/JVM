@@ -6,6 +6,6 @@ CpInfo::CpInfo(u1 tag){
 
 CpInfo::~CpInfo(){
     if(this->tag == 1){
-        delete this->info.Utf8.bytes;
+        delete [] this->info.Utf8.bytes;
     }
 }

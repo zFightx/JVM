@@ -1,0 +1,27 @@
+{
+  "files.associations": {
+    "ostream": "cpp",
+    "new": "cpp",
+    "iostream": "cpp",
+    "typeinfo": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "string": "cpp",
+    "vector": "cpp",
+    "string_view": "cpp",
+    "map": "cpp",
+    "ratio": "cpp",
+    "system_error": "cpp",
+    "functional": "cpp",
+    "tuple": "cpp",
+    "type_traits": "cpp",
+    "utility": "cpp",
+    "variant": "cpp",
+    "cmath": "cpp",
+    "unordered_map": "cpp",
+    "initializer_list": "cpp",
+    "optional": "cpp",
+    "istream": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Enabled"
+}
